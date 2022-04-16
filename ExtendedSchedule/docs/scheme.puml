@@ -1,0 +1,17 @@
+@startuml EntityDiagram
+
+entity IgnoredLessons {
+    * id: int
+    --
+    * lesson: string
+}
+
+entity AdditionalLessons {
+    * id: int <PK>
+    --
+    * user: uuid <FK>
+    * context: JSON
+    * intervals JSON
+}
+
+@enduml

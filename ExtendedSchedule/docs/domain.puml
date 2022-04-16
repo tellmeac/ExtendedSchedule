@@ -1,0 +1,25 @@
+@startuml EntityDiagram
+
+class UserSchedule <Aggregate> {
+    +UserID uuid.UUID
+    +IgnoredLessons []IgnoredLesson
+    +AdditionalLessons []AdditionalLessons
+}
+
+class IgnoredLesson {
+    +ID uuid.UUID
+    +UserID uuid.UUID
+    +LessonRef string
+}
+
+class AdditionalLesson {
+    +ID uuid.UUID
+    +UserID uuid.UUID
+    +Context LessonContext
+    +Intervals []LessonInterval
+}
+
+UserSchedule "M" o-- "1" IgnoredLesson
+UserSchedule "M" o-- "1" AdditionalLesson
+
+@enduml
