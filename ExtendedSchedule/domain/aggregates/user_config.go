@@ -9,6 +9,6 @@ import (
 type UserConfig struct {
 	UserID            uuid.UUID
 	JoinedGroups      []values.GroupInfo
-	IgnoredLessons    []entity.IgnoredLesson
+	IgnoredLessons    []entity.ExcludedLesson
 	AdditionalLessons []entity.ExtendedLesson
 }

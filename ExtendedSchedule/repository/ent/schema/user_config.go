@@ -24,7 +24,7 @@ func (UserConfig) Fields() []ent.Field {
 // Edges of the UserConfig.
 func (UserConfig) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("IgnoredLessons", IgnoredLesson.Type),
+		edge.To("ExcludedLessons", ExcludedLesson.Type),
 		edge.To("ExtendedLessons", ExtendedLesson.Type),
 	}
 }
