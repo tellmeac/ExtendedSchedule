@@ -1,17 +1,28 @@
 @startuml EntityDiagram
 
-entity IgnoredLessons {
-    * id: int
+entity UserConfig {
+    * id: uuid <PK>
     --
+    * joined_groups: JSON
+}
+
+entity IgnoredLessons {
+    * id: uuid
+    --
+    * config_id: uuid <FK>
     * lesson: string
 }
 
-entity AdditionalLessons {
-    * id: int <PK>
+IgnoredLessons --o{ UserConfig
+
+entity ExtendedLessons {
+    * id: uuid <PK>
     --
-    * user: uuid <FK>
+    * config_id: uuid <FK>
     * context: JSON
     * intervals JSON
 }
+
+ExtendedLessons --o{ UserConfig
 
 @enduml
