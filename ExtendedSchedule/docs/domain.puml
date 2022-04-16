@@ -1,7 +1,8 @@
 @startuml EntityDiagram
 
-class UserSchedule <Aggregate> {
+class UserConfig <Aggregate> {
     +UserID uuid.UUID
+    +JoinedGroups []GroupInfo
     +IgnoredLessons []IgnoredLesson
     +AdditionalLessons []AdditionalLessons
 }
@@ -19,7 +20,13 @@ class AdditionalLesson {
     +Intervals []LessonInterval
 }
 
-UserSchedule "M" o-- "1" IgnoredLesson
-UserSchedule "M" o-- "1" AdditionalLesson
+class GroupInfo {
+    + ID uuid.UUID
+    + Name string
+}
+
+UserConfig "M" o-- "1" IgnoredLesson
+UserConfig "M" o-- "1" AdditionalLesson
+UserConfig "M" o-- "1" GroupInfo
 
 @enduml
