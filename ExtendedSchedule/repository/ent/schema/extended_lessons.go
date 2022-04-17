@@ -5,6 +5,7 @@ import (
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	"github.com/google/uuid"
+	"github.com/tellmeac/extended-schedule/domain/values"
 )
 
 // ExtendedLesson holds the schema definition for the ExtendedLesson entity.
@@ -17,7 +18,9 @@ func (ExtendedLesson) Fields() []ent.Field {
 	return []ent.Field{
 		field.UUID("id", uuid.UUID{}).Default(uuid.New),
 		field.UUID("ConfigID", uuid.UUID{}),
-		field.String("Lesson"),
+		field.JSON("Context", values.LessonContext{}),
+		field.Bool("IsPrivate").Default(true),
+		field.JSON("Intervals", values.LessonInterval{}),
 	}
 }
 

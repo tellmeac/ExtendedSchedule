@@ -5,7 +5,7 @@ import (
 	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
 	"github.com/google/uuid"
-	"github.com/tellmeac/extended-schedule/domain/values"
+	"github.com/tellmeac/extended-schedule/domain/entity"
 )
 
 // UserConfig holds the schema definition for the UserConfig entity.
@@ -17,7 +17,7 @@ type UserConfig struct {
 func (UserConfig) Fields() []ent.Field {
 	return []ent.Field{
 		field.UUID("id", uuid.UUID{}).Default(uuid.New),
-		field.JSON("JoinedGroups", values.JoinedGroups{}),
+		field.JSON("JoinedGroups", entity.JoinedGroups{}),
 	}
 }
 
