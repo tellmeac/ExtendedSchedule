@@ -16,7 +16,7 @@ class ExtendedLesson <Entity> {
     +ID uuid.UUID
     +Author uuid.UUID
     +IsPrivate bool
-    +Context LessonContext
+    +Context *LessonContext
     +Intervals []LessonInterval
 }
 
