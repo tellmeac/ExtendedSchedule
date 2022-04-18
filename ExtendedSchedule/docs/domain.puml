@@ -1,32 +1,38 @@
 @startuml EntityDiagram
 
-class UserConfig <Aggregate> {
-    +UserID uuid.UUID
-    +JoinedGroups []GroupInfo
-    +IgnoredLessons []ExcludedLesson
-    +ExtendedLessons []ExtendedLesson
-}
+namespace domain {
+    namespace aggregate {
+        class UserConfig <Aggregate> {
+            +UserID uuid.UUID
+            +JoinedGroups []GroupInfo
+            +IgnoredLessons []ExcludedLesson
+            +ExtendedLessons []ExtendedLesson
+        }
+    }
 
-class ExcludedLesson <Entity> {
-    +ID uuid.UUID
-    +LessonRef string
-}
+    namespace entity {
+        class ExcludedLesson <Entity> {
+            +ID uuid.UUID
+            +LessonRef string
+        }
 
-class ExtendedLesson <Entity> {
-    +ID uuid.UUID
-    +Author uuid.UUID
-    +IsPrivate bool
-    +Context *LessonContext
-    +Intervals []LessonInterval
-}
+        class ExtendedLesson <Entity> {
+            +ID uuid.UUID
+            +Author uuid.UUID
+            +IsPrivate bool
+            +Context *LessonContext
+            +Intervals []LessonInterval
+        }
 
-class GroupInfo <Entity> {
-    + ID uuid.UUID
-    + Name string
-}
+        class GroupInfo <Entity> {
+            + ID uuid.UUID
+            + Name string
+        }
+    }
 
-UserConfig "M" o-- "1" ExcludedLesson
-UserConfig "M" o-- "1" ExtendedLesson
-UserConfig "M" o-- "1" GroupInfo
+    domain.aggregate.UserConfig "M" o-- "1" domain.entity.ExcludedLesson
+    domain.aggregate.UserConfig "M" o-- "1" domain.entity.ExtendedLesson
+    domain.aggregate.UserConfig "M" o-- "1" domain.entity.GroupInfo
+}
 
 @enduml
