@@ -3,26 +3,25 @@
 entity UserConfig {
     * id: uuid <PK>
     --
+    * user_id: uuid <FK>
     * joined_groups: JSON
 }
 
-entity IgnoredLessons {
+entity ExcludedLesson {
     * id: uuid
     --
-    * config_id: uuid <FK>
-    * lesson: string
+    * lesson_ref: string
 }
 
-IgnoredLessons --o{ UserConfig
+ExcludedLesson }o--o{ UserConfig
 
-entity ExtendedLessons {
+entity ExtendedLesson {
     * id: uuid <PK>
     --
-    * config_id: uuid <FK>
     * context: JSON
     * intervals JSON
 }
 
-ExtendedLessons --o{ UserConfig
+UserConfig }o--o{ ExtendedLesson 
 
 @enduml
