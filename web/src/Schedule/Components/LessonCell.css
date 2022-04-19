@@ -1,0 +1,15 @@
+.cell {
+    padding: 3px;
+}
+
+.practice-cell {
+    background-color: cornflowerblue;
+}
+
+.lecture-cell {
+    background-color: crimson;
+}
+
+.seminar-cell {
+    background-color: lightsalmon;
+}
