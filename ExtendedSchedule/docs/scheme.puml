@@ -1,6 +1,6 @@
 @startuml EntityDiagram
 
-entity UserConfig {
+entity UserJoinedGroups {
     * id: uuid <PK>
     --
     * user_id: uuid <FK>
@@ -10,18 +10,16 @@ entity UserConfig {
 entity ExcludedLesson {
     * id: uuid
     --
+    * user_id: uuid <FK>
     * lesson_ref: string
 }
-
-ExcludedLesson }o--o{ UserConfig
 
 entity ExtendedLesson {
     * id: uuid <PK>
     --
+    * user_id: uuid <FK>
     * context: JSON
     * intervals JSON
 }
-
-UserConfig }o--o{ ExtendedLesson 
 
 @enduml

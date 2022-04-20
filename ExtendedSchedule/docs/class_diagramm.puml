@@ -37,15 +37,18 @@ namespace domain {
 
     namespace repository {
         interface IExcludedRepository {
-
+            +Get(userID uuid.UUID) []ExcludedLesson
+            +Update(userID uuid.UUID, desired []ExcludedLesson) []ExcludedLesson
         }
 
         interface IExtendedRepository {
-
+            +Get(userID uuid.UUID) []ExtendedLesson
+            +Update(userID uuid.UUID, desired []entity.ExtendedLesson) []ExtendedLesson
         }
 
         interface IGroupRepository {
-
+            +Get(userID uuid.UUID) []GroupInfo
+            +Update(userID uuid.UUID, desired []GroupInfo) []GroupInfo
         }
     }
 
