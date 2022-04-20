@@ -1,4 +1,4 @@
-import {DaySection, Lesson, ScheduleDay} from "../../Shared/Models";
+import {DaySection, ScheduleDay} from "../../Shared/Models";
 import {add, startOfWeek} from "date-fns";
 
 export const MockScheduleWeek: ScheduleDay[] =  generateCurrentWeek()
@@ -25,47 +25,42 @@ function generateSections(): DaySection[] {
 
     const choices = ["practice", "lesson", "seminar"]
 
+    function generateLesson(id: string) {
+        return {
+            id: id,
+            title: "Study",
+            type: choose(choices),
+            audience: {
+                id: "zxc",
+                name: "online"
+            },
+            groups: [
+                {
+                    id: "zxc",
+                    name: "931901"
+                }
+            ],
+            professor: {
+                id: "zxc",
+                name: "Unknown"
+            }
+        };
+    }
+
     for(let i = 0; i < 8; i++){
-        if (Math.random() <= 0.55) {
-            result.push(
-                {
-                    position: i,
-                    lessons: [
-                        {
-                            id: i.toString(),
-                            title: "Study",
-                            type: choose(choices),
-                            audience: {
-                                id: "zxc",
-                                name: "online"
-                            },
-                            groups: [
-                                {
-                                    id: "zxc",
-                                    name: "931901"
-                                }
-                            ],
-                            professor: {
-                                id: "zxc",
-                                name: "Unknown"
-                            }
-                        }
-                    ]
-                }
-            )
-        } else {
-            result.push(
-                {
-                    position: i,
-                    lessons: [
-                        {
-                            id: i.toString(),
-                            title: "Empty",
-                            type: "empty"
-                        }
-                    ]
-                }
-            )
+        result.push(
+            {
+                position: i,
+                lessons: []
+            }
+        )
+
+        if (Math.random() <= 0.45) {
+            result[i].lessons.push(generateLesson((Math.random() + 1).toString(36)))
+
+            if (Math.random() <= 0.3) {
+                result[i].lessons.push(generateLesson((Math.random() + 1).toString(36)))
+            }
         }
     }
 
