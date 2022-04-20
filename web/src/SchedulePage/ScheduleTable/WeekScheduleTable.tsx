@@ -3,7 +3,7 @@ import {EmptyCell, ScheduleDay} from "../../Shared/Models";
 import {Table} from "react-bootstrap";
 import { format } from "date-fns";
 import "./WeekScheduleTable.css"
-import {ScheduleWeekDayCount, SectionsCount} from "../../Shared/Constants";
+import {Intervals, ScheduleWeekDayCount, SectionsCount} from "../../Shared/Constants";
 import {MockScheduleWeek} from "../Mocks/MockScheduleData";
 import {LessonCell} from "../Components/LessonCell";
 
@@ -53,7 +53,10 @@ export const WeekScheduleTable: React.FC<WeekScheduleProps> = ({dateStart, dateE
                 // rendering table body section by section
                 Array.from(Array<boolean>(SectionsCount).keys()).map((sectionNumber) => {
                     return <tr key={sectionNumber}>
-                        <td> Interval </td>
+                        <td>
+                            <p className={"date-start-section"}>{Intervals[sectionNumber][0]}</p>
+                            <p>{Intervals[sectionNumber][1]}</p>
+                        </td>
                         {
                             Array.from(Array<boolean>(ScheduleWeekDayCount).keys()).map((weekDay) => {
                                 // console.log(`week = ${weekDay}, section = ${sectionNumber}`)
