@@ -1,0 +1,17 @@
+.cell {
+    border: 1px solid;
+    padding: 2px;
+    margin-bottom: 3px;
+}
+
+.practice-cell {
+    background-color: #e6f7ff;
+}
+
+.lecture-cell {
+    background-color: #fff1f0;
+}
+
+.seminar-cell {
+    background-color: #fff7e6;
+}

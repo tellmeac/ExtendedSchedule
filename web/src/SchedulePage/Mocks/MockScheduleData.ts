@@ -8,7 +8,7 @@ function generateCurrentWeek(): ScheduleDay[] {
     const curr = new Date()
     const mondayDate = startOfWeek(curr, {weekStartsOn: 1})
 
-    for(let i = 0; i < 7; i++){
+    for(let i = 0; i < 6; i++){
         result.push(
             {
                 date: add(mondayDate, {days: i}),
