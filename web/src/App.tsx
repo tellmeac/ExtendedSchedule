@@ -5,7 +5,7 @@ import {ScheduleContainer} from "./SchedulePage/Container";
 function App() {
   return (
     <div className="App">
-        <ScheduleContainer/>
+
     </div>
   );
 }
