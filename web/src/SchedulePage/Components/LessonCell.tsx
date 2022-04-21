@@ -24,7 +24,7 @@ export const LessonCell: React.FC<LessonCellProps> = ({lesson}) => {
         <span>{lesson.title} - {lesson.type}</span>
         {
             lesson.groups?.map((group)=>{
-                return <p>{group.name}</p>
+                return <p key={group.id}>{group.name}</p>
             })
         }
     </div>
