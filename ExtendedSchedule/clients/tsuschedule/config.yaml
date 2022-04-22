@@ -1,0 +1,4 @@
+output:
+  api.gen.go
+package:
+  tsuschedule

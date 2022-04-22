@@ -2,8 +2,9 @@ package repository
 
 import (
 	"context"
+	"tellmeac/extended-schedule/domain/entity"
+
 	"github.com/google/uuid"
-	"github.com/tellmeac/extended-schedule/domain/entity"
 )
 
 type IExcludedLessonsRepository interface {

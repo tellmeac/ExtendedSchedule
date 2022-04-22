@@ -2,9 +2,10 @@ package userconfig
 
 import (
 	"context"
+	"tellmeac/extended-schedule/domain/aggregates"
+	"tellmeac/extended-schedule/domain/entity"
+
 	"github.com/google/uuid"
-	"github.com/tellmeac/extended-schedule/domain/aggregates"
-	"github.com/tellmeac/extended-schedule/domain/entity"
 )
 
 type IService interface {
