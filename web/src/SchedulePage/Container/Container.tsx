@@ -5,8 +5,8 @@ import {WeekScheduleTable} from "../ScheduleTable";
 import {ScheduleController} from "../ScheduleController";
 
 export function ScheduleContainer() {
-    return <Container>
+    return <div>
         <ScheduleController/>
         <WeekScheduleTable dateStart={new Date()} dateEnd={new Date()} days={MockScheduleWeek}/>
-    </Container>
+    </div>
 }

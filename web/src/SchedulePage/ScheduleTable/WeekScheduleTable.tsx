@@ -41,8 +41,7 @@ export const WeekScheduleTable: React.FC<WeekScheduleProps> = ({dateStart, dateE
             {
                 columnsInfo.map((colInfo)=>{
                     return <th key={colInfo.weekDay}>
-                        <p>{colInfo.weekDay}</p>
-                        <p>{colInfo.shortDate}</p>
+                        <p>{colInfo.weekDay} {colInfo.shortDate}</p>
                     </th>
                 })
             }

@@ -1,0 +1,115 @@
+openapi: 3.0.0
+info:
+  title: TSU Schedule
+  description: TSU schedule public API
+  version: 0.1.0
+servers:
+  - url: https://intime.tsu.ru/api/web/v1
+    description: Web API path
+
+paths:
+  /schedule/group:
+    get:
+      summary: Schedule by group
+      tags:
+        - ScheduleAPI
+      parameters:
+        - name: id
+          in: query
+          required: true
+          description: groupd identifier
+          schema:
+            type: string
+        - name: dateFrom
+          in: query
+          required: true
+          description: "date to start from"
+          schema:
+            type: string
+            example: "2022-04-17"
+        - name: dateTo
+          in: query
+          required: true
+          description: "date to end"
+          schema:
+            type: string
+            example: "2022-04-24"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                title: "Schedule list by day"
+                type: array
+                items:
+                  $ref: "#/components/schemas/DaySchedule"
+
+components:
+  schemas:
+    DaySchedule:
+      type: object
+      title: "Day schedule"
+      properties:
+        date:
+          type: "string"
+          example: "2022-04-19"
+        lessons:
+          type: array
+          items:
+            $ref: "#/components/schemas/Lesson"
+
+    Lesson:
+      type: object
+      title: "Lesson"
+      required:
+        - type
+        - lessonNumber
+      properties:
+        type:
+          type: "string"
+          example: "LESSON"
+        lessonType:
+          type: "string"
+          example: "PRACTICE"
+        lessonNumber:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: "Computer Science"
+        audience:
+          $ref: "#/components/schemas/AudienceInfo"
+        groups:
+          type: array
+          items:
+            $ref: "#/components/schemas/GroupInfo"
+
+    GroupInfo:
+      type: object
+      title: "Group Info"
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          example: "group-identifier"
+        name:
+          type: string
+          example: "931901"
+
+    AudienceInfo:
+      type: object
+      title: "Audience Info"
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          nullable: true
+          example: "audience-identifier"
+        name:
+          type: string
+          example: "104"
