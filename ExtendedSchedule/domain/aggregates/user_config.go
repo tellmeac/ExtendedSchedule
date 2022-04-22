@@ -1,8 +1,9 @@
 package aggregates
 
 import (
+	"tellmeac/extended-schedule/domain/entity"
+
 	"github.com/google/uuid"
-	"github.com/tellmeac/extended-schedule/domain/entity"
 )
 
 type UserConfig struct {

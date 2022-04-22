@@ -1,7 +1,7 @@
 package schedule
 
 import (
-	"github.com/tellmeac/extended-schedule/domain/entity"
+	"tellmeac/extended-schedule/domain/entity"
 	"time"
 )
 

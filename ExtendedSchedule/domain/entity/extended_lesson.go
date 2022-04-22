@@ -1,8 +1,9 @@
 package entity
 
 import (
+	"tellmeac/extended-schedule/domain/values"
+
 	"github.com/google/uuid"
-	"github.com/tellmeac/extended-schedule/domain/values"
 )
 
 type ExtendedLesson struct {

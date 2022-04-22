@@ -2,8 +2,9 @@ package factory
 
 import (
 	"context"
+	"tellmeac/extended-schedule/domain/aggregates"
+
 	"github.com/google/uuid"
-	"github.com/tellmeac/extended-schedule/domain/aggregates"
 )
 
 type IUserConfigFactory interface {
