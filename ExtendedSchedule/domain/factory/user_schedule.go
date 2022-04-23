@@ -23,12 +23,39 @@ type UsersScheduleFactory struct {
 }
 
 func (factory *UsersScheduleFactory) Make(ctx context.Context, userID uuid.UUID, start time.Time, end time.Time) ([]entity.DaySchedule, error) {
+	var schedule []entity.DaySchedule
+	var err error
+
+	schedule, err = factory.makeWithJoinedGroups(ctx, userID, start, end, schedule)
+	if err != nil {
+		return nil, fmt.Errorf("failed to join user schedule by groups: %w", err)
+	}
+
+	schedule, err = factory.makeWithExcludedLessons(ctx, userID, start, end, schedule)
+	if err != nil {
+		return nil, fmt.Errorf("failed to cut schedule with excluded lessons: %w", err)
+	}
+
+	schedule, err = factory.makeWithExtendedLessons(ctx, userID, start, end, schedule)
+	if err != nil {
+		return nil, fmt.Errorf("failed to build schedule with extended lessons: %w", err)
+	}
+
+	return schedule, nil
+}
+
+func (factory *UsersScheduleFactory) makeWithJoinedGroups(
+	ctx context.Context,
+	userID uuid.UUID,
+	start time.Time,
+	end time.Time,
+	schedule []entity.DaySchedule,
+) ([]entity.DaySchedule, error) {
 	groups, err := factory.joinedGroups.GetByUserID(ctx, userID)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get user joined groups: %w", err)
 	}
 
-	var schedule = make([]entity.DaySchedule, 0)
 	for _, group := range groups {
 		scheduleByGroup, err := factory.scheduleProvider.GetByGroup(ctx, group.ID, start, end)
 		if err != nil {
@@ -41,6 +68,26 @@ func (factory *UsersScheduleFactory) Make(ctx context.Context, userID uuid.UUID,
 		}
 	}
 
+	return schedule, nil
+}
+
+func (factory *UsersScheduleFactory) makeWithExcludedLessons(
+	ctx context.Context,
+	userID uuid.UUID,
+	start time.Time,
+	end time.Time,
+	schedule []entity.DaySchedule,
+) ([]entity.DaySchedule, error) {
+	return schedule, nil
+}
+
+func (factory *UsersScheduleFactory) makeWithExtendedLessons(
+	ctx context.Context,
+	userID uuid.UUID,
+	start time.Time,
+	end time.Time,
+	schedule []entity.DaySchedule,
+) ([]entity.DaySchedule, error) {
 	return schedule, nil
 }
 
