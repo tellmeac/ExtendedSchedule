@@ -9,7 +9,7 @@ const (
 
 // AudienceInfo defines model for audience info.
 type AudienceInfo struct {
-	ID   *string
+	ID   string
 	Name string
 }
 
@@ -21,12 +21,12 @@ type GroupInfo struct {
 
 // Lesson defines model for lesson.
 type Lesson struct {
-	Audience     *AudienceInfo
-	Groups       *[]GroupInfo
+	ID           string
+	Title        string
 	LessonNumber int
-	LessonType   *string
-	Title        *string
-	Type         string
+	LessonType   string
+	Audience     AudienceInfo
+	Groups       []GroupInfo
 }
 
 // DaySchedule defines model for day schedule.

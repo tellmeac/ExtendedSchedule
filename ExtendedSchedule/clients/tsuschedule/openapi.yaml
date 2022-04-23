@@ -72,12 +72,14 @@ components:
         type:
           type: "string"
           example: "LESSON"
-        lessonType:
-          type: "string"
-          example: "PRACTICE"
         lessonNumber:
           type: integer
           example: 1
+        lessonType:
+          type: "string"
+          example: "PRACTICE"
+        id:
+          type: "string"
         title:
           type: string
           example: "Computer Science"
