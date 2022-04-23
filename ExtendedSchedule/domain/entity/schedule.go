@@ -2,6 +2,11 @@ package entity
 
 import "time"
 
+const (
+	EmptyLesson    = "EMPTY"
+	NotEmptyLesson = "LESSON"
+)
+
 // AudienceInfo defines model for audience info.
 type AudienceInfo struct {
 	ID   *string
@@ -26,6 +31,11 @@ type Lesson struct {
 
 // DaySchedule defines model for day schedule.
 type DaySchedule struct {
-	Date    time.Time
-	Lessons []Lesson
+	Date     time.Time
+	Sections []Section
+}
+
+type Section struct {
+	Position int
+	Lessons  []Lesson
 }
