@@ -71,8 +71,8 @@ func makeSections(lessons []tsuschedule.Lesson) []entity.Section {
 			continue
 		}
 
-		sections[lesson.LessonNumber].Position = lesson.LessonNumber
-		sections[lesson.LessonNumber].Lessons = append(sections[lesson.LessonNumber].Lessons, mapLesson(lesson))
+		sections[lesson.LessonNumber-1].Position = lesson.LessonNumber
+		sections[lesson.LessonNumber-1].Lessons = append(sections[lesson.LessonNumber].Lessons, mapLesson(lesson))
 	}
 
 	return sections

@@ -2,6 +2,7 @@ package factory
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"tellmeac/extended-schedule/domain/entity"
 	"tellmeac/extended-schedule/domain/providers"
@@ -91,7 +92,7 @@ func (factory *UsersScheduleFactory) makeWithExtendedLessons(
 	return schedule, nil
 }
 
-// joinSchedules объединяет два списка расписания.
+// joinSchedules объединяет два одинаковых по размеру и датам списка расписания.
 func joinSchedules(a []entity.DaySchedule, b []entity.DaySchedule) ([]entity.DaySchedule, error) {
 	if a == nil {
 		return b, nil
@@ -100,5 +101,60 @@ func joinSchedules(a []entity.DaySchedule, b []entity.DaySchedule) ([]entity.Day
 		return a, nil
 	}
 
-	return append(a, b...), nil
+	if len(a) != len(b) {
+		return nil, errors.New("expected to have equal schedule length")
+	}
+
+	var joinedResult = a
+	for i := 0; i < len(a); i++ {
+		if a[i].Date != b[i].Date {
+			return nil, errors.New("expected to have equal date of day index by index")
+		}
+		joinedResult[i].Sections = joinSections(joinedResult[i].Sections, b[i].Sections)
+	}
+
+	return joinedResult, nil
+}
+
+func joinSections(x []entity.Section, y []entity.Section) []entity.Section {
+	var joinedResult = x
+	for i := 0; i < len(x); i++ {
+		joinedResult[i].Lessons = joinLessons(joinedResult[i].Lessons, y[i].Lessons)
+	}
+
+	return joinedResult
+}
+
+type lessonJoinKey struct {
+	ID           string
+	LessonType   string
+	LessonNumber int
+}
+
+func joinLessons(g []entity.Lesson, h []entity.Lesson) []entity.Lesson {
+	var joinMap = make(map[lessonJoinKey]*entity.Lesson)
+	var key lessonJoinKey
+	for i := 0; i < len(g); i++ {
+		key = lessonJoinKey{
+			ID:           g[i].ID,
+			LessonType:   g[i].LessonType,
+			LessonNumber: g[i].LessonNumber,
+		}
+		joinMap[key] = &g[i]
+	}
+	for i := 0; i < len(h); i++ {
+		key = lessonJoinKey{
+			ID:           h[i].ID,
+			LessonType:   h[i].LessonType,
+			LessonNumber: h[i].LessonNumber,
+		}
+		joinMap[key] = &h[i]
+	}
+
+	var joinedResult = make([]entity.Lesson, 0, len(joinMap))
+	for _, lesson := range joinMap {
+		joinedResult = append(joinedResult, *lesson)
+	}
+
+	return joinedResult
 }
