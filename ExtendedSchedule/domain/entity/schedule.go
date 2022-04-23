@@ -2,13 +2,13 @@ package entity
 
 // AudienceInfo defines model for audience info.
 type AudienceInfo struct {
-	Id   *string
+	ID   *string
 	Name string
 }
 
 // GroupInfo defines model for group info.
 type GroupInfo struct {
-	Id   string
+	ID   string
 	Name string
 }
 
