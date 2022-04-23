@@ -4,6 +4,7 @@ import (
 	"context"
 	"tellmeac/extended-schedule/clients/tsuschedule"
 	"tellmeac/extended-schedule/config"
+	"tellmeac/extended-schedule/infrastructure/log"
 	"testing"
 	"time"
 
@@ -16,6 +17,9 @@ func TestBaseScheduleProviderIntegration(t *testing.T) {
 	if testing.Short() {
 		t.Skip("skip integration schedule provider test")
 	}
+
+	// logging init
+	log.ConfigureLogger()
 
 	testCases := []struct {
 		Name         string
