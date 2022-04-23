@@ -9,4 +9,5 @@ import (
 
 type IJoinedGroupsRepository interface {
 	GetByUserID(ctx context.Context, userID uuid.UUID) ([]entity.GroupInfo, error)
+	Update(ctx context.Context, userID uuid.UUID, desired []entity.GroupInfo) error
 }

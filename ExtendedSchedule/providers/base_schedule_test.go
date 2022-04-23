@@ -35,13 +35,6 @@ func TestBaseScheduleProviderIntegration(t *testing.T) {
 			EndDate:      time.Date(2022, 4, 23, 0, 0, 0, 0, time.UTC),
 			ExpectedDays: 6,
 		},
-		{
-			Name:         "Get study week, may fail if there is no schedule at the current day",
-			GroupID:      "3c9f5a5d-ffca-11eb-8169-005056bc249c",
-			StartDate:    time.Date(2022, 4, 18, 0, 0, 0, 0, time.UTC),
-			EndDate:      time.Date(2022, 4, 18, 0, 0, 0, 0, time.UTC),
-			ExpectedDays: 1,
-		},
 	}
 
 	client := tsuschedule.MakeClient(config.Config{

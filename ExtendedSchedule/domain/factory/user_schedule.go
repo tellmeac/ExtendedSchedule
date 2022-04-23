@@ -91,7 +91,7 @@ func (factory *UsersScheduleFactory) makeWithExtendedLessons(
 	return schedule, nil
 }
 
-// joinSchedules соединяет два списка расписания.
+// joinSchedules объединяет два списка расписания.
 func joinSchedules(a []entity.DaySchedule, b []entity.DaySchedule) ([]entity.DaySchedule, error) {
 	if a == nil {
 		return b, nil
@@ -100,5 +100,5 @@ func joinSchedules(a []entity.DaySchedule, b []entity.DaySchedule) ([]entity.Day
 		return a, nil
 	}
 
-	return nil, nil
+	return append(a, b...), nil
 }

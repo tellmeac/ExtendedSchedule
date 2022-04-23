@@ -66,6 +66,7 @@ func makeSections(lessons []tsuschedule.Lesson) []entity.Section {
 	var sections = make([]entity.Section, domain.TotalSections)
 
 	for _, lesson := range lessons {
+		// ignoring empty placeholders
 		if lesson.Type == entity.EmptyLesson {
 			continue
 		}
@@ -79,16 +80,16 @@ func makeSections(lessons []tsuschedule.Lesson) []entity.Section {
 
 func mapLesson(dto tsuschedule.Lesson) entity.Lesson {
 	return entity.Lesson{
+		ID:           *dto.Id,
+		Title:        *dto.Title,
+		LessonType:   *dto.LessonType,
+		LessonNumber: dto.LessonNumber,
 		Audience:     mapAudience(dto.Audience),
 		Groups:       mapGroups(dto.Groups),
-		LessonNumber: dto.LessonNumber,
-		LessonType:   dto.LessonType,
-		Title:        dto.Title,
-		Type:         dto.Type,
 	}
 }
 
-func mapGroups(groups *[]tsuschedule.GroupInfo) *[]entity.GroupInfo {
+func mapGroups(groups *[]tsuschedule.GroupInfo) []entity.GroupInfo {
 	if groups == nil {
 		return nil
 	}
@@ -100,16 +101,24 @@ func mapGroups(groups *[]tsuschedule.GroupInfo) *[]entity.GroupInfo {
 			Name: dto.Name,
 		}
 	}
-	return &result
+	return result
 }
 
-func mapAudience(audience *tsuschedule.AudienceInfo) *entity.AudienceInfo {
+func mapAudience(audience *tsuschedule.AudienceInfo) entity.AudienceInfo {
 	if audience == nil {
-		return nil
+		return entity.AudienceInfo{
+			ID:   "",
+			Name: "Не определено",
+		}
 	}
 
-	return &entity.AudienceInfo{
-		ID:   audience.Id,
+	var id string
+	if audience.Id == nil {
+		id = ""
+	}
+
+	return entity.AudienceInfo{
+		ID:   id,
 		Name: audience.Name,
 	}
 }

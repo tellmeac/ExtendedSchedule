@@ -8,5 +8,6 @@ import (
 )
 
 type IExtendedRepository interface {
+	GetByUserID(ctx context.Context, userID uuid.UUID) ([]entity.ExtendedLesson, error)
 	Update(ctx context.Context, userID uuid.UUID, desired []entity.ExtendedLesson) error
 }
