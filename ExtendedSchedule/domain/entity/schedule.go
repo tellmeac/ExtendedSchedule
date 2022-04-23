@@ -1,5 +1,7 @@
 package entity
 
+import "time"
+
 // AudienceInfo defines model for audience info.
 type AudienceInfo struct {
 	ID   *string
@@ -24,6 +26,6 @@ type Lesson struct {
 
 // DaySchedule defines model for day schedule.
 type DaySchedule struct {
-	Date    *string
-	Lessons *[]Lesson
+	Date    time.Time
+	Lessons []Lesson
 }

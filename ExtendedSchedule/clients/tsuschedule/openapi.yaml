@@ -50,6 +50,9 @@ components:
     DaySchedule:
       type: object
       title: "Day schedule"
+      required:
+        - date
+        - lessons
       properties:
         date:
           type: "string"

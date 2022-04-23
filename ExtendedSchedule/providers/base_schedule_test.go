@@ -13,7 +13,7 @@ var baseURL = "https://intime.tsu.ru/api/web/v1"
 
 func TestBaseScheduleProviderIntegration(t *testing.T) {
 	if testing.Short() {
-		t.Skip("skip integrational base schedule provider test")
+		t.Skip("skip integration schedule provider test")
 	}
 
 	testCases := []struct {
