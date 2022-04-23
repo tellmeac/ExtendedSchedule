@@ -136,7 +136,7 @@ func TestUsersScheduleFactory_Make(t *testing.T) {
 						t,
 						testCase.IsExpectedError,
 						err != nil,
-						fmt.Sprintf("expected error: %t", testCase.IsExpectedError),
+						fmt.Sprintf("expected error = %t, err: %v", testCase.IsExpectedError, err),
 					)
 
 					require.ElementsMatch(t, testCase.ExpectedSchedule, result)
