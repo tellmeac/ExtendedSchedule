@@ -1,14 +1,17 @@
 package entity
 
 import (
-	"tellmeac/extended-schedule/domain/values"
-
 	"github.com/google/uuid"
 )
 
 type ExtendedLesson struct {
-	ID        uuid.UUID
-	UserID    uuid.UUID
-	Context   values.LessonContext
-	Intervals []values.LessonInterval
+	ID          uuid.UUID
+	UserID      uuid.UUID
+	Description string
+	Ref         LessonRef
+}
+
+type LessonRef struct {
+	LessonID string
+	GroupID  string
 }
