@@ -3,13 +3,14 @@ package providers
 import (
 	"context"
 	"tellmeac/extended-schedule/clients/tsuschedule"
+	"tellmeac/extended-schedule/config"
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/require"
 )
 
-var baseURL = "https://intime.tsu.ru/api/web/v1"
+var testBaseURL = "https://intime.tsu.ru/api/web/v1"
 
 func TestBaseScheduleProviderIntegration(t *testing.T) {
 	if testing.Short() {
@@ -24,16 +25,28 @@ func TestBaseScheduleProviderIntegration(t *testing.T) {
 		ExpectedDays int
 	}{
 		{
-			Name:         "Get study week, may fail if wrong there is no schedule at the current day",
+			Name:         "Get study week, may fail if there is no schedule at the current day",
 			GroupID:      "3c9f5a5d-ffca-11eb-8169-005056bc249c",
 			StartDate:    time.Date(2022, 4, 18, 0, 0, 0, 0, time.UTC),
 			EndDate:      time.Date(2022, 4, 23, 0, 0, 0, 0, time.UTC),
 			ExpectedDays: 6,
 		},
+		{
+			Name:         "Get study week, may fail if there is no schedule at the current day",
+			GroupID:      "3c9f5a5d-ffca-11eb-8169-005056bc249c",
+			StartDate:    time.Date(2022, 4, 18, 0, 0, 0, 0, time.UTC),
+			EndDate:      time.Date(2022, 4, 18, 0, 0, 0, 0, time.UTC),
+			ExpectedDays: 1,
+		},
 	}
 
-	client, err := tsuschedule.NewClient(baseURL)
-	require.NoError(t, err)
+	client := tsuschedule.MakeClient(config.Config{
+		ScheduleAPI: struct {
+			BaseURL string
+		}{
+			BaseURL: testBaseURL,
+		},
+	})
 
 	provider := BaseScheduleProvider{
 		client: client,

@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"tellmeac/extended-schedule/clients/tsuschedule"
+	"tellmeac/extended-schedule/domain"
 	"tellmeac/extended-schedule/domain/entity"
 	"time"
 )
@@ -56,24 +57,35 @@ func mapDaySchedule(day tsuschedule.DaySchedule) (entity.DaySchedule, error) {
 	}
 
 	return entity.DaySchedule{
-		Date:    date,
-		Lessons: mapLessons(day.Lessons),
+		Date:     date,
+		Sections: makeSections(day.Lessons),
 	}, nil
 }
 
-func mapLessons(lessons []tsuschedule.Lesson) []entity.Lesson {
-	var result = make([]entity.Lesson, len(lessons))
-	for i, dto := range lessons {
-		result[i] = entity.Lesson{
-			Audience:     mapAudience(dto.Audience),
-			Groups:       mapGroups(dto.Groups),
-			LessonNumber: dto.LessonNumber,
-			LessonType:   dto.LessonType,
-			Title:        dto.Title,
-			Type:         dto.Type,
+func makeSections(lessons []tsuschedule.Lesson) []entity.Section {
+	var sections = make([]entity.Section, domain.TotalSections)
+
+	for _, lesson := range lessons {
+		if lesson.Type == entity.EmptyLesson {
+			continue
 		}
+
+		sections[lesson.LessonNumber].Position = lesson.LessonNumber
+		sections[lesson.LessonNumber].Lessons = append(sections[lesson.LessonNumber].Lessons, mapLesson(lesson))
 	}
-	return result
+
+	return sections
+}
+
+func mapLesson(dto tsuschedule.Lesson) entity.Lesson {
+	return entity.Lesson{
+		Audience:     mapAudience(dto.Audience),
+		Groups:       mapGroups(dto.Groups),
+		LessonNumber: dto.LessonNumber,
+		LessonType:   dto.LessonType,
+		Title:        dto.Title,
+		Type:         dto.Type,
+	}
 }
 
 func mapGroups(groups *[]tsuschedule.GroupInfo) *[]entity.GroupInfo {
