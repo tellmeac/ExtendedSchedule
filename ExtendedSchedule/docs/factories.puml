@@ -1,0 +1,31 @@
+@startuml factories
+
+namespace factory {
+        interface IUserConfigFactory {
+            +Make(userID uuid.UUID) aggregate.UserConfig
+        }
+
+        IUserConfigFactory --> domain.aggregate.UserConfig
+
+        class userConfigFactory implements IUserConfigFactory {
+            -schedule IBaseScheduleProvider
+            -excluded IExcludedRepository
+            -extended IExtendedRepository
+            -userConfig IUserConfigRepository
+        }
+
+        interface IUserScheduleFactory {
+            +Make(userID uuid.UUID, start time.Time, end time.Time) []DaySchedule
+        }
+
+        IUserScheduleFactory --> domain.aggregate.DaySchedule
+
+        class userscheduleFactory implements IUserScheduleFactory {
+            -schedule IBaseScheduleProvider
+            -excluded IExcludedRepository
+            -extended IExtendedRepository
+            -userConfig IUserConfigRepository
+        }
+    }
+
+@enduml

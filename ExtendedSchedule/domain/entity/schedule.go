@@ -25,6 +25,7 @@ type Lesson struct {
 	Title        string
 	LessonNumber int
 	LessonType   string
+	Teacher      TeacherInfo
 	Audience     AudienceInfo
 	Groups       []GroupInfo
 }
@@ -38,4 +39,9 @@ type DaySchedule struct {
 type Section struct {
 	Position int
 	Lessons  []Lesson
+}
+
+type TeacherInfo struct {
+	ID   string
+	Name string
 }

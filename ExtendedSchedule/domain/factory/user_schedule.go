@@ -32,14 +32,14 @@ func (factory *UsersScheduleFactory) Make(ctx context.Context, userID uuid.UUID,
 		return nil, fmt.Errorf("failed to join user schedule by groups: %w", err)
 	}
 
-	schedule, err = factory.makeWithExcludedLessons(ctx, userID, start, end, schedule)
-	if err != nil {
-		return nil, fmt.Errorf("failed to cut schedule with excluded lessons: %w", err)
-	}
-
 	schedule, err = factory.makeWithExtendedLessons(ctx, userID, start, end, schedule)
 	if err != nil {
 		return nil, fmt.Errorf("failed to build schedule with extended lessons: %w", err)
+	}
+
+	schedule, err = factory.makeWithExcludedLessons(ctx, userID, start, end, schedule)
+	if err != nil {
+		return nil, fmt.Errorf("failed to cut schedule with excluded lessons: %w", err)
 	}
 
 	return schedule, nil
@@ -58,7 +58,7 @@ func (factory *UsersScheduleFactory) makeWithJoinedGroups(
 	}
 
 	for _, group := range groups {
-		scheduleByGroup, err := factory.scheduleProvider.GetByGroup(ctx, group.ID, start, end)
+		scheduleByGroup, err := factory.scheduleProvider.GetByGroupID(ctx, group.ID, start, end)
 		if err != nil {
 			return nil, fmt.Errorf("failed to get schedule by group: %w", err)
 		}
@@ -89,6 +89,29 @@ func (factory *UsersScheduleFactory) makeWithExtendedLessons(
 	end time.Time,
 	schedule []entity.DaySchedule,
 ) ([]entity.DaySchedule, error) {
+	lessons, err := factory.extendedLessons.GetByUserID(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, lesson := range lessons {
+		extendedSchedule, err := factory.scheduleProvider.GetLessonSchedule(
+			ctx,
+			lesson.Ref.GroupID,
+			lesson.Ref.LessonID,
+			start,
+			end,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		schedule, err = joinSchedules(schedule, extendedSchedule)
+		if err != nil {
+			return nil, err
+		}
+	}
+
 	return schedule, nil
 }
 

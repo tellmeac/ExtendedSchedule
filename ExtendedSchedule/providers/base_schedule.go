@@ -13,7 +13,53 @@ type BaseScheduleProvider struct {
 	client *tsuschedule.Client
 }
 
-func (provider *BaseScheduleProvider) GetByGroup(
+func (provider *BaseScheduleProvider) GetLessonSchedule(ctx context.Context, groupID string, lessonID string, start time.Time, end time.Time) ([]entity.DaySchedule, error) {
+	params := tsuschedule.GetScheduleGroupParams{
+		Id:       groupID,
+		DateFrom: start.Format("2006-01-02"),
+		DateTo:   end.Format("2006-01-02"),
+	}
+
+	response, err := provider.client.GetScheduleGroup(ctx, &params)
+	if err != nil {
+		return nil, fmt.Errorf("failed to get response from api: %w", err)
+	}
+
+	scheduleDto, err := tsuschedule.ParseGetScheduleGroupResponse(response)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse response from api: %w", err)
+	}
+
+	if scheduleDto.JSON200 == nil {
+		return nil, fmt.Errorf("failed to get schedule from parsed response: %w", err)
+	}
+
+	var result = make([]entity.DaySchedule, len(*scheduleDto.JSON200))
+	for i, day := range *scheduleDto.JSON200 {
+		result[i], err = mapDaySchedule(day)
+		if err != nil {
+			return nil, fmt.Errorf("failed to map response data properly: %w", err)
+		}
+		result[i] = filterByLessonID(result[i], lessonID)
+	}
+
+	return result, nil
+}
+
+func filterByLessonID(schedule entity.DaySchedule, lessonID string) entity.DaySchedule {
+	var filteredLessons = make([]entity.Lesson, 0)
+	for _, section := range schedule.Sections {
+		for _, lesson := range section.Lessons {
+			if lesson.ID == lessonID {
+				filteredLessons = append(filteredLessons, lesson)
+			}
+		}
+		section.Lessons = filteredLessons
+	}
+	return schedule
+}
+
+func (provider *BaseScheduleProvider) GetByGroupID(
 	ctx context.Context,
 	groupID string,
 	start time.Time,
