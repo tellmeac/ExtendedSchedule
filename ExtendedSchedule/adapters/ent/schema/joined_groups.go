@@ -18,7 +18,7 @@ func (UserConfig) Fields() []ent.Field {
 	return []ent.Field{
 		field.UUID("id", uuid.UUID{}).Default(uuid.New),
 		field.UUID("UserID", uuid.UUID{}),
-		field.JSON("JoinedGroups", entity.JoinedGroups{}),
+		field.JSON("JoinedGroups", []entity.GroupInfo{}),
 	}
 }
 
