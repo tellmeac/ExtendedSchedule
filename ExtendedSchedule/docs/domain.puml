@@ -11,14 +11,6 @@ namespace domain {
             +LessonRef LessonRef
         }
 
-        class ExtendedLesson <Entity> {
-            +ID uuid.UUID
-            +Author uuid.UUID
-            +IsPrivate bool
-            +Context *LessonContext
-            +Intervals []LessonInterval
-        }
-
         class GroupInfo <Entity> {
             + ID uuid.UUID
             + Name string
@@ -30,7 +22,6 @@ namespace domain {
             +UserID uuid.UUID
             +JoinedGroups []GroupInfo
             +IgnoredLessons []ExcludedLesson
-            +ExtendedLessons []ExtendedLesson
         }
 
         class DaySchedule <Aggregate> {
@@ -48,14 +39,10 @@ namespace domain {
     }
 
     domain.aggregate.UserConfig "M" o-- "1" domain.entity.ExcludedLesson
-    domain.aggregate.UserConfig "M" o-- "1" domain.entity.ExtendedLesson
     domain.aggregate.UserConfig "M" o-- "1" domain.entity.GroupInfo
 
     namespace repository {
         interface IExcludedRepository {
-        }
-
-        interface IExtendedRepository {
         }
 
         interface IGroupRepository {
@@ -79,12 +66,10 @@ namespace domain {
         class userConfigFactory implements IUserConfigFactory {
             -schedule IBaseScheduleProvider
             -excluded IExcludedRepository
-            -extended IExtendedRepository
             -userConfig IUserConfigRepository
         }
 
         userConfigFactory "1" o-- "1" domain.repository.IExcludedRepository
-        userConfigFactory "1" o-- "1" domain.repository.IExtendedRepository
         userConfigFactory "1" o-- "1" domain.repository.IGroupRepository
         userConfigFactory "1" o-- "1" domain.providers.IBaseScheduleProvider
 
@@ -97,12 +82,10 @@ namespace domain {
         class userscheduleFactory implements IUserScheduleFactory {
             -schedule IBaseScheduleProvider
             -excluded IExcludedRepository
-            -extended IExtendedRepository
             -userConfig IUserConfigRepository
         }
 
         userscheduleFactory "1" o-- "1" domain.repository.IExcludedRepository
-        userscheduleFactory "1" o-- "1" domain.repository.IExtendedRepository
         userscheduleFactory "1" o-- "1" domain.repository.IGroupRepository
         userscheduleFactory "1" o-- "1" domain.providers.IBaseScheduleProvider
     }

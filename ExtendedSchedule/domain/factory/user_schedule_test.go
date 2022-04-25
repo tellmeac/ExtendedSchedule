@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
+	"tellmeac/extended-schedule/domain/aggregates"
 	"tellmeac/extended-schedule/domain/entity"
 	"testing"
 	"time"
@@ -13,23 +14,22 @@ import (
 
 func TestUsersScheduleFactory_Make(t *testing.T) {
 	userID := uuid.New()
+	scheduleDay := time.Date(2022, 4, 18, 0, 0, 0, 0, time.UTC)
 
 	testCases := []struct {
 		Name             string
 		Start            time.Time
 		End              time.Time
-		GroupSchedule    map[string][]entity.DaySchedule
+		GroupSchedule    map[string][]aggregates.DaySchedule
 		JoinedGroups     []entity.GroupInfo
 		ExcludedLessons  []entity.ExcludedLesson
-		ExtendedLessons  []entity.ExtendedLesson
-		ExtendedSchedule map[entity.LessonRef][]entity.DaySchedule
-		ExpectedSchedule []entity.DaySchedule
+		ExpectedSchedule []aggregates.DaySchedule
 		IsExpectedError  bool
 	}{
 		{
 			Name:  "Joined groups should be added successfully",
-			Start: time.Date(2022, 4, 18, 0, 0, 0, 0, time.UTC),
-			End:   time.Date(2022, 4, 18, 0, 0, 0, 0, time.UTC),
+			Start: scheduleDay,
+			End:   scheduleDay,
 			JoinedGroups: []entity.GroupInfo{
 				{
 					ID: "group-1",
@@ -38,23 +38,17 @@ func TestUsersScheduleFactory_Make(t *testing.T) {
 					ID: "group-2",
 				},
 			},
-			GroupSchedule: map[string][]entity.DaySchedule{
+			GroupSchedule: map[string][]aggregates.DaySchedule{
 				"group-1": {
 					{
-						Date: time.Date(2022, 4, 18, 0, 0, 0, 0, time.UTC),
-						Sections: []entity.Section{
+						Date: scheduleDay,
+						Sections: []aggregates.Section{
 							{
 								Position: 1,
 								Lessons: []entity.Lesson{
 									{
-										ID:           "id-1",
-										LessonType:   "PRACTICE",
-										LessonNumber: 1,
-									},
-									{
-										ID:           "id-2",
-										LessonType:   "PRACTICE",
-										LessonNumber: 1,
+										ID:         "id-1",
+										LessonType: "PRACTICE",
 									},
 								},
 							},
@@ -63,15 +57,18 @@ func TestUsersScheduleFactory_Make(t *testing.T) {
 				},
 				"group-2": {
 					{
-						Date: time.Date(2022, 4, 18, 0, 0, 0, 0, time.UTC),
-						Sections: []entity.Section{
+						Date: scheduleDay,
+						Sections: []aggregates.Section{
 							{
 								Position: 1,
 								Lessons: []entity.Lesson{
 									{
-										ID:           "id-1",
-										LessonType:   "PRACTICE",
-										LessonNumber: 1,
+										ID:         "id-1",
+										LessonType: "PRACTICE",
+									},
+									{
+										ID:         "id-2",
+										LessonType: "PRACTICE",
 									},
 								},
 							},
@@ -80,22 +77,20 @@ func TestUsersScheduleFactory_Make(t *testing.T) {
 				},
 			},
 			IsExpectedError: false,
-			ExpectedSchedule: []entity.DaySchedule{
+			ExpectedSchedule: []aggregates.DaySchedule{
 				{
-					Date: time.Date(2022, 4, 18, 0, 0, 0, 0, time.UTC),
-					Sections: []entity.Section{
+					Date: scheduleDay,
+					Sections: []aggregates.Section{
 						{
 							Position: 1,
 							Lessons: []entity.Lesson{
 								{
-									ID:           "id-1",
-									LessonType:   "PRACTICE",
-									LessonNumber: 1,
+									ID:         "id-1",
+									LessonType: "PRACTICE",
 								},
 								{
-									ID:           "id-2",
-									LessonType:   "PRACTICE",
-									LessonNumber: 1,
+									ID:         "id-2",
+									LessonType: "PRACTICE",
 								},
 							},
 						},
@@ -104,9 +99,9 @@ func TestUsersScheduleFactory_Make(t *testing.T) {
 			},
 		},
 		{
-			Name:  "Extended Lessons should be added successfully",
-			Start: time.Date(2022, 4, 18, 0, 0, 0, 0, time.UTC),
-			End:   time.Date(2022, 4, 18, 0, 0, 0, 0, time.UTC),
+			Name:  "Excluded lessons should be ignored successfully",
+			Start: scheduleDay,
+			End:   scheduleDay,
 			JoinedGroups: []entity.GroupInfo{
 				{
 					ID: "group-1",
@@ -115,74 +110,228 @@ func TestUsersScheduleFactory_Make(t *testing.T) {
 					ID: "group-2",
 				},
 			},
-			GroupSchedule: map[string][]entity.DaySchedule{
+			GroupSchedule: map[string][]aggregates.DaySchedule{
 				"group-1": {
 					{
-						Date: time.Date(2022, 4, 18, 0, 0, 0, 0, time.UTC),
-						Sections: []entity.Section{
+						Date: scheduleDay,
+						Sections: []aggregates.Section{
 							{
 								Position: 1,
 								Lessons: []entity.Lesson{
 									{
-										ID:           "id-1",
-										LessonType:   "PRACTICE",
-										LessonNumber: 1,
+										ID:         "id-1",
+										LessonType: "PRACTICE",
 									},
 								},
 							},
 						},
 					},
 				},
-			},
-			ExtendedLessons: []entity.ExtendedLesson{
-				{
-					UserID:      userID,
-					Description: "test extended",
-					Ref: entity.LessonRef{
-						LessonID: "id-2",
-						GroupID:  "group-2",
-					},
-				},
-			},
-			ExtendedSchedule: map[entity.LessonRef][]entity.DaySchedule{
-				entity.LessonRef{
-					LessonID: "id-2",
-					GroupID:  "group-2",
-				}: {
+				"group-2": {
 					{
-						Date: time.Date(2022, 4, 18, 0, 0, 0, 0, time.UTC),
-						Sections: []entity.Section{
+						Date: scheduleDay,
+						Sections: []aggregates.Section{
 							{
 								Position: 1,
 								Lessons: []entity.Lesson{
 									{
-										ID:           "id-2",
-										LessonType:   "PRACTICE",
-										LessonNumber: 1,
+										ID:         "id-2",
+										LessonType: "PRACTICE",
 									},
 								},
 							},
 						},
 					},
+				},
+			},
+			ExcludedLessons: []entity.ExcludedLesson{
+				{
+					UserID: userID,
+					LessonRef: entity.LessonRef{
+						LessonID: "id-2",
+					},
+					ByPosition: 1,
+					ByWeekDays: nil,
+					ByTeacher:  nil,
 				},
 			},
 			IsExpectedError: false,
-			ExpectedSchedule: []entity.DaySchedule{
+			ExpectedSchedule: []aggregates.DaySchedule{
 				{
-					Date: time.Date(2022, 4, 18, 0, 0, 0, 0, time.UTC),
-					Sections: []entity.Section{
+					Date: scheduleDay,
+					Sections: []aggregates.Section{
 						{
 							Position: 1,
 							Lessons: []entity.Lesson{
 								{
-									ID:           "id-1",
-									LessonType:   "PRACTICE",
-									LessonNumber: 1,
+									ID:         "id-1",
+									LessonType: "PRACTICE",
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		{
+			Name:  "Excluded lessons by teacher should be ignored successfully",
+			Start: scheduleDay,
+			End:   scheduleDay,
+			JoinedGroups: []entity.GroupInfo{
+				{
+					ID: "group-1",
+				},
+				{
+					ID: "group-2",
+				},
+			},
+			GroupSchedule: map[string][]aggregates.DaySchedule{
+				"group-1": {
+					{
+						Date: scheduleDay,
+						Sections: []aggregates.Section{
+							{
+								Position: 1,
+								Lessons: []entity.Lesson{
+									{
+										ID:         "id-1",
+										LessonType: "PRACTICE",
+									},
+								},
+							},
+						},
+					},
+				},
+				"group-2": {
+					{
+						Date: scheduleDay,
+						Sections: []aggregates.Section{
+							{
+								Position: 1,
+								Lessons: []entity.Lesson{
+									{
+										ID:         "id-2",
+										LessonType: "PRACTICE",
+										Teacher: entity.TeacherInfo{
+											ID:   "teacher-1",
+											Name: "Teacher name",
+										},
+									},
+									{
+										ID:         "id-2",
+										LessonType: "PRACTICE",
+										Teacher: entity.TeacherInfo{
+											ID:   "teacher-2",
+											Name: "",
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			ExcludedLessons: []entity.ExcludedLesson{
+				{
+					UserID: userID,
+					LessonRef: entity.LessonRef{
+						LessonID: "id-2",
+					},
+					ByWeekDays: nil,
+					ByTeacher: &entity.TeacherInfo{
+						ID:   "teacher-1",
+						Name: "Teacher name",
+					},
+				},
+			},
+			IsExpectedError: false,
+			ExpectedSchedule: []aggregates.DaySchedule{
+				{
+					Date: scheduleDay,
+					Sections: []aggregates.Section{
+						{
+							Position: 1,
+							Lessons: []entity.Lesson{
+								{
+									ID:         "id-1",
+									LessonType: "PRACTICE",
 								},
 								{
-									ID:           "id-2",
-									LessonType:   "PRACTICE",
-									LessonNumber: 1,
+									ID:         "id-2",
+									LessonType: "PRACTICE",
+									Teacher: entity.TeacherInfo{
+										ID:   "teacher-2",
+										Name: "",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+		},
+		{
+			Name:  "Excluded lessons by weekday should be ignored successfully",
+			Start: scheduleDay,
+			End:   scheduleDay,
+			JoinedGroups: []entity.GroupInfo{
+				{
+					ID: "group-1",
+				},
+			},
+			GroupSchedule: map[string][]aggregates.DaySchedule{
+				"group-1": {
+					{
+						Date: scheduleDay,
+						Sections: []aggregates.Section{
+							{
+								Position: 1,
+								Lessons: []entity.Lesson{
+									{
+										ID:         "id-1",
+										LessonType: "PRACTICE",
+									},
+									{
+										ID:         "id-2",
+										LessonType: "PRACTICE",
+									},
+								},
+							},
+							{
+								Position: 2,
+								Lessons: []entity.Lesson{
+									{
+										ID:         "id-2",
+										LessonType: "PRACTICE",
+									},
+								},
+							},
+						},
+					},
+				},
+			},
+			ExcludedLessons: []entity.ExcludedLesson{
+				{
+					UserID: userID,
+					LessonRef: entity.LessonRef{
+						LessonID: "id-2",
+					},
+					ByPosition: 1,
+					ByWeekDays: nil,
+					ByTeacher:  nil,
+				},
+			},
+			IsExpectedError: false,
+			ExpectedSchedule: []aggregates.DaySchedule{
+				{
+					Date: scheduleDay,
+					Sections: []aggregates.Section{
+						{
+							Position: 1,
+							Lessons: []entity.Lesson{
+								{
+									ID:         "id-1",
+									LessonType: "PRACTICE",
 								},
 							},
 						},
@@ -202,10 +351,6 @@ func TestUsersScheduleFactory_Make(t *testing.T) {
 						scheduleProvider.On("GetByGroupID", g.ID, testCase.Start, testCase.End).
 							Return(testCase.GroupSchedule[g.ID], nil)
 					}
-					for _, e := range testCase.ExtendedLessons {
-						scheduleProvider.On("GetLessonSchedule", e.Ref.GroupID, e.Ref.LessonID, testCase.Start, testCase.End).
-							Return(testCase.ExtendedSchedule[e.Ref], nil)
-					}
 
 					groupsRepository := new(joinedGroupsRepository)
 					groupsRepository.On("GetByUserID", userID).Return(testCase.JoinedGroups, nil)
@@ -213,13 +358,9 @@ func TestUsersScheduleFactory_Make(t *testing.T) {
 					excludedRepository := new(excludedLessonsRepository)
 					excludedRepository.On("GetByUserID", userID).Return(testCase.ExcludedLessons, nil)
 
-					extendedRepository := new(extendedLessonsRepository)
-					extendedRepository.On("GetByUserID", userID).Return(testCase.ExtendedLessons, nil)
-
 					factory := UsersScheduleFactory{
 						scheduleProvider: scheduleProvider,
 						joinedGroups:     groupsRepository,
-						extendedLessons:  extendedRepository,
 						excludedLessons:  excludedRepository,
 					}
 
@@ -230,7 +371,7 @@ func TestUsersScheduleFactory_Make(t *testing.T) {
 						err != nil,
 						fmt.Sprintf("expected error = %t, err: %v", testCase.IsExpectedError, err),
 					)
-
+					require.ElementsMatch(t, testCase.ExpectedSchedule[0].Sections[0].Lessons, result[0].Sections[0].Lessons)
 					require.ElementsMatch(t, testCase.ExpectedSchedule, result)
 				},
 			)
@@ -243,14 +384,14 @@ type scheduleProviderMock struct {
 	mock.Mock
 }
 
-func (s *scheduleProviderMock) GetLessonSchedule(_ context.Context, groupID string, lessonID string, start time.Time, end time.Time) ([]entity.DaySchedule, error) {
+func (s *scheduleProviderMock) GetLessonSchedule(_ context.Context, groupID string, lessonID string, start time.Time, end time.Time) ([]aggregates.DaySchedule, error) {
 	result := s.Called(groupID, lessonID, start, end)
-	return result.Get(0).([]entity.DaySchedule), result.Error(1)
+	return result.Get(0).([]aggregates.DaySchedule), result.Error(1)
 }
 
-func (s *scheduleProviderMock) GetByGroupID(_ context.Context, groupID string, start time.Time, end time.Time) ([]entity.DaySchedule, error) {
+func (s *scheduleProviderMock) GetByGroupID(_ context.Context, groupID string, start time.Time, end time.Time) ([]aggregates.DaySchedule, error) {
 	result := s.Called(groupID, start, end)
-	return result.Get(0).([]entity.DaySchedule), result.Error(1)
+	return result.Get(0).([]aggregates.DaySchedule), result.Error(1)
 }
 
 type joinedGroupsRepository struct {
@@ -265,20 +406,6 @@ func (j *joinedGroupsRepository) Update(_ context.Context, userID uuid.UUID, des
 func (j *joinedGroupsRepository) GetByUserID(_ context.Context, userID uuid.UUID) ([]entity.GroupInfo, error) {
 	result := j.Called(userID)
 	return result.Get(0).([]entity.GroupInfo), result.Error(1)
-}
-
-type extendedLessonsRepository struct {
-	mock.Mock
-}
-
-func (e *extendedLessonsRepository) GetByUserID(_ context.Context, userID uuid.UUID) ([]entity.ExtendedLesson, error) {
-	result := e.Called(userID)
-	return result.Get(0).([]entity.ExtendedLesson), result.Error(1)
-}
-
-func (e *extendedLessonsRepository) Update(_ context.Context, userID uuid.UUID, desired []entity.ExtendedLesson) error {
-	result := e.Called(userID, desired)
-	return result.Error(0)
 }
 
 type excludedLessonsRepository struct {
