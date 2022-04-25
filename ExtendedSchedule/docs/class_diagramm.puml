@@ -11,14 +11,6 @@ namespace domain {
             +LessonRef LessonRef
         }
 
-        class ExtendedLesson <Entity> {
-            +ID uuid.UUID
-            +Author uuid.UUID
-            +IsPrivate bool
-            +Context *LessonContext
-            +Intervals []LessonInterval
-        }
-
         class GroupInfo <Entity> {
             + ID uuid.UUID
             + Name string
@@ -30,7 +22,6 @@ namespace domain {
             +UserID uuid.UUID
             +JoinedGroups []GroupInfo
             +IgnoredLessons []ExcludedLesson
-            +ExtendedLessons []ExtendedLesson
         }
 
         class DaySchedule <Aggregate> {
@@ -48,32 +39,21 @@ namespace domain {
     }
 
     domain.aggregate.UserConfig "M" o-- "1" domain.entity.ExcludedLesson
-    domain.aggregate.UserConfig "M" o-- "1" domain.entity.ExtendedLesson
     domain.aggregate.UserConfig "M" o-- "1" domain.entity.GroupInfo
 
     namespace repository {
         interface IExcludedRepository {
-            +Get(userID uuid.UUID) []ExcludedLesson
-            +Update(userID uuid.UUID, desired []ExcludedLesson) []ExcludedLesson
-        }
-
-        interface IExtendedRepository {
-            +Get(userID uuid.UUID) []ExtendedLesson
-            +Update(userID uuid.UUID, desired []entity.ExtendedLesson) []ExtendedLesson
         }
 
         interface IGroupRepository {
-            +Get(userID uuid.UUID) []GroupInfo
-            +Update(userID uuid.UUID, desired []GroupInfo) []GroupInfo
         }
     }
 
     namespace providers {
         interface IBaseScheduleProvider {
-            +GetByGroupID(groupID string) []DaySchedule
         }
 
-        IBaseScheduleProvider --> domain.entity.DaySchedule
+        IBaseScheduleProvider --r-> domain.aggregate.DaySchedule
     }
 
     namespace factory {
@@ -86,30 +66,26 @@ namespace domain {
         class userConfigFactory implements IUserConfigFactory {
             -schedule IBaseScheduleProvider
             -excluded IExcludedRepository
-            -extended IExtendedRepository
             -userConfig IUserConfigRepository
         }
 
         userConfigFactory "1" o-- "1" domain.repository.IExcludedRepository
-        userConfigFactory "1" o-- "1" domain.repository.IExtendedRepository
         userConfigFactory "1" o-- "1" domain.repository.IGroupRepository
         userConfigFactory "1" o-- "1" domain.providers.IBaseScheduleProvider
 
         interface IUserScheduleFactory {
-            +Make(userID uuid.UUID) aggregate.UserConfig
+            +Make(userID uuid.UUID, start, end) []DaySchedule
         }
 
-        IUserScheduleFactory --> domain.aggregate.UserConfig
+        IUserScheduleFactory --> domain.aggregate.DaySchedule
 
         class userscheduleFactory implements IUserScheduleFactory {
             -schedule IBaseScheduleProvider
             -excluded IExcludedRepository
-            -extended IExtendedRepository
             -userConfig IUserConfigRepository
         }
 
         userscheduleFactory "1" o-- "1" domain.repository.IExcludedRepository
-        userscheduleFactory "1" o-- "1" domain.repository.IExtendedRepository
         userscheduleFactory "1" o-- "1" domain.repository.IGroupRepository
         userscheduleFactory "1" o-- "1" domain.providers.IBaseScheduleProvider
     }
@@ -124,13 +100,11 @@ namespace service {
         class service implements IService {
             -userConfigFactory IUserConfigFactory
             -excluded IExcludedRepository
-            -extended IExtendedRepository
             -userConfig IUserConfigRepository
         }
 
         service "1" o-- "1" domain.factory.IUserConfigFactory
         service "1" o-- "1" domain.repository.IExcludedRepository
-        service "1" o-- "1" domain.repository.IExtendedRepository
         service "1" o-- "1" domain.repository.IGroupRepository
     }
 
@@ -142,13 +116,11 @@ namespace service {
         class service implements IService {
             -userscheduleFactory IUserScheduleFactory
             -excluded IExcludedRepository
-            -extended IExtendedRepository
             -userConfig IUserConfigRepository
         }
 
         service "1" o-- "1" domain.factory.IUserScheduleFactory
         service "1" o-- "1" domain.repository.IExcludedRepository
-        service "1" o-- "1" domain.repository.IExtendedRepository
         service "1" o-- "1" domain.repository.IGroupRepository
     }
 }

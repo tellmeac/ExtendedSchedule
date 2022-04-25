@@ -2,17 +2,13 @@ package entity
 
 import (
 	"github.com/google/uuid"
-	"time"
 )
 
 type ExcludedLesson struct {
-	ID        uuid.UUID
-	UserID    uuid.UUID
-	LessonRef ExcludedRef
-}
-
-type ExcludedRef struct {
-	LessonID   string
+	ID         uuid.UUID
+	UserID     uuid.UUID
+	LessonRef  LessonRef
 	ByTeacher  *TeacherInfo
-	ByWeekDays []time.Weekday
+	ByPosition int
+	ByWeekDays []int
 }

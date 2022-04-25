@@ -10,7 +10,6 @@ namespace factory {
         class userConfigFactory implements IUserConfigFactory {
             -schedule IBaseScheduleProvider
             -excluded IExcludedRepository
-            -extended IExtendedRepository
             -userConfig IUserConfigRepository
         }
 
@@ -23,7 +22,6 @@ namespace factory {
         class userscheduleFactory implements IUserScheduleFactory {
             -schedule IBaseScheduleProvider
             -excluded IExcludedRepository
-            -extended IExtendedRepository
             -userConfig IUserConfigRepository
         }
     }
