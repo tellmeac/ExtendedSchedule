@@ -47,7 +47,7 @@ func (day DaySchedule) isExcluded(lesson *entity.Lesson, excludeMap map[string][
 	return false
 }
 
-// Join добавляет расписание занятий из переданного дня
+// Join добавляет расписание занятий из переданного дня.
 func (day *DaySchedule) Join(other DaySchedule) error {
 	var appendDistinct = func(others []*entity.Lesson, lesson *entity.Lesson) []*entity.Lesson {
 		for _, other := range others {
