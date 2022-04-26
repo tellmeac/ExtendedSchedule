@@ -7,59 +7,94 @@ import (
 )
 
 type DaySchedule struct {
-	Date     time.Time
-	Sections []Section
+	Date    time.Time
+	Lessons []entity.Lesson
 }
 
-func (day *DaySchedule) ExcludeLessons(lessons []entity.ExcludedLesson) error {
-	var excluded = make(map[string]*entity.ExcludedLesson, len(lessons))
-	for _, lesson := range lessons {
-		excluded[lesson.LessonRef.LessonID] = &lesson
+func (day *DaySchedule) ExcludeLessons(excluded []entity.ExcludedLesson) error {
+	var excludedMap = make(map[string][]entity.ExcludedLesson, len(excluded))
+	for _, e := range excluded {
+		excludedMap[e.LessonID] = append(excludedMap[e.LessonID], e)
 	}
 
 	var filteredLessons = make([]entity.Lesson, 0)
-	for _, section := range day.Sections {
-		for _, lesson := range section.Lessons {
-			if e, ok := excluded[lesson.ID]; !ok || ok && !day.isExcluded(lesson, e, section.Position) {
-				filteredLessons = append(filteredLessons, lesson)
-			}
+	for _, lesson := range day.Lessons {
+		if !day.isExcluded(&lesson, excludedMap) {
+			filteredLessons = append(filteredLessons, lesson)
 		}
-		section.Lessons = filteredLessons
 	}
+	day.Lessons = filteredLessons
+
 	return nil
 }
 
-func (day *DaySchedule) Join(other DaySchedule) error {
-	if day.Date != other.Date {
-		return errors.New("expected to have equal date of day index by index")
+func (day DaySchedule) isExcluded(lesson *entity.Lesson, excludeMap map[string][]entity.ExcludedLesson) bool {
+	var lessonMatchExcluded = func(excluded *entity.ExcludedLesson) bool {
+		return lesson.ID == excluded.LessonID &&
+			lesson.Position == excluded.Position &&
+			int(day.Date.Weekday()) == excluded.WeekDay &&
+			(excluded.Teacher == nil || (excluded.Teacher != nil && *excluded.Teacher == lesson.Teacher))
 	}
 
-	day.Sections = JoinSections(day.Sections, other.Sections)
-	return nil
-}
-
-func (day *DaySchedule) isExcluded(lesson entity.Lesson, excluded *entity.ExcludedLesson, position int) bool {
-	var isIncludedWeekday = func(day int, days []int) bool {
-		if days == nil {
-			return true
-		}
-
-		for _, d := range days {
-			if d == day {
+	if excludedLessons, ok := excludeMap[lesson.ID]; ok {
+		for _, excluded := range excludedLessons {
+			if lessonMatchExcluded(&excluded) {
 				return true
 			}
 		}
 		return false
 	}
+	return false
+}
 
-	if isIncludedWeekday(int(day.Date.Weekday()), excluded.ByWeekDays) && excluded.ByPosition == position {
-		// assert  excluding by teacher
-		if excluded.ByTeacher == nil || (excluded.ByTeacher != nil && lesson.Teacher == *excluded.ByTeacher) {
-			return false
+// Join добавляет расписание занятий из переданного дня
+func (day *DaySchedule) Join(other DaySchedule) error {
+	var appendDistinct = func(others []*entity.Lesson, lesson *entity.Lesson) []*entity.Lesson {
+		for _, other := range others {
+			if lesson.Equal(other) {
+				return others
+			}
+		}
+
+		return append(others, lesson)
+	}
+
+	if day.Date != other.Date {
+		return errors.New("expected to have equal date of day index by index")
+	}
+
+	var maxPosition = 0
+	var lessonsByPosition = make(map[int][]*entity.Lesson, 0)
+	for i, lesson := range day.Lessons {
+		lessonsByPosition[lesson.Position] = append(lessonsByPosition[lesson.Position], &day.Lessons[i])
+		if maxPosition < lesson.Position {
+			maxPosition = lesson.Position
+		}
+	}
+	for i, lesson := range other.Lessons {
+		lessonsByPosition[lesson.Position] = appendDistinct(lessonsByPosition[lesson.Position], &other.Lessons[i])
+		if maxPosition < lesson.Position {
+			maxPosition = lesson.Position
 		}
 	}
 
-	return true
+	// get maximum lessons for starting allocation size
+	maximumLessons := len(day.Lessons)
+	if len(other.Lessons) > maximumLessons {
+		maximumLessons = len(other.Lessons)
+	}
+
+	var joinedLessons = make([]entity.Lesson, 0, maximumLessons)
+	for i := 0; i <= maxPosition; i++ {
+		if lessons, ok := lessonsByPosition[i]; ok {
+			for _, lesson := range lessons {
+				joinedLessons = append(joinedLessons, *lesson)
+			}
+		}
+	}
+
+	day.Lessons = joinedLessons
+	return nil
 }
 
 // JoinSchedules объединяет два одинаковых по размеру и дате списка расписания.
@@ -80,7 +115,9 @@ func JoinSchedules(a []DaySchedule, b []DaySchedule) ([]DaySchedule, error) {
 		if a[i].Date != b[i].Date {
 			return nil, errors.New("expected to have equal date of day index by index")
 		}
-		joinedResult[i].Sections = JoinSections(joinedResult[i].Sections, b[i].Sections)
+		if err := joinedResult[i].Join(b[i]); err != nil {
+			return nil, err
+		}
 	}
 
 	return joinedResult, nil

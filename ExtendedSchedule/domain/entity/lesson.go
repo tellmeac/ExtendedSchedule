@@ -1,20 +1,24 @@
 package entity
 
-const (
-	EmptyLesson = "EMPTY"
+import (
+	"tellmeac/extended-schedule/domain/values"
 )
 
 type Lesson struct {
 	ID         string
 	Title      string
-	LessonType string
+	LessonType values.LessonType
+	Position   int
 	Teacher    TeacherInfo
 	Audience   AudienceInfo
 	Groups     []GroupInfo
 }
 
-type LessonRef struct {
-	LessonID string
+func (lesson Lesson) Equal(other *Lesson) bool {
+	return lesson.ID == other.ID &&
+		lesson.Position == other.Position &&
+		lesson.Teacher == other.Teacher &&
+		lesson.LessonType == other.LessonType
 }
 
 type AudienceInfo struct {
