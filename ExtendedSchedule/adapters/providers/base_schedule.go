@@ -3,7 +3,7 @@ package providers
 import (
 	"context"
 	"fmt"
-	"tellmeac/extended-schedule/clients/tsuschedule"
+	"tellmeac/extended-schedule/adapters/clients/tsuschedule"
 	"tellmeac/extended-schedule/domain/aggregates"
 	"tellmeac/extended-schedule/domain/entity"
 	"tellmeac/extended-schedule/domain/values"
