@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 	"tellmeac/extended-schedule/clients/tsuschedule"
-	"tellmeac/extended-schedule/domain"
 	"tellmeac/extended-schedule/domain/aggregates"
 	"tellmeac/extended-schedule/domain/entity"
+	"tellmeac/extended-schedule/domain/values"
 	"time"
 )
 
@@ -47,17 +47,14 @@ func (provider *BaseScheduleProvider) GetLessonSchedule(ctx context.Context, gro
 	return result, nil
 }
 
-func filterByLessonID(schedule aggregates.DaySchedule, lessonID string) aggregates.DaySchedule {
+func filterByLessonID(day aggregates.DaySchedule, lessonID string) aggregates.DaySchedule {
 	var filteredLessons = make([]entity.Lesson, 0)
-	for _, section := range schedule.Sections {
-		for _, lesson := range section.Lessons {
-			if lesson.ID == lessonID {
-				filteredLessons = append(filteredLessons, lesson)
-			}
+	for _, lesson := range day.Lessons {
+		if lesson.ID == lessonID {
+			filteredLessons = append(filteredLessons, lesson)
 		}
-		section.Lessons = filteredLessons
 	}
-	return schedule
+	return day
 }
 
 func (provider *BaseScheduleProvider) GetByGroupID(
@@ -103,36 +100,30 @@ func mapDaySchedule(day tsuschedule.DaySchedule) (aggregates.DaySchedule, error)
 		return aggregates.DaySchedule{}, err
 	}
 
-	return aggregates.DaySchedule{
-		Date:     date,
-		Sections: makeSections(day.Lessons),
-	}, nil
-}
-
-func makeSections(lessons []tsuschedule.Lesson) []aggregates.Section {
-	var sections = make([]aggregates.Section, domain.TotalSections)
-
-	for _, lesson := range lessons {
-		// ignoring empty placeholders
-		if lesson.Type == entity.EmptyLesson {
-			continue
-		}
-
-		sections[lesson.LessonNumber-1].Position = lesson.LessonNumber
-		sections[lesson.LessonNumber-1].Lessons = append(sections[lesson.LessonNumber].Lessons, mapLesson(lesson))
+	scheduleDay := aggregates.DaySchedule{
+		Date:    date,
+		Lessons: make([]entity.Lesson, 0, len(day.Lessons)),
 	}
 
-	return sections
+	for _, lesson := range day.Lessons {
+		// ignoring empty placeholders
+		if lesson.Type == "EMPTY" {
+			continue
+		}
+		scheduleDay.Lessons = append(scheduleDay.Lessons, mapLesson(lesson))
+	}
+
+	return scheduleDay, nil
 }
 
 func mapLesson(dto tsuschedule.Lesson) entity.Lesson {
 	return entity.Lesson{
-		ID:           *dto.Id,
-		Title:        *dto.Title,
-		LessonType:   *dto.LessonType,
-		LessonNumber: dto.LessonNumber,
-		Audience:     mapAudience(dto.Audience),
-		Groups:       mapGroups(dto.Groups),
+		ID:         *dto.Id,
+		Title:      *dto.Title,
+		LessonType: values.LessonType(*dto.LessonType),
+		Position:   dto.LessonNumber - 1,
+		Audience:   mapAudience(dto.Audience),
+		Groups:     mapGroups(dto.Groups),
 	}
 }
 
