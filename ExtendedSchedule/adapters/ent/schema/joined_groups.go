@@ -1,6 +1,7 @@
 package schema
 
 import (
+	"entgo.io/ent/schema/index"
 	"tellmeac/extended-schedule/domain/entity"
 
 	"entgo.io/ent"
@@ -8,13 +9,13 @@ import (
 	"github.com/google/uuid"
 )
 
-// UserConfig holds the schema definition for the UserConfig entity.
-type UserConfig struct {
+// JoinedGroups holds the schema definition for the JoinedGroups entity.
+type JoinedGroups struct {
 	ent.Schema
 }
 
 // Fields of the UserConfig.
-func (UserConfig) Fields() []ent.Field {
+func (JoinedGroups) Fields() []ent.Field {
 	return []ent.Field{
 		field.UUID("id", uuid.UUID{}).Default(uuid.New),
 		field.UUID("UserID", uuid.UUID{}),
@@ -22,7 +23,13 @@ func (UserConfig) Fields() []ent.Field {
 	}
 }
 
+func (JoinedGroups) Indexes() []ent.Index {
+	return []ent.Index{
+		index.Fields("UserID").Unique(),
+	}
+}
+
 // Edges of the UserConfig.
-func (UserConfig) Edges() []ent.Edge {
+func (JoinedGroups) Edges() []ent.Edge {
 	return nil
 }

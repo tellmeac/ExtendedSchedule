@@ -6,7 +6,7 @@ import (
 )
 
 type UserConfig struct {
-	UserID         uuid.UUID
-	JoinedGroups   []entity.GroupInfo
-	IgnoredLessons []entity.ExcludedLesson
+	UserID          uuid.UUID
+	JoinedGroups    []entity.GroupInfo
+	ExcludedLessons []entity.ExcludedLesson
 }
