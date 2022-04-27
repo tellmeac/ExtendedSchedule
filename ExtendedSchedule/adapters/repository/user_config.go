@@ -11,6 +11,7 @@ import (
 	"tellmeac/extended-schedule/domain/entity"
 )
 
+// EntUserConfigRepository реализует репозиторий для пользовательской конфигурации.
 type EntUserConfigRepository struct {
 	client *ent.Client
 }
@@ -57,8 +58,35 @@ func mapExcluded(excluded []*ent.ExcludedLesson) []entity.ExcludedLesson {
 }
 
 func (repository EntUserConfigRepository) Update(ctx context.Context, userID uuid.UUID, desired aggregates.UserConfig) error {
-	//TODO implement me
-	panic("implement me")
+	tx, err := repository.client.Tx(ctx)
+	if err != nil {
+		return err
+	}
+
+	if _, err := tx.ExcludedLesson.Delete().Where(excludedlesson.UserIDEQ(userID)).Exec(ctx); err != nil {
+		return rollback(tx, err)
+	}
+
+	for _, excluded := range desired.ExcludedLessons {
+		_, err := tx.ExcludedLesson.Create().
+			SetLessonID(excluded.LessonID).
+			SetPosition(excluded.Position).
+			SetWeekday(excluded.WeekDay).
+			SetTeacher(excluded.Teacher).
+			Save(ctx)
+		if err != nil {
+			return rollback(tx, err)
+		}
+	}
+
+	if err := tx.JoinedGroups.Update().
+		Where(joinedgroups.UserIDEQ(userID)).
+		SetJoinedGroups(desired.JoinedGroups).
+		Exec(ctx); err != nil {
+		return rollback(tx, err)
+	}
+
+	return tx.Commit()
 }
 
 func rollback(tx *ent.Tx, err error) error {
