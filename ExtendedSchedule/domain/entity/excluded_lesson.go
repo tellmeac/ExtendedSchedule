@@ -5,9 +5,9 @@ import (
 )
 
 type ExcludedLesson struct {
-	ID       uuid.UUID
-	LessonID string
-	Teacher  *TeacherInfo
-	Position int
-	WeekDay  int
+	ID       uuid.UUID    `json:"ID"`
+	LessonID string       `json:"LessonID"`
+	Teacher  *TeacherInfo `json:"Teacher"`
+	Position int          `json:"Position"`
+	WeekDay  int          `json:"WeekDay"`
 }
