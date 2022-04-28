@@ -1,4 +1,4 @@
-import {DaySection, ScheduleDay} from "../../Shared/Models";
+import {Lesson, ScheduleDay} from "../../Shared/Models";
 import {add, startOfWeek} from "date-fns";
 
 export const MockScheduleWeek: ScheduleDay[] =  generateCurrentWeek()
@@ -12,7 +12,7 @@ function generateCurrentWeek(): ScheduleDay[] {
         result.push(
             {
                 date: add(mondayDate, {days: i}),
-                sections: generateSections()
+                lessons: generateLessons()
             }
         )
     }
@@ -20,15 +20,16 @@ function generateCurrentWeek(): ScheduleDay[] {
 }
 
 
-function generateSections(): DaySection[] {
-    const result: DaySection[] = []
+function generateLessons(): Lesson[] {
+    const result: Lesson[] = []
 
     const choices = ["practice", "lesson", "seminar"]
 
-    function generateLesson(id: string) {
+    function generateLesson(id: string, position: number): Lesson {
         return {
             id: id,
-            title: "Study",
+            title: "Study Subject",
+            position: position,
             type: choose(choices),
             audience: {
                 id: "zxc",
@@ -47,19 +48,16 @@ function generateSections(): DaySection[] {
         };
     }
 
-    for(let i = 0; i < 8; i++){
-        result.push(
-            {
-                position: i,
-                lessons: []
-            }
-        )
+    const randomId = () => {
+        return (Math.random() + 1).toString(36)
+    }
 
+    for(let i = 0; i < 8; i++){
         if (Math.random() <= 0.45) {
-            result[i].lessons.push(generateLesson((Math.random() + 1).toString(36)))
+            result.push(generateLesson(randomId(), i))
 
             if (Math.random() <= 0.3) {
-                result[i].lessons.push(generateLesson((Math.random() + 1).toString(36)))
+                result.push(generateLesson(randomId(), i))
             }
         }
     }
