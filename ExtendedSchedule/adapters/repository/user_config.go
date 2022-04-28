@@ -9,7 +9,12 @@ import (
 	"tellmeac/extended-schedule/adapters/ent/joinedgroups"
 	"tellmeac/extended-schedule/domain/aggregates"
 	"tellmeac/extended-schedule/domain/entity"
+	"tellmeac/extended-schedule/domain/repository"
 )
+
+func NewEntUserConfigRepository(client *ent.Client) repository.IUserConfigRepository {
+	return &EntUserConfigRepository{client: client}
+}
 
 // EntUserConfigRepository реализует репозиторий для пользовательской конфигурации.
 type EntUserConfigRepository struct {
