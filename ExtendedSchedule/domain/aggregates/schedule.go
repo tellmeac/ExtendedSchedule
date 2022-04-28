@@ -7,8 +7,8 @@ import (
 )
 
 type DaySchedule struct {
-	Date    time.Time
-	Lessons []entity.Lesson
+	Date    time.Time       `json:"Date"`
+	Lessons []entity.Lesson `json:"Lessons"`
 }
 
 func (day *DaySchedule) ExcludeLessons(excluded []entity.ExcludedLesson) error {
@@ -97,7 +97,7 @@ func (day *DaySchedule) Join(other DaySchedule) error {
 	return nil
 }
 
-// JoinSchedules объединяет два одинаковых по размеру и дате списка расписания.
+// JoinSchedules объединяет два расписания одинаковых по размеру и дате.
 func JoinSchedules(a []DaySchedule, b []DaySchedule) ([]DaySchedule, error) {
 	if a == nil {
 		return b, nil

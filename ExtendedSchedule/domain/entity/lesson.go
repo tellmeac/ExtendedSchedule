@@ -5,13 +5,13 @@ import (
 )
 
 type Lesson struct {
-	ID         string
-	Title      string
-	LessonType values.LessonType
-	Position   int
-	Teacher    TeacherInfo
-	Audience   AudienceInfo
-	Groups     []GroupInfo
+	ID         string            `json:"ID"`
+	Title      string            `json:"Title"`
+	LessonType values.LessonType `json:"LessonType"`
+	Position   int               `json:"Position"`
+	Teacher    TeacherInfo       `json:"Teacher"`
+	Audience   AudienceInfo      `json:"Audience"`
+	Groups     []GroupInfo       `json:"Groups"`
 }
 
 func (lesson Lesson) Equal(other *Lesson) bool {
@@ -22,16 +22,16 @@ func (lesson Lesson) Equal(other *Lesson) bool {
 }
 
 type AudienceInfo struct {
-	ID   string
-	Name string
+	ID   string `json:"ID"`
+	Name string `json:"Name"`
 }
 
 type GroupInfo struct {
-	ID   string
-	Name string
+	ID   string `json:"ID"`
+	Name string `json:"Name"`
 }
 
 type TeacherInfo struct {
-	ID   string
-	Name string
+	ID   string `json:"ID"`
+	Name string `json:"Name"`
 }
