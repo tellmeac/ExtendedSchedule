@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 	"net/http"
 	"tellmeac/extended-schedule/domain"
+	"tellmeac/extended-schedule/utils/shortcuts"
 	"time"
 )
 
@@ -26,13 +27,13 @@ func (e Endpoints) Bind(router gin.IRouter) {
 func (e Endpoints) GetPersonalSchedule(ctx *gin.Context) {
 	userID, err := uuid.Parse(ctx.Param("userID"))
 	if err != nil {
-		HandleBadRequest(ctx, err.Error())
+		shortcuts.HandleBadRequest(ctx, err.Error())
 		return
 	}
 
 	start, end, err := e.ExtractScheduleQuery(ctx)
 	if err != nil {
-		HandleBadRequest(ctx, err.Error())
+		shortcuts.HandleBadRequest(ctx, err.Error())
 		return
 	}
 
@@ -54,13 +55,13 @@ func (e Endpoints) GetPersonalSchedule(ctx *gin.Context) {
 func (e Endpoints) GetGroupSchedule(ctx *gin.Context) {
 	groupID := ctx.Param("groupID")
 	if groupID == "" {
-		HandleBadRequest(ctx, "groupID is an empty string, must be identifier")
+		shortcuts.HandleBadRequest(ctx, "groupID is an empty string, must be identifier")
 		return
 	}
 
 	start, end, err := e.ExtractScheduleQuery(ctx)
 	if err != nil {
-		HandleBadRequest(ctx, err.Error())
+		shortcuts.HandleBadRequest(ctx, err.Error())
 		return
 	}
 
@@ -82,19 +83,19 @@ func (e Endpoints) GetGroupSchedule(ctx *gin.Context) {
 func (e Endpoints) GetLessonSchedule(ctx *gin.Context) {
 	groupID := ctx.Param("groupID")
 	if groupID == "" {
-		HandleBadRequest(ctx, "groupID is an empty string, must be identifier")
+		shortcuts.HandleBadRequest(ctx, "groupID is an empty string, must be identifier")
 		return
 	}
 
 	lessonID := ctx.Param("lessonID")
 	if lessonID == "" {
-		HandleBadRequest(ctx, "lessonID is an empty string, must be identifier")
+		shortcuts.HandleBadRequest(ctx, "lessonID is an empty string, must be identifier")
 		return
 	}
 
 	start, end, err := e.ExtractScheduleQuery(ctx)
 	if err != nil {
-		HandleBadRequest(ctx, err.Error())
+		shortcuts.HandleBadRequest(ctx, err.Error())
 		return
 	}
 
@@ -129,8 +130,4 @@ func (e Endpoints) ExtractScheduleQuery(ctx *gin.Context) (start time.Time, end 
 		return
 	}
 	return
-}
-
-func HandleBadRequest(ctx *gin.Context, errorMsg string) {
-	ctx.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": errorMsg})
 }

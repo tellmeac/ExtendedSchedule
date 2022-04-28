@@ -10,6 +10,7 @@ import (
 	"tellmeac/extended-schedule/infrastructure"
 	"tellmeac/extended-schedule/infrastructure/log"
 	"tellmeac/extended-schedule/service/schedule"
+	"tellmeac/extended-schedule/service/userconfig"
 )
 
 var Module = fx.Options(
@@ -18,11 +19,13 @@ var Module = fx.Options(
 	fx.Provide(infrastructure.NewClient),
 	adapters.Module,
 	schedule.Module,
+	userconfig.Module,
 	fx.Invoke(bindRoutes),
 	fx.Provide(infrastructure.NewServer),
 	fx.Invoke(bootstrap),
 )
 
+// bootstrap function is an end point to all providing structs.
 func bootstrap(lc fx.Lifecycle, cfg config.Config, server *gin.Engine) {
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
