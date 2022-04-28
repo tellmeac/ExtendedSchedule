@@ -1,4 +1,4 @@
-export const SectionsCount = 7
+export const IntervalSectionsCount = 7
 
 export const ScheduleWeekDayCount = 6
 

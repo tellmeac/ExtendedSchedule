@@ -5,21 +5,17 @@ export const SeminarCell: string = "seminar"
 
 export interface ScheduleDay {
     date: Date
-    sections: DaySection[]
-}
-
-export interface DaySection {
-    position: number
     lessons: Lesson[]
 }
 
 export interface Lesson {
     id: string
     title: string
+    position: number
     type: string
-    audience?: Audience
-    groups?: Group[]
-    professor?: Professor
+    audience: Audience
+    groups: Group[]
+    professor: Professor
 }
 
 export interface Audience {

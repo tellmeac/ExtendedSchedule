@@ -1,9 +1,9 @@
-import React, {useMemo} from "react";
+import React, {ReactNode, useMemo} from "react";
 import {EmptyCell, ScheduleDay} from "../../Shared/Models";
 import {Table} from "react-bootstrap";
 import { format } from "date-fns";
 import "./WeekScheduleTable.css"
-import {Intervals, ScheduleWeekDayCount, SectionsCount} from "../../Shared/Constants";
+import {Intervals, ScheduleWeekDayCount, IntervalSectionsCount} from "../../Shared/Constants";
 import {MockScheduleWeek} from "../Mocks/MockScheduleData";
 import {LessonCell} from "../Components";
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -49,35 +49,40 @@ export const WeekScheduleTable: React.FC<WeekScheduleProps> = ({dateStart, dateE
         </thead>
         <tbody>
         {
-            // rendering table body section by section
-            Array.from(Array<boolean>(SectionsCount).keys()).map((sectionNumber) => {
-                return <tr key={sectionNumber}>
-                    <td key="-1">
-                        <p key="start-date" className={"date-start-section"}>{Intervals[sectionNumber][0]}</p>
-                        <p key="end-date">{Intervals[sectionNumber][1]}</p>
+            Array.from(Array<boolean>(IntervalSectionsCount).keys()).map(position => {
+                return <tr key={position}>
+                    <td key={-1}>
+                        <p key="start-date" className={"date-start-section"}>{Intervals[position][0]}</p>
+                        <p key="end-date">{Intervals[position][1]}</p>
                     </td>
-                    {
-                        Array.from(Array<boolean>(ScheduleWeekDayCount).keys()).map((weekDay) => {
-                            // console.log(`week = ${weekDay}, section = ${sectionNumber}`)
-                            return <td key={weekDay}>
-                                {
-                                    week[weekDay].sections[sectionNumber].lessons.map((lesson) => {
-                                        const unique_key = [lesson.id, lesson.groups?.concat()].join("")
-                                        return <div key={unique_key}>
-                                            {
-                                                lesson.type !== EmptyCell &&
-                                                <LessonCell key={unique_key}
-                                                            lesson={lesson}/>
-                                            }
-                                        </div>
-                                    })
-                                }
-                            </td>
-                        })
-                    }
+                    {renderSection(position, week)}
                 </tr>
             })
         }
         </tbody>
     </Table>
+}
+
+function renderSection(position: number, days: ScheduleDay[]): ReactNode {
+    return <>
+        {
+            days.map(day => {
+                return <td>
+                    {
+                        day.lessons.filter(lesson => {
+                            return lesson.position === position
+                        }).map(lesson => {
+                            return <>
+                                {
+                                    lesson.type !== EmptyCell &&
+                                    <LessonCell key={lesson.id + lesson.position + lesson.professor.id}
+                                                lesson={lesson}/>
+                                }
+                            </>
+                        })
+                    }
+                </td>
+            })
+        }
+    </>
 }
