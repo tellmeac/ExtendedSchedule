@@ -6,15 +6,20 @@ import (
 	"tellmeac/extended-schedule/adapters/clients/tsuschedule"
 	"tellmeac/extended-schedule/domain/aggregates"
 	"tellmeac/extended-schedule/domain/entity"
+	"tellmeac/extended-schedule/domain/providers"
 	"tellmeac/extended-schedule/domain/values"
 	"time"
 )
+
+func NewBaseScheduleProvider(client *tsuschedule.Client) providers.IBaseScheduleProvider {
+	return &BaseScheduleProvider{client: client}
+}
 
 type BaseScheduleProvider struct {
 	client *tsuschedule.Client
 }
 
-func (provider *BaseScheduleProvider) GetLessonSchedule(ctx context.Context, groupID string, lessonID string, start time.Time, end time.Time) ([]aggregates.DaySchedule, error) {
+func (provider *BaseScheduleProvider) GetByLessonID(ctx context.Context, groupID string, lessonID string, start time.Time, end time.Time) ([]aggregates.DaySchedule, error) {
 	params := tsuschedule.GetScheduleGroupParams{
 		Id:       groupID,
 		DateFrom: start.Format("2006-01-02"),
@@ -41,20 +46,20 @@ func (provider *BaseScheduleProvider) GetLessonSchedule(ctx context.Context, gro
 		if err != nil {
 			return nil, fmt.Errorf("failed to map response data properly: %w", err)
 		}
-		result[i] = filterByLessonID(result[i], lessonID)
+		filterByLessonID(&result[i], lessonID)
 	}
 
 	return result, nil
 }
 
-func filterByLessonID(day aggregates.DaySchedule, lessonID string) aggregates.DaySchedule {
+func filterByLessonID(day *aggregates.DaySchedule, lessonID string) {
 	var filteredLessons = make([]entity.Lesson, 0)
 	for _, lesson := range day.Lessons {
 		if lesson.ID == lessonID {
 			filteredLessons = append(filteredLessons, lesson)
 		}
 	}
-	return day
+	day.Lessons = filteredLessons
 }
 
 func (provider *BaseScheduleProvider) GetByGroupID(

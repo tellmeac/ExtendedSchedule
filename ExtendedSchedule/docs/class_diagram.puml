@@ -1,4 +1,4 @@
-@startuml class_diagramm
+@startuml class_diagram
 
 namespace domain {
     namespace entity {
@@ -77,7 +77,7 @@ namespace domain {
     namespace provider {
         interface IBaseScheduleProvider {
             +GetByGroup(groupID string, ..options) []DaySchedule
-            +GetByLesson(groupdID string, lessonID string, ..options) []DaySchedule
+            +GetByLesson(groupID string, lessonID string, ..options) []DaySchedule
         }
 
         IBaseScheduleProvider --r-> domain.aggregate.DaySchedule

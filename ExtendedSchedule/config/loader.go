@@ -25,7 +25,6 @@ func Load(config interface{}) error {
 	viper.AddConfigPath(".")
 	viper.SetConfigName("config")
 	viper.SetConfigType("yaml")
-	viper.SetEnvPrefix("VS")
 	viper.AutomaticEnv()
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 

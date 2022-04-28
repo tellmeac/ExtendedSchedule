@@ -1,0 +1,5 @@
+ListenAddress: ":8080"
+ScheduleAPI:
+  BaseURL: "https://intime.tsu.ru/api/web/v1"
+Database:
+  ConnectionAddress: "postgres://postgres:postgres@localhost:5432/BetterSchedule"
