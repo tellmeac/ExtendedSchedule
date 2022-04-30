@@ -3,16 +3,12 @@ import {EmptyCell, ScheduleDay} from "../../Shared/Models";
 import {Table} from "react-bootstrap";
 import {format} from "date-fns";
 import "./WeekSchedule.css"
-import {Intervals, IntervalSectionsCount} from "../../Shared/Constants";
-import {generateCurrentWeek} from "../Mocks/MockScheduleData";
+import {Intervals, IntervalSectionsCount} from "../../Shared/Definitions";
+import {generateWeekSchedule} from "../Mocks/MockScheduleData";
 import {LessonCell} from "../LessonCell";
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-
-interface WeekScheduleProps {
-    dateStart: Date
-    dateEnd: Date
-}
+import {useAppSelector} from "../../Shared/Hooks";
+import {selectSelectedWeekEnd, selectSelectedWeekStart} from "../../Shared/Store";
 
 interface ColumnInfo {
     weekDay: string
@@ -28,17 +24,20 @@ function generateColumnsInfo(days: ScheduleDay[]): ColumnInfo[] {
     });
 }
 
-export const WeekSchedule: React.FC<WeekScheduleProps> = ({dateStart, dateEnd}) => {
+export const WeekSchedule: React.FC = () => {
+    const start = useAppSelector(selectSelectedWeekStart)
+    const end = useAppSelector(selectSelectedWeekEnd)
+
     let columnsInfo: ColumnInfo[] = [];
     const [scheduleDays, setScheduleDays] = useState<ScheduleDay[]>([]);
 
-    const updateSchedule = () => {
-        setScheduleDays(generateCurrentWeek())
+    const getWeekSchedule = () => {
+        setScheduleDays(generateWeekSchedule(start))
     }
 
     useEffect(() => {
-        updateSchedule()
-    }, [])
+        getWeekSchedule()
+    }, [start, end])
 
     useMemo(() => {
         columnsInfo = generateColumnsInfo(scheduleDays)

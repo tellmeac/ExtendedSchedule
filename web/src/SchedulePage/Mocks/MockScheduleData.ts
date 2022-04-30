@@ -1,15 +1,13 @@
 import {Lesson, ScheduleDay} from "../../Shared/Models";
-import {add, startOfWeek} from "date-fns";
+import {add} from "date-fns";
 
-export function generateCurrentWeek(): ScheduleDay[] {
+export function generateWeekSchedule(monday: Date): ScheduleDay[] {
     const result: ScheduleDay[] = []
-    const curr = new Date()
-    const mondayDate = startOfWeek(curr, {weekStartsOn: 1})
 
     for(let i = 0; i < 6; i++){
         result.push(
             {
-                date: add(mondayDate, {days: i}),
+                date: add(monday, {days: i}),
                 lessons: generateLessons()
             }
         )
