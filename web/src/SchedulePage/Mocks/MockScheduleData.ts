@@ -1,9 +1,7 @@
 import {Lesson, ScheduleDay} from "../../Shared/Models";
 import {add, startOfWeek} from "date-fns";
 
-export const MockScheduleWeek: ScheduleDay[] =  generateCurrentWeek()
-
-function generateCurrentWeek(): ScheduleDay[] {
+export function generateCurrentWeek(): ScheduleDay[] {
     const result: ScheduleDay[] = []
     const curr = new Date()
     const mondayDate = startOfWeek(curr, {weekStartsOn: 1})
