@@ -1,5 +1,5 @@
 import React from "react";
-import {EmptyCell, LectureCell, Lesson, PracticeCell, SeminarCell} from "../../Shared/Models";
+import {LectureCell, Lesson, PracticeCell, SeminarCell} from "../../Shared/Models";
 import "./LessonCell.css"
 
 interface LessonCellProps {
