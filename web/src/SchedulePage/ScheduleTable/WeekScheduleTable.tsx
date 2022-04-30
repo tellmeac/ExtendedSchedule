@@ -1,10 +1,10 @@
-import React, {ReactNode, useMemo} from "react";
+import React, {ReactNode, useEffect, useMemo, useState} from "react";
 import {EmptyCell, ScheduleDay} from "../../Shared/Models";
 import {Table} from "react-bootstrap";
-import { format } from "date-fns";
+import {format} from "date-fns";
 import "./WeekScheduleTable.css"
-import {Intervals, ScheduleWeekDayCount, IntervalSectionsCount} from "../../Shared/Constants";
-import {MockScheduleWeek} from "../Mocks/MockScheduleData";
+import {Intervals, IntervalSectionsCount} from "../../Shared/Constants";
+import {generateCurrentWeek} from "../Mocks/MockScheduleData";
 import {LessonCell} from "../Components";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -12,7 +12,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 interface WeekScheduleProps {
     dateStart: Date
     dateEnd: Date
-    days: ScheduleDay[]
 }
 
 interface ColumnInfo {
@@ -29,10 +28,21 @@ function generateColumnsInfo(days: ScheduleDay[]): ColumnInfo[] {
     });
 }
 
-export const WeekScheduleTable: React.FC<WeekScheduleProps> = ({dateStart, dateEnd, days}) => {
-    const columnsInfo: ColumnInfo[] = generateColumnsInfo(days)
+export const WeekScheduleTable: React.FC<WeekScheduleProps> = ({dateStart, dateEnd}) => {
+    let columnsInfo: ColumnInfo[] = [];
+    const [scheduleDays, setScheduleDays] = useState<ScheduleDay[]>([]);
 
-    const week = useMemo(() => MockScheduleWeek, [])
+    const updateSchedule = () => {
+        setScheduleDays(generateCurrentWeek())
+    }
+
+    useEffect(() => {
+        updateSchedule()
+    }, [])
+
+    useMemo(() => {
+        columnsInfo = generateColumnsInfo(scheduleDays)
+    }, [scheduleDays])
 
     return <Table striped bordered hover>
         <thead>
@@ -55,7 +65,7 @@ export const WeekScheduleTable: React.FC<WeekScheduleProps> = ({dateStart, dateE
                         <p key="start-date" className={"date-start-section"}>{Intervals[position][0]}</p>
                         <p key="end-date">{Intervals[position][1]}</p>
                     </td>
-                    {renderSection(position, week)}
+                    {renderSection(position, scheduleDays)}
                 </tr>
             })
         }
@@ -67,18 +77,19 @@ function renderSection(position: number, days: ScheduleDay[]): ReactNode {
     return <>
         {
             days.map(day => {
-                return <td>
+                return <td key={day.date.toString()}>
                     {
                         day.lessons.filter(lesson => {
                             return lesson.position === position
                         }).map(lesson => {
-                            return <>
+                            const key = lesson.id + lesson.position + lesson.professor.id
+                            return <div key={key}>
                                 {
                                     lesson.type !== EmptyCell &&
-                                    <LessonCell key={lesson.id + lesson.position + lesson.professor.id}
+                                    <LessonCell key={key}
                                                 lesson={lesson}/>
                                 }
-                            </>
+                            </div>
                         })
                     }
                 </td>
