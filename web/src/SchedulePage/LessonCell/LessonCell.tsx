@@ -21,11 +21,7 @@ export const LessonCell: React.FC<LessonCellProps> = ({lesson}) => {
     }
 
     return <div className={["cell", specificCellClass].join(" ")}>
-        <span>{lesson.title} - {lesson.type}</span>
-        {
-            lesson.groups?.map((group)=>{
-                return <p key={group.id}>{group.name}</p>
-            })
-        }
+        <span className={"lesson-title"}>{lesson.title}</span>
+        <span className={"lesson-group"}>{lesson.groups.map(g => g.name).join(", ")}</span>
     </div>
 }
