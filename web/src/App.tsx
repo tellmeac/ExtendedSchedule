@@ -1,13 +1,12 @@
 import React from 'react';
-import './App.css';
 import {Navigate, Outlet, Route, Routes} from "react-router-dom";
 import {SchedulePage} from "./SchedulePage";
 import {PreferencesPage} from "./PreferencesPage";
-import {Container} from "react-bootstrap";
 import {NavigationController} from "./NavigationController";
 
+
 function App() {
-  return <Container>
+  return <div className={"app-container"}>
     <NavigationController/>
 
     <Routes>
@@ -19,7 +18,7 @@ function App() {
     </Routes>
 
     <Outlet/>
-  </Container>
+  </div>
 }
 
 export default App;

@@ -30,8 +30,8 @@ export const ScheduleController: React.FC = () => {
         </Container>
 
         <Container className={"buttons-container"}>
-            <Button variant="outline-primary" className={"prev-button"} onClick={setPrevWeek}>Предыдущаяя неделя</Button>
-            <Button variant="outline-primary" className={"next-button"} onClick={setNextWeek}>Следующая неделя</Button>
+            <Button variant="outline-primary" onClick={setPrevWeek}>Предыдущая неделя</Button>
+            <Button variant="outline-primary" onClick={setNextWeek}>Следующая неделя</Button>
         </Container>
     </Container>
 }
