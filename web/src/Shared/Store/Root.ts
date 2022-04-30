@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit';
+import {configureStore} from '@reduxjs/toolkit';
 import {scheduleSlice} from "./ScheduleSlice";
 import {uiSlice} from "./UISlice";
 
