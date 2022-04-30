@@ -2,10 +2,10 @@ import React, {ReactNode, useEffect, useMemo, useState} from "react";
 import {EmptyCell, ScheduleDay} from "../../Shared/Models";
 import {Table} from "react-bootstrap";
 import {format} from "date-fns";
-import "./WeekScheduleTable.css"
+import "./WeekSchedule.css"
 import {Intervals, IntervalSectionsCount} from "../../Shared/Constants";
 import {generateCurrentWeek} from "../Mocks/MockScheduleData";
-import {LessonCell} from "../Components";
+import {LessonCell} from "../LessonCell";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 
@@ -28,7 +28,7 @@ function generateColumnsInfo(days: ScheduleDay[]): ColumnInfo[] {
     });
 }
 
-export const WeekScheduleTable: React.FC<WeekScheduleProps> = ({dateStart, dateEnd}) => {
+export const WeekSchedule: React.FC<WeekScheduleProps> = ({dateStart, dateEnd}) => {
     let columnsInfo: ColumnInfo[] = [];
     const [scheduleDays, setScheduleDays] = useState<ScheduleDay[]>([]);
 
@@ -47,11 +47,14 @@ export const WeekScheduleTable: React.FC<WeekScheduleProps> = ({dateStart, dateE
     return <Table striped bordered hover>
         <thead>
         <tr>
-            <th key="-1"> # </th>
+            <th key="-1"></th>
             {
                 columnsInfo.map((colInfo)=>{
                     return <th key={colInfo.weekDay}>
-                        <p>{colInfo.weekDay} {colInfo.shortDate}</p>
+                        <div className={"day-header"}>
+                            <span className={"day-header-weekday"}>{colInfo.weekDay}</span>
+                            <span className={"day-header-date"}>{colInfo.shortDate}</span>
+                        </div>
                     </th>
                 })
             }
@@ -62,8 +65,10 @@ export const WeekScheduleTable: React.FC<WeekScheduleProps> = ({dateStart, dateE
             Array.from(Array<boolean>(IntervalSectionsCount).keys()).map(position => {
                 return <tr key={position}>
                     <td key={-1}>
-                        <p key="start-date" className={"date-start-section"}>{Intervals[position][0]}</p>
-                        <p key="end-date">{Intervals[position][1]}</p>
+                        <div className={"section-header"}>
+                            <span key="start-date" className={"section-start-date"}>{Intervals[position][0]}</span>
+                            <span key="end-date" className={"section-end-date"}>{Intervals[position][1]}</span>
+                        </div>
                     </td>
                     {renderSection(position, scheduleDays)}
                 </tr>

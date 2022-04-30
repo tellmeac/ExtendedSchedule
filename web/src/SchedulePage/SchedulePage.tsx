@@ -1,10 +1,6 @@
 import React from "react";
-import {ScheduleController} from "./ScheduleController";
-import {WeekScheduleTable} from "./ScheduleTable";
+import {WeekSchedule} from "./WeekSchedule";
 
 export function SchedulePage() {
-    return <>
-        <ScheduleController/>
-        <WeekScheduleTable dateStart={new Date()} dateEnd={new Date()}/>
-    </>
+    return <WeekSchedule dateStart={new Date()} dateEnd={new Date()}/>
 }
