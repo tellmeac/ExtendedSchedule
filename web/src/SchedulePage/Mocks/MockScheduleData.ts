@@ -23,6 +23,20 @@ function generateLessons(): Lesson[] {
 
     const choices = ["practice", "lesson", "seminar"]
 
+    function generateGroups() {
+        const result = [{
+            id: "g1",
+            name: "931901"
+        }]
+        if (Math.random() <= 0.3) {
+            result.push({
+                id: "g2",
+                name: "931901 a"
+            })
+        }
+        return result;
+    }
+
     function generateLesson(id: string, position: number): Lesson {
         return {
             id: id,
@@ -33,12 +47,7 @@ function generateLessons(): Lesson[] {
                 id: "zxc",
                 name: "online"
             },
-            groups: [
-                {
-                    id: "zxc",
-                    name: "931901"
-                }
-            ],
+            groups: generateGroups(),
             professor: {
                 id: "zxc",
                 name: "Unknown"
