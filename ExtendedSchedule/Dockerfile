@@ -1,11 +1,10 @@
 # Stage 1: build
-FROM golang:1.18.1-alpine3.15 as builder
+FROM golang:1.18.1-alpine as builder
 
 WORKDIR /service
 
 RUN apk update && apk add --virtual build-dependencies build-base gcc wget git
 
-RUN go install github.com/swaggo/swag/cmd/swag@latest
 RUN go install entgo.io/ent/cmd/ent@latest
 
 COPY go.mod go.sum ./
@@ -16,9 +15,6 @@ COPY . .
 RUN go generate ./...
 RUN go test ./...
 
-RUN swag init \
- && rm docs/docs.go
-
 ENV CGO_ENABLED=0
 RUN go build -a -installsuffix cgo -o app .
 
@@ -28,6 +24,6 @@ FROM alpine:3.15.0
 WORKDIR /app
 
 COPY --from=builder /service/app /usr/bin/app
-COPY Config.yaml Config.yaml
+COPY config.yaml config.yaml
 
 CMD ["/usr/bin/app"]
