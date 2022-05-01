@@ -4,8 +4,8 @@ import {SchedulePage} from "./SchedulePage";
 import {PreferencesPage} from "./PreferencesPage";
 import {NavigationController} from "./NavigationController";
 
-
 function App() {
+
   return <div className={"app-container"}>
     <NavigationController/>
 
