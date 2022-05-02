@@ -1,13 +1,13 @@
 import {Lesson, ScheduleDay} from "../../Shared/Models";
 import {add} from "date-fns";
 
-export function generateWeekSchedule(monday: Date): ScheduleDay[] {
+export function generateWeekSchedule(monday: number): ScheduleDay[] {
     const result: ScheduleDay[] = []
 
     for(let i = 0; i < 6; i++){
         result.push(
             {
-                date: add(monday, {days: i}),
+                date: add(new Date(monday), {days: i}).getTime(),
                 lessons: generateLessons()
             }
         )

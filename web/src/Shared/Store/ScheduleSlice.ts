@@ -5,14 +5,14 @@ import {add, sub} from "date-fns";
 import {RootState} from "./Root";
 
 export interface ScheduleState {
-    selectedWeekStart: Date
-    selectedWeekEnd: Date
+    selectedWeekStart: number
+    selectedWeekEnd: number
     weekSchedule: ScheduleDay[]
 }
 
 const initialScheduleState: ScheduleState = {
-    selectedWeekStart: getCurrentWeekMonday(new Date()),
-    selectedWeekEnd: getCurrentWeekSaturday(new Date()),
+    selectedWeekStart: getCurrentWeekMonday(new Date()).getTime(),
+    selectedWeekEnd: getCurrentWeekSaturday(new Date()).getTime(),
     weekSchedule: []
 }
 
@@ -24,12 +24,12 @@ export const scheduleSlice = createSlice({
             state.weekSchedule = action.payload
         },
         setNextWeek: (state) => {
-            state.selectedWeekStart = add(state.selectedWeekStart, {days: 7})
-            state.selectedWeekEnd = add(state.selectedWeekEnd, {days: 7})
+            state.selectedWeekStart = add(state.selectedWeekStart, {days: 7}).getTime()
+            state.selectedWeekEnd = add(state.selectedWeekEnd, {days: 7}).getTime()
         },
         setPreviousWeek: (state) => {
-            state.selectedWeekStart = sub(state.selectedWeekStart, {days: 7})
-            state.selectedWeekEnd = sub(state.selectedWeekEnd, {days: 7})
+            state.selectedWeekStart = sub(state.selectedWeekStart, {days: 7}).getTime()
+            state.selectedWeekEnd = sub(state.selectedWeekEnd, {days: 7}).getTime()
         },
     }
 })

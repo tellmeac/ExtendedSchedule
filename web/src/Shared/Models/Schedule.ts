@@ -4,7 +4,7 @@ export const PracticeCell: string = "practice"
 export const SeminarCell: string = "seminar"
 
 export interface ScheduleDay {
-    date: Date
+    date: number
     lessons: Lesson[]
 }
 
