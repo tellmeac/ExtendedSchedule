@@ -1,5 +1,6 @@
-import {Lesson, ScheduleDay} from "../../Shared/Models";
+import {LectureCell, Lesson, PracticeCell, ScheduleDay, SeminarCell} from "../../Shared/Models";
 import {add} from "date-fns";
+import {LessonCell} from "../LessonCell";
 
 export function generateWeekSchedule(monday: number): ScheduleDay[] {
     const result: ScheduleDay[] = []
@@ -19,7 +20,7 @@ export function generateWeekSchedule(monday: number): ScheduleDay[] {
 function generateLessons(): Lesson[] {
     const result: Lesson[] = []
 
-    const choices = ["practice", "lesson", "seminar"]
+    const choices = [PracticeCell, LectureCell, SeminarCell]
 
     function generateGroups() {
         const result = [{
@@ -40,7 +41,7 @@ function generateLessons(): Lesson[] {
             id: id,
             title: "Study Subject",
             position: position,
-            type: choose(choices),
+            lessonType: choose(choices),
             audience: {
                 id: "zxc",
                 name: "online"

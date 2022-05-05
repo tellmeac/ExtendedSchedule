@@ -1,7 +1,7 @@
 import React from "react";
 import {format} from "date-fns";
 import {useAppDispatch, useAppSelector} from "../../Shared/Hooks";
-import {selectSelectedWeekEnd, selectSelectedWeekStart, setPreviousWeek} from "../../Shared/Store";
+import {selectSelectedWeekEnd, selectSelectedWeekStart, setPreviousWeek, setNextWeek} from "../../Shared/Store";
 import {Button, Container} from "react-bootstrap";
 import "./ScheduleController.css"
 
@@ -12,12 +12,12 @@ export const ScheduleController: React.FC = () => {
 
     const dispatch = useAppDispatch()
 
-    const setPrevWeek = () => {
+    const setDownWeek = () => {
         dispatch(setPreviousWeek())
     }
 
-    const setNextWeek = () => {
-        dispatch(setPreviousWeek())
+    const setUpWeek = () => {
+        dispatch(setNextWeek())
     }
 
     const startFormatted = format(start, "d MMMM u")
@@ -30,8 +30,8 @@ export const ScheduleController: React.FC = () => {
         </Container>
 
         <Container className={"buttons-container"}>
-            <Button variant="outline-primary" onClick={setPrevWeek}>Предыдущая неделя</Button>
-            <Button variant="outline-primary" onClick={setNextWeek}>Следующая неделя</Button>
+            <Button variant="outline-primary" onClick={setDownWeek}>Предыдущая неделя</Button>
+            <Button variant="outline-primary" onClick={setUpWeek}>Следующая неделя</Button>
         </Container>
     </Container>
 }

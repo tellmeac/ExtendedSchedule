@@ -1,7 +1,7 @@
-export const EmptyCell: string = "empty"
-export const LectureCell: string = "lesson"
-export const PracticeCell: string = "practice"
-export const SeminarCell: string = "seminar"
+export const LectureCell: string = "LECTURE"
+export const PracticeCell: string = "PRACTICE"
+export const SeminarCell: string = "SEMINAR"
+export const laboratoryCell: string = "LABORATORY"
 
 export interface ScheduleDay {
     date: number
@@ -12,7 +12,7 @@ export interface Lesson {
     id: string
     title: string
     position: number
-    type: string
+    lessonType: string
     audience: Audience
     groups: Group[]
     professor: Professor

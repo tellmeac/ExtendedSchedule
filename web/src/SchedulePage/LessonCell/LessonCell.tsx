@@ -1,5 +1,5 @@
 import React from "react";
-import {LectureCell, Lesson, PracticeCell, SeminarCell} from "../../Shared/Models";
+import {laboratoryCell, LectureCell, Lesson, PracticeCell, SeminarCell} from "../../Shared/Models";
 import "./LessonCell.css"
 
 interface LessonCellProps {
@@ -8,7 +8,7 @@ interface LessonCellProps {
 
 export const LessonCell: React.FC<LessonCellProps> = ({lesson}) => {
     let specificCellClass = ""
-    switch (lesson.type) {
+    switch (lesson.lessonType) {
         case PracticeCell:
             specificCellClass = "practice-cell"
             break
@@ -17,6 +17,9 @@ export const LessonCell: React.FC<LessonCellProps> = ({lesson}) => {
             break
         case SeminarCell:
             specificCellClass = "seminar-cell"
+            break
+        case laboratoryCell:
+            specificCellClass = "laboratory-cell"
             break
     }
 
