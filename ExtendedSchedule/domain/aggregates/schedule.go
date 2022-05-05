@@ -7,8 +7,8 @@ import (
 )
 
 type DaySchedule struct {
-	Date    time.Time       `json:"Date"`
-	Lessons []entity.Lesson `json:"Lessons"`
+	Date    time.Time       `json:"date"`
+	Lessons []entity.Lesson `json:"lessons"`
 }
 
 func (day *DaySchedule) ExcludeLessons(excluded []entity.ExcludedLesson) error {

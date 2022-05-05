@@ -6,6 +6,7 @@ import (
 	"github.com/google/uuid"
 	"net/http"
 	"tellmeac/extended-schedule/domain"
+	"tellmeac/extended-schedule/domain/aggregates"
 	"tellmeac/extended-schedule/utils/shortcuts"
 	"time"
 )
@@ -49,7 +50,7 @@ func (e Endpoints) GetPersonalSchedule(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, days)
+	ctx.JSON(http.StatusOK, mapSchedule(days))
 }
 
 func (e Endpoints) GetGroupSchedule(ctx *gin.Context) {
@@ -77,7 +78,7 @@ func (e Endpoints) GetGroupSchedule(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, days)
+	ctx.JSON(http.StatusOK, mapSchedule(days))
 }
 
 func (e Endpoints) GetLessonSchedule(ctx *gin.Context) {
@@ -111,7 +112,7 @@ func (e Endpoints) GetLessonSchedule(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, days)
+	ctx.JSON(http.StatusOK, mapSchedule(days))
 }
 
 func (e Endpoints) ExtractScheduleQuery(ctx *gin.Context) (start time.Time, end time.Time, err error) {
@@ -130,4 +131,15 @@ func (e Endpoints) ExtractScheduleQuery(ctx *gin.Context) (start time.Time, end 
 		return
 	}
 	return
+}
+
+func mapSchedule(schedule []aggregates.DaySchedule) []DaySchedule {
+	var result = make([]DaySchedule, len(schedule))
+	for i, d := range schedule {
+		result[i] = DaySchedule{
+			Date:    d.Date.Format("2006-01-02"),
+			Lessons: d.Lessons,
+		}
+	}
+	return result
 }
