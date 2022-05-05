@@ -1,14 +1,15 @@
-import React, {ReactNode, useEffect, useMemo, useState} from "react";
-import {EmptyCell, ScheduleDay} from "../../Shared/Models";
+import React, {ReactNode, useEffect, useMemo} from "react";
+import {ScheduleDay} from "../../Shared/Models";
 import {Table} from "react-bootstrap";
 import {format} from "date-fns";
 import "./WeekSchedule.css"
 import {Intervals, IntervalSectionsCount} from "../../Shared/Definitions";
-import {generateWeekSchedule} from "../Mocks/MockScheduleData";
 import {LessonCell} from "../LessonCell";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {useAppSelector} from "../../Shared/Hooks";
-import {selectSelectedWeekEnd, selectSelectedWeekStart} from "../../Shared/Store";
+import {useAppDispatch, useAppSelector} from "../../Shared/Hooks";
+import {selectSelectedSchedule, selectSelectedWeekEnd, selectSelectedWeekStart, updateSchedule} from "../../Shared/Store";
+import {selectLoginResponse} from "../../Shared/Store/UserSlice";
+import {getUserSchedule} from "../../Shared/Api";
 
 interface ColumnInfo {
     weekDay: string
@@ -17,9 +18,10 @@ interface ColumnInfo {
 
 function generateColumnsInfo(days: ScheduleDay[]): ColumnInfo[] {
     return days.map((day) => {
+        const date = new Date(day.date)
         return {
-            weekDay: format(day.date, "E"),
-            shortDate: format(day.date, "d LLL.")
+            weekDay: format(date, "E"),
+            shortDate: format(date, "d LLL.")
         }
     });
 }
@@ -27,17 +29,28 @@ function generateColumnsInfo(days: ScheduleDay[]): ColumnInfo[] {
 export const WeekSchedule: React.FC = () => {
     const start = useAppSelector(selectSelectedWeekStart)
     const end = useAppSelector(selectSelectedWeekEnd)
+    const user = useAppSelector(selectLoginResponse)
+    const scheduleDays = useAppSelector(selectSelectedSchedule)
 
     let columnsInfo: ColumnInfo[] = [];
-    const [scheduleDays, setScheduleDays] = useState<ScheduleDay[]>([]);
+
+    const dispatch = useAppDispatch()
 
     const getWeekSchedule = () => {
-        setScheduleDays(generateWeekSchedule(start))
+        if (!user) {
+            return
+        }
+
+        getUserSchedule(user.id_token, start, end).then(days => {
+            dispatch(updateSchedule(days))
+        }).catch(e => {
+            console.log(e)
+        })
     }
 
     useEffect(() => {
         getWeekSchedule()
-    }, [start, end])
+    }, [start, end, user])
 
     useMemo(() => {
         columnsInfo = generateColumnsInfo(scheduleDays)
@@ -46,7 +59,7 @@ export const WeekSchedule: React.FC = () => {
     return <Table striped bordered hover>
         <thead>
         <tr>
-            <th key="-1"></th>
+            <th key="-1"/>
             {
                 columnsInfo.map((colInfo)=>{
                     return <th key={colInfo.weekDay}>
@@ -81,19 +94,13 @@ function renderSection(position: number, days: ScheduleDay[]): ReactNode {
     return <>
         {
             days.map(day => {
-                return <td key={day.date.toString()}>
+                return <td key={day.date}>
                     {
                         day.lessons.filter(lesson => {
                             return lesson.position === position
                         }).map(lesson => {
-                            const key = lesson.id + lesson.position + lesson.professor.id
-                            return <div key={key}>
-                                {
-                                    lesson.type !== EmptyCell &&
-                                    <LessonCell key={key}
-                                                lesson={lesson}/>
-                                }
-                            </div>
+                            return <LessonCell key={lesson.position + lesson.id}
+                                               lesson={lesson}/>
                         })
                     }
                 </td>

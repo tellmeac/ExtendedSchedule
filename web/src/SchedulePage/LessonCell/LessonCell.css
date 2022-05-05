@@ -1,8 +1,7 @@
 .cell {
     display: flex;
     flex-direction: column;
-    padding-left: 2px;
-    padding-top: 2px;
+    padding: 2px;
     border: 1px solid;
     margin-bottom: 3px;
     font-weight: 600;
@@ -21,7 +20,7 @@
 }
 
 .practice-cell {
-    background-color: #e6f7ff;
+    background-color: #f0f5ff;
 }
 
 .lecture-cell {
@@ -30,4 +29,8 @@
 
 .seminar-cell {
     background-color: #fff7e6;
+}
+
+.laboratory-cell {
+    background-color: #e6f7ff;
 }
