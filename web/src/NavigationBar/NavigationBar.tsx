@@ -5,12 +5,16 @@ import "./NavigationBar.css"
 import GoogleLogin, {GoogleLoginResponse, GoogleLoginResponseOffline, GoogleLogout} from "react-google-login";
 import {authProps} from "../auth";
 import {useAppDispatch, useAppSelector} from "../Shared/Hooks";
-import {resetUserData, selectLoginResponse, updateUserData, updateSchedule} from "../Shared/Store";
+import {selectLoginResponse, updateUserData} from "../Shared/Store";
 import {getUserAuthContentFromResponse} from "../Shared/Models/Auth";
+import {UserMenu} from "./UserMenu";
+import {useNavigate} from "react-router-dom";
 
 export function NavigationBar() {
-    const userData = useAppSelector(selectLoginResponse)
+    const navigate = useNavigate()
+
     const dispatch = useAppDispatch()
+    const userData = useAppSelector(selectLoginResponse)
 
     const loginSuccess = (response: (GoogleLoginResponse | GoogleLoginResponseOffline)) => {
         const r = response as GoogleLoginResponse;
@@ -18,8 +22,7 @@ export function NavigationBar() {
     }
 
     const logoutSuccess = () => {
-        dispatch(resetUserData())
-        dispatch(updateSchedule([]))
+        navigate(0)
     }
 
     return <Navbar bg="light" expand="lg">
@@ -36,7 +39,7 @@ export function NavigationBar() {
                         <GoogleLogin
                             clientId={authProps.clientId}
                             onSuccess={loginSuccess}
-                            onFailure={err => console.log('fail', err)}
+                            onFailure={err => console.log('failed to sign in', err)}
                             isSignedIn={true}
                             cookiePolicy={'single_host_origin'}
                         >

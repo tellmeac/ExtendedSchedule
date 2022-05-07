@@ -24,6 +24,7 @@ td {
 
 .day-header-weekday {
     font-weight: 700;
+    min-width: 6em;
 }
 
 .day-header-date {

@@ -7,12 +7,8 @@ import {Intervals, IntervalSectionsCount} from "../../Shared/Definitions";
 import {LessonCell} from "../LessonCell";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {useAppDispatch, useAppSelector} from "../../Shared/Hooks";
-import {
-    selectWeekSchedule,
-    updateSchedule,
-    selectWeekPeriod
-} from "../../Shared/Store";
-import {selectLoginResponse} from "../../Shared/Store/UserSlice";
+import {selectWeekPeriod, selectWeekSchedule, updateSchedule} from "../../Shared/Store";
+import {selectLoginResponse} from "../../Shared/Store";
 import {getUserSchedule} from "../../Shared/Api";
 
 interface ColumnInfo {
@@ -41,11 +37,10 @@ export const WeekSchedule: React.FC = () => {
 
     const getWeekSchedule = () => {
         if (!user) {
-            console.log("no user authorized")
             return
         }
 
-        getUserSchedule(user?.tokenId, weekPeriod.weekStart, weekPeriod.weekEnd).then(days => {
+        getUserSchedule(user?.tokenId || "", weekPeriod.weekStart, weekPeriod.weekEnd).then(days => {
             dispatch(updateSchedule(days))
         }).catch(e => {
             console.log(e)

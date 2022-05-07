@@ -1,6 +1,6 @@
 import React from "react";
 import {Dropdown, Image} from "react-bootstrap";
-import "./NavUserInfo.css"
+import "./UserMenu.css"
 import {UserAuthContent} from "../Shared/Models/Auth";
 
 type Props = {
@@ -8,7 +8,7 @@ type Props = {
     renderLogoutButton: () => JSX.Element
 }
 
-export const NavUserInfo: React.FC<Props> = ({data, renderLogoutButton}) => {
+export const UserMenu: React.FC<Props> = ({data, renderLogoutButton}) => {
     return <div className={"user-info"}>
         <Dropdown align="end">
             <Dropdown.Toggle id="dropdown-autoclose-outside">
