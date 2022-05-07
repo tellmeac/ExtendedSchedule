@@ -5,15 +5,19 @@ import {add, sub} from "date-fns";
 import {RootState} from "./Root";
 
 export interface ScheduleState {
-    selectedWeekStart: number
-    selectedWeekEnd: number
+    period: {
+        weekStart: number,
+        weekEnd: number
+    }
     weekSchedule: ScheduleDay[]
 }
 
 const initialScheduleState: ScheduleState = {
-    selectedWeekStart: getCurrentWeekMonday(new Date()).getTime(),
-    selectedWeekEnd: getCurrentWeekSaturday(new Date()).getTime(),
-    weekSchedule: []
+    period: {
+        weekStart: getCurrentWeekMonday(new Date()).getTime(),
+        weekEnd: getCurrentWeekSaturday(new Date()).getTime()
+    },
+    weekSchedule: [],
 }
 
 export const scheduleSlice = createSlice({
@@ -24,18 +28,21 @@ export const scheduleSlice = createSlice({
             state.weekSchedule = action.payload
         },
         setNextWeek: (state) => {
-            state.selectedWeekStart = add(state.selectedWeekStart, {days: 7}).getTime()
-            state.selectedWeekEnd = add(state.selectedWeekEnd, {days: 7}).getTime()
+            state.period = {
+                weekStart: add(state.period.weekStart, {days: 7}).getTime(),
+                weekEnd: add(state.period.weekEnd, {days: 7}).getTime()
+            }
         },
         setPreviousWeek: (state) => {
-            state.selectedWeekStart = sub(state.selectedWeekStart, {days: 7}).getTime()
-            state.selectedWeekEnd = sub(state.selectedWeekEnd, {days: 7}).getTime()
+            state.period = {
+                weekStart: sub(state.period.weekStart, {days: 7}).getTime(),
+                weekEnd: sub(state.period.weekEnd, {days: 7}).getTime()
+            }
         },
     }
 })
 
-export const selectSelectedWeekStart = (state: RootState) => state.schedule.selectedWeekStart
-export const selectSelectedWeekEnd = (state: RootState) => state.schedule.selectedWeekEnd
-export const selectSelectedSchedule = (state: RootState) => state.schedule.weekSchedule
+export const selectWeekPeriod = (state: RootState) => state.schedule.period
+export const selectWeekSchedule = (state: RootState) => state.schedule.weekSchedule
 
 export const { updateSchedule, setNextWeek, setPreviousWeek, } = scheduleSlice.actions

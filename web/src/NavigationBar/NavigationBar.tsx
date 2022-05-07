@@ -1,31 +1,29 @@
 import React from "react";
 import {Nav, Navbar} from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import "./NavigationController.css"
+import "./NavigationBar.css"
 import GoogleLogin, {GoogleLoginResponse, GoogleLoginResponseOffline, GoogleLogout} from "react-google-login";
 import {authProps} from "../auth";
 import {useAppDispatch, useAppSelector} from "../Shared/Hooks";
-import {resetUserData, selectLoginResponse, updateUserData} from "../Shared/Store/UserSlice";
-import {NavUserInfo} from "./NavUserInfo";
+import {resetUserData, selectLoginResponse, updateUserData, updateSchedule} from "../Shared/Store";
 import {getUserAuthContentFromResponse} from "../Shared/Models/Auth";
 
-const Title = "Расписание"
-
-export function NavigationController() {
+export function NavigationBar() {
     const userData = useAppSelector(selectLoginResponse)
     const dispatch = useAppDispatch()
 
-    const responseGoogle = (response: (GoogleLoginResponse | GoogleLoginResponseOffline)) => {
+    const loginSuccess = (response: (GoogleLoginResponse | GoogleLoginResponseOffline)) => {
         const r = response as GoogleLoginResponse;
         dispatch(updateUserData(getUserAuthContentFromResponse(r)))
     }
 
-    const logout = () => {
+    const logoutSuccess = () => {
         dispatch(resetUserData())
+        dispatch(updateSchedule([]))
     }
 
     return <Navbar bg="light" expand="lg">
-        <Navbar.Brand className="title" href="/">{Title}</Navbar.Brand>
+        <Navbar.Brand className="title" href="/">Расписание</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
@@ -37,7 +35,7 @@ export function NavigationController() {
                     <Nav.Item>
                         <GoogleLogin
                             clientId={authProps.clientId}
-                            onSuccess={responseGoogle}
+                            onSuccess={loginSuccess}
                             onFailure={err => console.log('fail', err)}
                             isSignedIn={true}
                             cookiePolicy={'single_host_origin'}
@@ -47,8 +45,8 @@ export function NavigationController() {
                     </Nav.Item>
                 }
                 {userData &&
-                    <NavUserInfo data={userData} renderLogoutButton={
-                        () => <GoogleLogout onLogoutSuccess={logout} clientId={authProps.clientId}/>
+                    <UserMenu data={userData} renderLogoutButton={
+                        () => <GoogleLogout onLogoutSuccess={logoutSuccess} clientId={authProps.clientId}/>
                     }/>
                 }
             </Nav>

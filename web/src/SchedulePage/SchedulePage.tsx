@@ -1,12 +1,12 @@
 import React from "react";
 import {WeekSchedule} from "./WeekSchedule";
-import {ScheduleController} from "./ScheduleController/ScheduleController";
+import {ScheduleControlTab} from "./ScheduleControlTab/ScheduleControlTab";
 import {Container} from "react-bootstrap";
 import "./SchedulePage.css"
 
 export function SchedulePage() {
     return <Container className={"schedule-page"}>
-        <ScheduleController/>
+        <ScheduleControlTab/>
         <WeekSchedule/>
     </Container>
 }

@@ -1,14 +1,13 @@
 import React from "react";
 import {format} from "date-fns";
 import {useAppDispatch, useAppSelector} from "../../Shared/Hooks";
-import {selectSelectedWeekEnd, selectSelectedWeekStart, setPreviousWeek, setNextWeek} from "../../Shared/Store";
+import {setPreviousWeek, setNextWeek, selectWeekPeriod} from "../../Shared/Store";
 import {Button, Container} from "react-bootstrap";
-import "./ScheduleController.css"
+import "./ScheduleControlTab.css"
 
 
-export const ScheduleController: React.FC = () => {
-    const start = useAppSelector(selectSelectedWeekStart)
-    const end = useAppSelector(selectSelectedWeekEnd)
+export const ScheduleControlTab: React.FC = () => {
+    const period = useAppSelector(selectWeekPeriod)
 
     const dispatch = useAppDispatch()
 
@@ -20,8 +19,8 @@ export const ScheduleController: React.FC = () => {
         dispatch(setNextWeek())
     }
 
-    const startFormatted = format(start, "d MMMM u")
-    const endFormatted = format(end, "d MMMM u")
+    const startFormatted = format(period.weekStart, "d MMMM u")
+    const endFormatted = format(period.weekEnd, "d MMMM u")
 
     return <Container>
         <Container className={"week-info"}>
