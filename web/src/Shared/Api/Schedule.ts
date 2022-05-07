@@ -1,7 +1,7 @@
 import {ScheduleDay} from "../Models";
 import {format} from "date-fns";
 
-const ScheduleAPIBaseUrl = process.env.API_BASE_URL || "http://localhost:8080/api"
+const ScheduleAPIBaseUrl = process.env.REACT_APP_API_BASE_URL || "http://localhost:8080/api"
 
 export async function getUserSchedule(tokenId: string, startTime: number, endTime: number): Promise<ScheduleDay[]> {
     const start = format(new Date(startTime), "u-MM-dd")

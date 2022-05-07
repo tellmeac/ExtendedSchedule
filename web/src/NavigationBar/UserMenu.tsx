@@ -9,17 +9,15 @@ type Props = {
 }
 
 export const UserMenu: React.FC<Props> = ({data, renderLogoutButton}) => {
-    return <div className={"user-info"}>
-        <Dropdown align="end">
-            <Dropdown.Toggle id="dropdown-autoclose-outside">
-                <Image className={"user-avatar"} fluid={true} roundedCircle={true} src={data.avatar}/>
-            </Dropdown.Toggle>
+    return <Dropdown className={"user-info"} align="end">
+        <Dropdown.Toggle id="dropdown-autoclose-outside">
+            <Image className={"user-avatar"} fluid={true} roundedCircle={true} src={data.avatar}/>
+        </Dropdown.Toggle>
 
-            <Dropdown.Menu>
-                <Dropdown.Item>
-                    {renderLogoutButton()}
-                </Dropdown.Item>
-            </Dropdown.Menu>
-        </Dropdown>
-    </div>
+        <Dropdown.Menu>
+            <Dropdown.Item>
+                {renderLogoutButton()}
+            </Dropdown.Item>
+        </Dropdown.Menu>
+    </Dropdown>
 }
