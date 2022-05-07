@@ -3,7 +3,6 @@ import {Nav, Navbar} from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./NavigationBar.css"
 import GoogleLogin, {GoogleLoginResponse, GoogleLoginResponseOffline, GoogleLogout} from "react-google-login";
-import {authProps} from "../auth";
 import {useAppDispatch, useAppSelector} from "../Shared/Hooks";
 import {selectLoginResponse, updateUserData} from "../Shared/Store";
 import {getUserAuthContentFromResponse} from "../Shared/Models/Auth";
@@ -37,7 +36,7 @@ export function NavigationBar() {
                 {!userData &&
                     <Nav.Item>
                         <GoogleLogin
-                            clientId={authProps.clientId}
+                            clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID || ""}
                             onSuccess={loginSuccess}
                             onFailure={err => console.log('failed to sign in', err)}
                             isSignedIn={true}
@@ -48,9 +47,11 @@ export function NavigationBar() {
                     </Nav.Item>
                 }
                 {userData &&
-                    <UserMenu data={userData} renderLogoutButton={
-                        () => <GoogleLogout onLogoutSuccess={logoutSuccess} clientId={authProps.clientId}/>
-                    }/>
+                    <Nav.Item>
+                        <UserMenu data={userData} renderLogoutButton={
+                            () => <GoogleLogout onLogoutSuccess={logoutSuccess} clientId={process.env.GOOGLE_CLIENT_ID || ""}/>
+                        }/>
+                    </Nav.Item>
                 }
             </Nav>
         </Navbar.Collapse>

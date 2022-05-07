@@ -7,6 +7,8 @@ import {store} from "./Shared/Store";
 import {Provider} from "react-redux";
 import {BrowserRouter} from "react-router-dom";
 
+console.log(process.env)
+
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
