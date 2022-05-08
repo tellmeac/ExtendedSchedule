@@ -36,6 +36,7 @@ export const WeekSchedule: React.FC = () => {
     const [columnWeekDayInfo, setColumnWeekDayInfo] = useState<ColumnInfo[]>([]);
 
     const getWeekSchedule = () => {
+        console.log(user)
         if (!user) {
             return
         }
@@ -49,11 +50,9 @@ export const WeekSchedule: React.FC = () => {
 
     useEffect(() => {
         getWeekSchedule()
+        setColumnWeekDayInfo(generateColumnsInfo(weekSchedule))
     }, [weekPeriod, user])
 
-    useMemo(() => {
-        setColumnWeekDayInfo(generateColumnsInfo(weekSchedule))
-    }, [weekSchedule])
 
     return <Table striped bordered hover>
         <thead>
