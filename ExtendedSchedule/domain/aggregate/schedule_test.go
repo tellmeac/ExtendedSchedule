@@ -1,4 +1,4 @@
-package aggregates
+package aggregate
 
 import (
 	"github.com/stretchr/testify/require"

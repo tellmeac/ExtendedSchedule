@@ -2,9 +2,9 @@ package userconfig
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"net/http"
-	"tellmeac/extended-schedule/domain/aggregates"
+	"tellmeac/extended-schedule/domain/aggregate"
+	"tellmeac/extended-schedule/utils/middleware"
 	"tellmeac/extended-schedule/utils/shortcuts"
 )
 
@@ -19,18 +19,20 @@ type Endpoints struct {
 }
 
 func (e Endpoints) Bind(router gin.IRouter) {
-	router.GET("/user/:userID/config", e.GetConfig)
-	router.PATCH("/user/:userID/config", e.UpdateConfig)
+	router.GET("/user/config", e.GetConfig)
+	router.PATCH("/user/config", e.UpdateConfig)
 }
 
 func (e Endpoints) GetConfig(ctx *gin.Context) {
-	userID, err := uuid.Parse(ctx.Param("userID"))
+	userIdentifier, err := middleware.GetGoogleEmail(ctx)
 	if err != nil {
-		shortcuts.HandleBadRequest(ctx, err.Error())
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+			"error": "unauthorized",
+		})
 		return
 	}
 
-	config, err := e.service.GetUserConfig(ctx, userID)
+	config, err := e.service.GetUserConfig(ctx, userIdentifier)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, err)
 		return
@@ -39,24 +41,21 @@ func (e Endpoints) GetConfig(ctx *gin.Context) {
 }
 
 func (e Endpoints) UpdateConfig(ctx *gin.Context) {
-	userID, err := uuid.Parse(ctx.Param("userID"))
-	if err != nil {
-		shortcuts.HandleBadRequest(ctx, err.Error())
-		return
-	}
-
-	var desired aggregates.UserConfig
+	var desired aggregate.UserConfig
 	if err := ctx.ShouldBindJSON(&desired); err != nil {
 		shortcuts.HandleBadRequest(ctx, err.Error())
 		return
 	}
 
-	if userID != desired.UserID {
-		shortcuts.HandleBadRequest(ctx, "userID in path should be equal to json body usedID field")
+	userIdentifier, err := middleware.GetGoogleEmail(ctx)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+			"error": "unauthorized",
+		})
 		return
 	}
 
-	if err := e.service.UpdateUserConfig(ctx, desired); err != nil {
+	if err := e.service.UpdateUserConfig(ctx, userIdentifier, desired); err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

@@ -6,7 +6,8 @@ import (
 	"github.com/google/uuid"
 	"net/http"
 	"tellmeac/extended-schedule/domain"
-	"tellmeac/extended-schedule/domain/aggregates"
+	"tellmeac/extended-schedule/domain/aggregate"
+	"tellmeac/extended-schedule/utils/middleware"
 	"tellmeac/extended-schedule/utils/shortcuts"
 	"time"
 )
@@ -20,25 +21,27 @@ type Endpoints struct {
 }
 
 func (e Endpoints) Bind(router gin.IRouter) {
-	router.GET("/schedule/personal/:userID", e.GetPersonalSchedule)
+	router.GET("/schedule/personal", e.GetPersonalSchedule)
 	router.GET("/schedule/groups/:groupID", e.GetGroupSchedule)
 	router.GET("/schedule/groups/:groupID/lessons/:lessonID", e.GetLessonSchedule)
 }
 
 func (e Endpoints) GetPersonalSchedule(ctx *gin.Context) {
-	userID, err := uuid.Parse(ctx.Param("userID"))
-	if err != nil {
-		shortcuts.HandleBadRequest(ctx, err.Error())
-		return
-	}
-
 	start, end, err := e.ExtractScheduleQuery(ctx)
 	if err != nil {
 		shortcuts.HandleBadRequest(ctx, err.Error())
 		return
 	}
 
-	days, err := e.service.GetPersonal(ctx, userID, start, end)
+	userIdentifier, err := middleware.GetGoogleEmail(ctx)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+			"error": "unauthorized",
+		})
+		return
+	}
+
+	days, err := e.service.GetPersonal(ctx, userIdentifier, start, end)
 	if err != nil {
 		ctx.AbortWithStatusJSON(
 			http.StatusInternalServerError,
@@ -133,7 +136,7 @@ func (e Endpoints) ExtractScheduleQuery(ctx *gin.Context) (start time.Time, end 
 	return
 }
 
-func mapSchedule(schedule []aggregates.DaySchedule) []DaySchedule {
+func mapSchedule(schedule []aggregate.DaySchedule) []DaySchedule {
 	var result = make([]DaySchedule, len(schedule))
 	for i, d := range schedule {
 		result[i] = DaySchedule{
@@ -142,4 +145,9 @@ func mapSchedule(schedule []aggregates.DaySchedule) []DaySchedule {
 		}
 	}
 	return result
+}
+
+// isCorrectUser asserts that authorized user is the same that passed to API.
+func isCorrectUser(ctx *gin.Context, userID uuid.UUID) (bool, error) {
+	return true, nil
 }

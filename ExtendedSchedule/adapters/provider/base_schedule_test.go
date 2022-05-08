@@ -1,8 +1,8 @@
-package providers
+package provider
 
 import (
 	"context"
-	"tellmeac/extended-schedule/adapters/clients/tsuschedule"
+	"tellmeac/extended-schedule/adapters/client/tsuschedule"
 	"tellmeac/extended-schedule/config"
 	"tellmeac/extended-schedule/infrastructure/log"
 	"testing"

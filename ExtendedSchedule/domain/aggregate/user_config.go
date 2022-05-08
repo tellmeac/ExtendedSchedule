@@ -1,12 +1,11 @@
-package aggregates
+package aggregate
 
 import (
-	"github.com/google/uuid"
 	"tellmeac/extended-schedule/domain/entity"
 )
 
 type UserConfig struct {
-	UserID          uuid.UUID               `json:"userID"`
+	UserIdentifier  string                  `json:"userIdentifier"`
 	JoinedGroups    []entity.GroupInfo      `json:"joinedGroups"`
 	ExcludedLessons []entity.ExcludedLesson `json:"excludedLessons"`
 }

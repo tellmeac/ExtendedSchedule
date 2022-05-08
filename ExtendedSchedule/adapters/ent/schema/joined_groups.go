@@ -1,7 +1,7 @@
 package schema
 
 import (
-	"entgo.io/ent/schema/index"
+	"entgo.io/ent/schema/edge"
 	"tellmeac/extended-schedule/domain/entity"
 
 	"entgo.io/ent"
@@ -14,22 +14,18 @@ type JoinedGroups struct {
 	ent.Schema
 }
 
-// Fields of the UserConfig.
+// Fields of the JoinedGroups.
 func (JoinedGroups) Fields() []ent.Field {
 	return []ent.Field{
-		field.UUID("id", uuid.UUID{}).Default(uuid.New),
+		field.Int("id"),
 		field.UUID("UserID", uuid.UUID{}),
 		field.JSON("JoinedGroups", []entity.GroupInfo{}),
 	}
 }
 
-func (JoinedGroups) Indexes() []ent.Index {
-	return []ent.Index{
-		index.Fields("UserID").Unique(),
-	}
-}
-
-// Edges of the UserConfig.
+// Edges of the JoinedGroups.
 func (JoinedGroups) Edges() []ent.Edge {
-	return nil
+	return []ent.Edge{
+		edge.From("UserInfo", UserInfo.Type).Ref("JoinedGroups").Unique().Field("UserID").Required(),
+	}
 }

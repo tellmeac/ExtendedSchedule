@@ -1,17 +1,17 @@
-package providers
+package provider
 
 import (
 	"context"
 	"fmt"
-	"tellmeac/extended-schedule/adapters/clients/tsuschedule"
-	"tellmeac/extended-schedule/domain/aggregates"
+	"tellmeac/extended-schedule/adapters/client/tsuschedule"
+	"tellmeac/extended-schedule/domain/aggregate"
 	"tellmeac/extended-schedule/domain/entity"
-	"tellmeac/extended-schedule/domain/providers"
-	"tellmeac/extended-schedule/domain/values"
+	"tellmeac/extended-schedule/domain/enum"
+	"tellmeac/extended-schedule/domain/provider"
 	"time"
 )
 
-func NewBaseScheduleProvider(client *tsuschedule.Client) providers.IBaseScheduleProvider {
+func NewBaseScheduleProvider(client *tsuschedule.Client) provider.IBaseScheduleProvider {
 	return &BaseScheduleProvider{client: client}
 }
 
@@ -19,7 +19,7 @@ type BaseScheduleProvider struct {
 	client *tsuschedule.Client
 }
 
-func (provider *BaseScheduleProvider) GetByLessonID(ctx context.Context, groupID string, lessonID string, start time.Time, end time.Time) ([]aggregates.DaySchedule, error) {
+func (provider *BaseScheduleProvider) GetByLessonID(ctx context.Context, groupID string, lessonID string, start time.Time, end time.Time) ([]aggregate.DaySchedule, error) {
 	params := tsuschedule.GetScheduleGroupParams{
 		Id:       groupID,
 		DateFrom: start.Format("2006-01-02"),
@@ -40,7 +40,7 @@ func (provider *BaseScheduleProvider) GetByLessonID(ctx context.Context, groupID
 		return nil, fmt.Errorf("failed to get schedule from parsed response: %w", err)
 	}
 
-	var result = make([]aggregates.DaySchedule, len(*scheduleDto.JSON200))
+	var result = make([]aggregate.DaySchedule, len(*scheduleDto.JSON200))
 	for i, day := range *scheduleDto.JSON200 {
 		result[i], err = mapDaySchedule(day)
 		if err != nil {
@@ -52,7 +52,7 @@ func (provider *BaseScheduleProvider) GetByLessonID(ctx context.Context, groupID
 	return result, nil
 }
 
-func filterByLessonID(day *aggregates.DaySchedule, lessonID string) {
+func filterByLessonID(day *aggregate.DaySchedule, lessonID string) {
 	var filteredLessons = make([]entity.Lesson, 0)
 	for _, lesson := range day.Lessons {
 		if lesson.ID == lessonID {
@@ -67,7 +67,7 @@ func (provider *BaseScheduleProvider) GetByGroupID(
 	groupID string,
 	start time.Time,
 	end time.Time,
-) ([]aggregates.DaySchedule, error) {
+) ([]aggregate.DaySchedule, error) {
 	params := tsuschedule.GetScheduleGroupParams{
 		Id:       groupID,
 		DateFrom: start.Format("2006-01-02"),
@@ -88,7 +88,7 @@ func (provider *BaseScheduleProvider) GetByGroupID(
 		return nil, fmt.Errorf("failed to get schedule from parsed response: %w", err)
 	}
 
-	var result = make([]aggregates.DaySchedule, len(*scheduleDto.JSON200))
+	var result = make([]aggregate.DaySchedule, len(*scheduleDto.JSON200))
 	for i, day := range *scheduleDto.JSON200 {
 		result[i], err = mapDaySchedule(day)
 		if err != nil {
@@ -99,13 +99,13 @@ func (provider *BaseScheduleProvider) GetByGroupID(
 	return result, nil
 }
 
-func mapDaySchedule(day tsuschedule.DaySchedule) (aggregates.DaySchedule, error) {
+func mapDaySchedule(day tsuschedule.DaySchedule) (aggregate.DaySchedule, error) {
 	date, err := time.Parse("2006-01-02", day.Date)
 	if err != nil {
-		return aggregates.DaySchedule{}, err
+		return aggregate.DaySchedule{}, err
 	}
 
-	scheduleDay := aggregates.DaySchedule{
+	scheduleDay := aggregate.DaySchedule{
 		Date:    date,
 		Lessons: make([]entity.Lesson, 0, len(day.Lessons)),
 	}
@@ -125,7 +125,7 @@ func mapLesson(dto tsuschedule.Lesson) entity.Lesson {
 	return entity.Lesson{
 		ID:         *dto.Id,
 		Title:      *dto.Title,
-		LessonType: values.LessonType(*dto.LessonType),
+		LessonType: enum.LessonType(*dto.LessonType),
 		Position:   dto.LessonNumber - 1,
 		Audience:   mapAudience(dto.Audience),
 		Groups:     mapGroups(dto.Groups),
