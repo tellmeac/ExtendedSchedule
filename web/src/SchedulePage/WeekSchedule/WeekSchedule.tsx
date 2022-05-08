@@ -36,7 +36,7 @@ export const WeekSchedule: React.FC = () => {
     const [columnWeekDayInfo, setColumnWeekDayInfo] = useState<ColumnInfo[]>([]);
 
     const getWeekSchedule = () => {
-        console.log(user)
+        console.log("User info:", user)
         if (!user) {
             return
         }
@@ -44,7 +44,7 @@ export const WeekSchedule: React.FC = () => {
         getUserSchedule(user?.tokenId || "", weekPeriod.weekStart, weekPeriod.weekEnd).then(days => {
             dispatch(updateSchedule(days))
         }).catch(e => {
-            console.log(e)
+            console.log("Get user schedule error: ", e)
         })
     }
 

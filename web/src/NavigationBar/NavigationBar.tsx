@@ -7,7 +7,7 @@ import {useAppDispatch, useAppSelector} from "../Shared/Hooks";
 import {selectLoginResponse, updateUserData} from "../Shared/Store";
 import {getUserAuthContentFromResponse} from "../Shared/Models/Auth";
 import {UserMenu} from "./UserMenu";
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 export function NavigationBar() {
     const navigate = useNavigate()
@@ -29,8 +29,8 @@ export function NavigationBar() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-                <Nav.Link href="/schedule">Расписание</Nav.Link>
-                <Nav.Link href="/preferences">Параметры</Nav.Link>
+                <Nav.Item><Link className={"nav-link"} to="/schedule">Расписание</Link></Nav.Item>
+                <Nav.Item><Link className={"nav-link"} to="/preferences">Параметры</Link></Nav.Item>
             </Nav>
             <Nav className="mr-auto">
                 {!userData &&
