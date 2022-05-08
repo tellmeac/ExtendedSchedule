@@ -3,56 +3,52 @@ package repository
 import (
 	"context"
 	"fmt"
-	"github.com/google/uuid"
 	"tellmeac/extended-schedule/adapters/ent"
 	"tellmeac/extended-schedule/adapters/ent/excludedlesson"
 	"tellmeac/extended-schedule/adapters/ent/joinedgroups"
-	"tellmeac/extended-schedule/domain/aggregates"
+	"tellmeac/extended-schedule/adapters/ent/userinfo"
+	"tellmeac/extended-schedule/domain/aggregate"
 	"tellmeac/extended-schedule/domain/entity"
 	"tellmeac/extended-schedule/domain/repository"
 )
 
 func NewEntUserConfigRepository(client *ent.Client) repository.IUserConfigRepository {
-	return &EntUserConfigRepository{client: client}
+	return &entUserConfigRepository{client: client}
 }
 
-// EntUserConfigRepository реализует репозиторий для пользовательской конфигурации.
-type EntUserConfigRepository struct {
+// entUserConfigRepository реализует репозиторий для пользовательской конфигурации.
+type entUserConfigRepository struct {
 	client *ent.Client
 }
 
-func (repository EntUserConfigRepository) Get(ctx context.Context, userID uuid.UUID) (aggregates.UserConfig, error) {
-	tx, err := repository.client.Tx(ctx)
+func (repository entUserConfigRepository) Get(ctx context.Context, userIdentifier string) (aggregate.UserConfig, error) {
+	dbo, err := repository.client.UserInfo.Query().Where(userinfo.EmailEqualFold(userIdentifier)).
+		WithExcludedLessons().
+		WithJoinedGroups().
+		Only(ctx)
 	if err != nil {
-		return aggregates.UserConfig{}, err
+		return aggregate.UserConfig{}, err
 	}
 
-	joinedGroups, err := tx.JoinedGroups.Query().Where(joinedgroups.UserIDEQ(userID)).Only(ctx)
-	if err != nil {
-		return aggregates.UserConfig{}, rollback(tx, fmt.Errorf("failed to get joined groups: %w", err))
-	}
-
-	excluded, err := tx.ExcludedLesson.Query().Where(excludedlesson.UserIDEQ(userID)).All(ctx)
-	if err != nil {
-		return aggregates.UserConfig{}, rollback(tx, fmt.Errorf("failed to get excluded lessons: %w", err))
-	}
-
-	if err := tx.Commit(); err != nil {
-		return aggregates.UserConfig{}, fmt.Errorf("failed to commit select request: %w", err)
-	}
-
-	return aggregates.UserConfig{
-		UserID:          userID,
-		JoinedGroups:    joinedGroups.JoinedGroups,
-		ExcludedLessons: mapExcluded(excluded),
+	return aggregate.UserConfig{
+		UserIdentifier:  dbo.Email,
+		JoinedGroups:    mapJoinedGroups(dbo.Edges.JoinedGroups),
+		ExcludedLessons: mapExcluded(dbo.Edges.ExcludedLessons),
 	}, nil
+}
+
+func mapJoinedGroups(groups []*ent.JoinedGroups) []entity.GroupInfo {
+	if len(groups) == 0 {
+		return nil
+	}
+	return groups[0].JoinedGroups
 }
 
 func mapExcluded(excluded []*ent.ExcludedLesson) []entity.ExcludedLesson {
 	var result = make([]entity.ExcludedLesson, 0, len(excluded))
 	for _, e := range excluded {
 		result = append(result, entity.ExcludedLesson{
-			ID:       e.ID,
+			ID:       e.UserID,
 			LessonID: e.LessonID,
 			Teacher:  e.Teacher,
 			Position: e.Position,
@@ -62,13 +58,18 @@ func mapExcluded(excluded []*ent.ExcludedLesson) []entity.ExcludedLesson {
 	return result
 }
 
-func (repository EntUserConfigRepository) Update(ctx context.Context, userID uuid.UUID, desired aggregates.UserConfig) error {
+func (repository entUserConfigRepository) Update(ctx context.Context, userIdentifier string, desired aggregate.UserConfig) error {
+	userInfo, err := repository.client.UserInfo.Query().Where(userinfo.EmailEqualFold(userIdentifier)).Only(ctx)
+	if err != nil {
+		return err
+	}
+
 	tx, err := repository.client.Tx(ctx)
 	if err != nil {
 		return err
 	}
 
-	if _, err := tx.ExcludedLesson.Delete().Where(excludedlesson.UserIDEQ(userID)).Exec(ctx); err != nil {
+	if _, err := tx.ExcludedLesson.Delete().Where(excludedlesson.UserIDEQ(userInfo.ID)).Exec(ctx); err != nil {
 		return rollback(tx, err)
 	}
 
@@ -85,7 +86,7 @@ func (repository EntUserConfigRepository) Update(ctx context.Context, userID uui
 	}
 
 	if err := tx.JoinedGroups.Update().
-		Where(joinedgroups.UserIDEQ(userID)).
+		Where(joinedgroups.UserIDEQ(userInfo.ID)).
 		SetJoinedGroups(desired.JoinedGroups).
 		Exec(ctx); err != nil {
 		return rollback(tx, err)

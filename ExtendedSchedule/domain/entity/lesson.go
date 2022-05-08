@@ -1,17 +1,15 @@
 package entity
 
-import (
-	"tellmeac/extended-schedule/domain/values"
-)
+import "tellmeac/extended-schedule/domain/enum"
 
 type Lesson struct {
-	ID         string            `json:"id"`
-	Title      string            `json:"title"`
-	LessonType values.LessonType `json:"lessonType"`
-	Position   int               `json:"position"`
-	Teacher    TeacherInfo       `json:"teacher"`
-	Audience   AudienceInfo      `json:"audience"`
-	Groups     []GroupInfo       `json:"groups"`
+	ID         string          `json:"id"`
+	Title      string          `json:"title"`
+	Position   int             `json:"position"`
+	LessonType enum.LessonType `json:"lessonType"`
+	Teacher    TeacherInfo     `json:"teacher"`
+	Audience   AudienceInfo    `json:"audience"`
+	Groups     []GroupInfo     `json:"groups"`
 }
 
 func (lesson Lesson) Equal(other *Lesson) bool {

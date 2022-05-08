@@ -2,8 +2,8 @@ package schema
 
 import (
 	"entgo.io/ent"
+	"entgo.io/ent/schema/edge"
 	"entgo.io/ent/schema/field"
-	"entgo.io/ent/schema/index"
 	"github.com/google/uuid"
 	"tellmeac/extended-schedule/domain/entity"
 )
@@ -16,7 +16,7 @@ type ExcludedLesson struct {
 // Fields of the ExcludedLesson.
 func (ExcludedLesson) Fields() []ent.Field {
 	return []ent.Field{
-		field.UUID("id", uuid.UUID{}).Default(uuid.New),
+		field.Int("id"),
 		field.UUID("UserID", uuid.UUID{}),
 		field.String("LessonID"),
 		field.Int("Position"),
@@ -25,13 +25,9 @@ func (ExcludedLesson) Fields() []ent.Field {
 	}
 }
 
-func (ExcludedLesson) Indexes() []ent.Index {
-	return []ent.Index{
-		index.Fields("UserID"),
-	}
-}
-
 // Edges of the ExcludedLesson.
 func (ExcludedLesson) Edges() []ent.Edge {
-	return nil
+	return []ent.Edge{
+		edge.From("UserInfo", UserInfo.Type).Ref("ExcludedLessons").Unique().Field("UserID").Required(),
+	}
 }

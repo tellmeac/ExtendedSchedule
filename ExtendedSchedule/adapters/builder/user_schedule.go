@@ -2,15 +2,14 @@ package builder
 
 import (
 	"context"
-	"github.com/google/uuid"
-	"tellmeac/extended-schedule/domain/aggregates"
+	"tellmeac/extended-schedule/domain/aggregate"
 	"tellmeac/extended-schedule/domain/builder"
-	"tellmeac/extended-schedule/domain/providers"
+	"tellmeac/extended-schedule/domain/provider"
 	"tellmeac/extended-schedule/domain/repository"
 	"time"
 )
 
-func NewUserScheduleBuilder(schedule providers.IBaseScheduleProvider, configs repository.IUserConfigRepository) builder.IUserScheduleBuilder {
+func NewUserScheduleBuilder(schedule provider.IBaseScheduleProvider, configs repository.IUserConfigRepository) builder.IUserScheduleBuilder {
 	return &UserScheduleBuilder{
 		scheduleProvider: schedule,
 		configs:          configs,
@@ -18,14 +17,14 @@ func NewUserScheduleBuilder(schedule providers.IBaseScheduleProvider, configs re
 }
 
 type UserScheduleBuilder struct {
-	scheduleProvider providers.IBaseScheduleProvider
+	scheduleProvider provider.IBaseScheduleProvider
 	configs          repository.IUserConfigRepository
 }
 
-func (builder UserScheduleBuilder) Make(ctx context.Context, userID uuid.UUID, start time.Time, end time.Time) ([]aggregates.DaySchedule, error) {
-	var schedule []aggregates.DaySchedule = nil
+func (builder UserScheduleBuilder) Make(ctx context.Context, userIdentifier string, start time.Time, end time.Time) ([]aggregate.DaySchedule, error) {
+	var schedule []aggregate.DaySchedule = nil
 
-	config, err := builder.configs.Get(ctx, userID)
+	config, err := builder.configs.Get(ctx, userIdentifier)
 	if err != nil {
 		return nil, err
 	}
@@ -36,7 +35,7 @@ func (builder UserScheduleBuilder) Make(ctx context.Context, userID uuid.UUID, s
 			return nil, err
 		}
 
-		schedule, err = aggregates.JoinSchedules(schedule, groupSchedule)
+		schedule, err = aggregate.JoinSchedules(schedule, groupSchedule)
 		if err != nil {
 			return nil, err
 		}
