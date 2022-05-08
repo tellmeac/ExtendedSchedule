@@ -7,13 +7,17 @@ export async function getUserSchedule(tokenId: string, startTime: number, endTim
     const start = format(new Date(startTime), "u-MM-dd")
     const end = format(new Date(endTime), "u-MM-dd")
 
-    const url = `${ScheduleAPIBaseUrl}/schedule/groups/3c9f5a5d-ffca-11eb-8169-005056bc249c?start=${start}&end=${end}`
-    const response = await fetch(url, {
+    const url = `${ScheduleAPIBaseUrl}/schedule/personal?start=${start}&end=${end}`
+    const response = fetch(url, {
         method: 'GET',
         headers: {
             "Authorization": `Bearer ${tokenId}`,
         },
     });
 
-    return (await response.json()) as ScheduleDay[]
+    return response.then(r => {
+        return r.json() as Promise<ScheduleDay[]>
+    }).catch(err => {
+        throw err
+    })
 }

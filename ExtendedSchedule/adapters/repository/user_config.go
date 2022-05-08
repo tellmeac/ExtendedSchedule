@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"fmt"
+	"github.com/pkg/errors"
 	"tellmeac/extended-schedule/adapters/ent"
 	"tellmeac/extended-schedule/adapters/ent/excludedlesson"
 	"tellmeac/extended-schedule/adapters/ent/joinedgroups"
@@ -12,20 +13,36 @@ import (
 	"tellmeac/extended-schedule/domain/repository"
 )
 
+// NewEntUserConfigRepository создает репозиторий для пользовательской конфигурации.
 func NewEntUserConfigRepository(client *ent.Client) repository.IUserConfigRepository {
 	return &entUserConfigRepository{client: client}
 }
 
-// entUserConfigRepository реализует репозиторий для пользовательской конфигурации.
 type entUserConfigRepository struct {
 	client *ent.Client
 }
 
-func (repository entUserConfigRepository) Get(ctx context.Context, userIdentifier string) (aggregate.UserConfig, error) {
-	dbo, err := repository.client.UserInfo.Query().Where(userinfo.EmailEqualFold(userIdentifier)).
+func (r entUserConfigRepository) Init(ctx context.Context, userIdentifier string) (aggregate.UserConfig, error) {
+	userInfo, err := r.client.UserInfo.Create().SetEmail(userIdentifier).Save(ctx)
+	if err != nil {
+		return aggregate.UserConfig{}, err
+	}
+
+	return aggregate.UserConfig{
+		UserIdentifier:  userInfo.Email,
+		JoinedGroups:    nil,
+		ExcludedLessons: nil,
+	}, nil
+}
+
+func (r entUserConfigRepository) Get(ctx context.Context, userIdentifier string) (aggregate.UserConfig, error) {
+	dbo, err := r.client.UserInfo.Query().Where(userinfo.EmailEqualFold(userIdentifier)).
 		WithExcludedLessons().
 		WithJoinedGroups().
 		Only(ctx)
+	if errors.Is(err, &ent.NotFoundError{}) {
+		return aggregate.UserConfig{}, fmt.Errorf("user = %s: %w", userIdentifier, repository.ErrConfigNotFound)
+	}
 	if err != nil {
 		return aggregate.UserConfig{}, err
 	}
@@ -33,7 +50,7 @@ func (repository entUserConfigRepository) Get(ctx context.Context, userIdentifie
 	return aggregate.UserConfig{
 		UserIdentifier:  dbo.Email,
 		JoinedGroups:    mapJoinedGroups(dbo.Edges.JoinedGroups),
-		ExcludedLessons: mapExcluded(dbo.Edges.ExcludedLessons),
+		ExcludedLessons: mapExcludedLessons(dbo.Edges.ExcludedLessons),
 	}, nil
 }
 
@@ -44,7 +61,7 @@ func mapJoinedGroups(groups []*ent.JoinedGroups) []entity.GroupInfo {
 	return groups[0].JoinedGroups
 }
 
-func mapExcluded(excluded []*ent.ExcludedLesson) []entity.ExcludedLesson {
+func mapExcludedLessons(excluded []*ent.ExcludedLesson) []entity.ExcludedLesson {
 	var result = make([]entity.ExcludedLesson, 0, len(excluded))
 	for _, e := range excluded {
 		result = append(result, entity.ExcludedLesson{
@@ -58,13 +75,13 @@ func mapExcluded(excluded []*ent.ExcludedLesson) []entity.ExcludedLesson {
 	return result
 }
 
-func (repository entUserConfigRepository) Update(ctx context.Context, userIdentifier string, desired aggregate.UserConfig) error {
-	userInfo, err := repository.client.UserInfo.Query().Where(userinfo.EmailEqualFold(userIdentifier)).Only(ctx)
+func (r entUserConfigRepository) Update(ctx context.Context, userIdentifier string, desired aggregate.UserConfig) error {
+	userInfo, err := r.client.UserInfo.Query().Where(userinfo.EmailEqualFold(userIdentifier)).Only(ctx)
 	if err != nil {
 		return err
 	}
 
-	tx, err := repository.client.Tx(ctx)
+	tx, err := r.client.Tx(ctx)
 	if err != nil {
 		return err
 	}
