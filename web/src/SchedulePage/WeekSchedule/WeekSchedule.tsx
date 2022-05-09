@@ -9,7 +9,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import {useAppDispatch, useAppSelector} from "../../Shared/Hooks";
 import {selectWeekPeriod, selectWeekSchedule, updateSchedule} from "../../Shared/Store";
 import {selectLoginResponse} from "../../Shared/Store";
-import {getUserSchedule} from "../../Shared/Api";
+import {getPersonalSchedule} from "../../Shared/Api";
 
 interface ColumnInfo {
     weekDay: string
@@ -41,7 +41,7 @@ export const WeekSchedule: React.FC = () => {
             return
         }
 
-        getUserSchedule(user?.tokenId || "", weekPeriod.weekStart, weekPeriod.weekEnd).then(days => {
+        getPersonalSchedule(user?.tokenId || "", weekPeriod.weekStart, weekPeriod.weekEnd).then(days => {
             dispatch(updateSchedule(days))
         }).catch(e => {
             console.log("Get user schedule error: ", e)

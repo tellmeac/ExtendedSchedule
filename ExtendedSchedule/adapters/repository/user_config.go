@@ -3,7 +3,6 @@ package repository
 import (
 	"context"
 	"fmt"
-	"github.com/pkg/errors"
 	"tellmeac/extended-schedule/adapters/ent"
 	"tellmeac/extended-schedule/adapters/ent/excludedlesson"
 	"tellmeac/extended-schedule/adapters/ent/joinedgroups"
@@ -40,18 +39,18 @@ func (r entUserConfigRepository) Get(ctx context.Context, userIdentifier string)
 		WithExcludedLessons().
 		WithJoinedGroups().
 		Only(ctx)
-	if errors.Is(err, &ent.NotFoundError{}) {
+	switch {
+	case ent.IsNotFound(err):
 		return aggregate.UserConfig{}, fmt.Errorf("user = %s: %w", userIdentifier, repository.ErrConfigNotFound)
-	}
-	if err != nil {
+	case err != nil:
 		return aggregate.UserConfig{}, err
+	default:
+		return aggregate.UserConfig{
+			UserIdentifier:  dbo.Email,
+			JoinedGroups:    mapJoinedGroups(dbo.Edges.JoinedGroups),
+			ExcludedLessons: mapExcludedLessons(dbo.Edges.ExcludedLessons),
+		}, nil
 	}
-
-	return aggregate.UserConfig{
-		UserIdentifier:  dbo.Email,
-		JoinedGroups:    mapJoinedGroups(dbo.Edges.JoinedGroups),
-		ExcludedLessons: mapExcludedLessons(dbo.Edges.ExcludedLessons),
-	}, nil
 }
 
 func mapJoinedGroups(groups []*ent.JoinedGroups) []entity.GroupInfo {

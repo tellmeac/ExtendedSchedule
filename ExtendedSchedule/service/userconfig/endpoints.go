@@ -27,14 +27,16 @@ func (e Endpoints) GetConfig(ctx *gin.Context) {
 	userIdentifier, err := middleware.GetGoogleEmail(ctx)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-			"error": "unauthorized",
+			"error": err.Error(),
 		})
 		return
 	}
 
 	config, err := e.service.GetUserConfig(ctx, userIdentifier)
 	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusInternalServerError, err)
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
 		return
 	}
 	ctx.JSON(http.StatusOK, config)
