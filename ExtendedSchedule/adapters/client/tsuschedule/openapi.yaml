@@ -44,6 +44,43 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/DaySchedule"
+  /faculties:
+    get:
+      summary: Get all faculties
+      tags:
+        - ScheduleAPI
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                title: "List of all faculties"
+                type: array
+                items:
+                  $ref: "#/components/schemas/FacultyInfo"
+
+  /faculties/{facultyID}/groups:
+    get:
+      summary: Get all groups for specific faculty
+      tags:
+        - ScheduleAPI
+      parameters:
+        - name: facultyID
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                title: "List of groups"
+                type: array
+                items:
+                  $ref: "#/components/schemas/GroupInfo"
 
 components:
   schemas:
@@ -61,7 +98,6 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/Lesson"
-
     Lesson:
       type: object
       title: "Lesson"
@@ -89,7 +125,6 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/GroupInfo"
-
     GroupInfo:
       type: object
       title: "Group Info"
@@ -103,7 +138,6 @@ components:
         name:
           type: string
           example: "931901"
-
     AudienceInfo:
       type: object
       title: "Audience Info"
@@ -118,3 +152,17 @@ components:
         name:
           type: string
           example: "104"
+    FacultyInfo:
+      type: object
+      title: "Faculty Info"
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          nullable: true
+          example: "faculty-identifier"
+        name:
+          type: string
+          example: "Институт Прикладной Математики и Компьютерных Наук"
