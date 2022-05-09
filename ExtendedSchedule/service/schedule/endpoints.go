@@ -35,7 +35,7 @@ func (e Endpoints) GetPersonalSchedule(ctx *gin.Context) {
 	userIdentifier, err := middleware.GetGoogleEmail(ctx)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-			"error": "unauthorized",
+			"error": err.Error(),
 		})
 		return
 	}

@@ -40,11 +40,11 @@ func GetGoogleEmail(ctx *gin.Context) (string, error) {
 	}
 
 	var result GoogleToken
-	token, err := jwt.ParseWithClaims(jwtToken, result, nil)
+	_, _, err := jwt.NewParser().ParseUnverified(jwtToken, &result)
 	if err != nil {
 		return "", err
 	}
-	return token.Claims.(GoogleToken).Email, nil
+	return result.Email, nil
 }
 
 func GoogleOAuth2() gin.HandlerFunc {
