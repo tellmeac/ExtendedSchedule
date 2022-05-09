@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"tellmeac/extended-schedule/adapters/client/tsuschedule"
+	"tellmeac/extended-schedule/domain"
 	"tellmeac/extended-schedule/domain/aggregate"
 	"tellmeac/extended-schedule/domain/entity"
 	"tellmeac/extended-schedule/domain/enum"
@@ -22,8 +23,8 @@ type BaseScheduleProvider struct {
 func (provider *BaseScheduleProvider) GetByLessonID(ctx context.Context, groupID string, lessonID string, start time.Time, end time.Time) ([]aggregate.DaySchedule, error) {
 	params := tsuschedule.GetScheduleGroupParams{
 		Id:       groupID,
-		DateFrom: start.Format("2006-01-02"),
-		DateTo:   end.Format("2006-01-02"),
+		DateFrom: start.Format(domain.ScheduleDateFormat),
+		DateTo:   end.Format(domain.ScheduleDateFormat),
 	}
 
 	response, err := provider.client.GetScheduleGroup(ctx, &params)
@@ -70,8 +71,8 @@ func (provider *BaseScheduleProvider) GetByGroupID(
 ) ([]aggregate.DaySchedule, error) {
 	params := tsuschedule.GetScheduleGroupParams{
 		Id:       groupID,
-		DateFrom: start.Format("2006-01-02"),
-		DateTo:   end.Format("2006-01-02"),
+		DateFrom: start.Format(domain.ScheduleDateFormat),
+		DateTo:   end.Format(domain.ScheduleDateFormat),
 	}
 
 	response, err := provider.client.GetScheduleGroup(ctx, &params)
@@ -100,7 +101,7 @@ func (provider *BaseScheduleProvider) GetByGroupID(
 }
 
 func mapDaySchedule(day tsuschedule.DaySchedule) (aggregate.DaySchedule, error) {
-	date, err := time.Parse("2006-01-02", day.Date)
+	date, err := time.Parse(domain.ScheduleDateFormat, day.Date)
 	if err != nil {
 		return aggregate.DaySchedule{}, err
 	}

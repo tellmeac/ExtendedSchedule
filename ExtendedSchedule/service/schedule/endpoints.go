@@ -3,7 +3,6 @@ package schedule
 import (
 	"errors"
 	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"net/http"
 	"tellmeac/extended-schedule/domain"
 	"tellmeac/extended-schedule/domain/aggregate"
@@ -47,7 +46,7 @@ func (e Endpoints) GetPersonalSchedule(ctx *gin.Context) {
 			http.StatusInternalServerError,
 			gin.H{
 				"error":   err.Error(),
-				"context": "Failed to build personal schedule days",
+				"context": "Failed to build personal schedule days: %s",
 			},
 		)
 		return
@@ -140,14 +139,9 @@ func mapSchedule(schedule []aggregate.DaySchedule) []DaySchedule {
 	var result = make([]DaySchedule, len(schedule))
 	for i, d := range schedule {
 		result[i] = DaySchedule{
-			Date:    d.Date.Format("2006-01-02"),
+			Date:    d.Date.Format(domain.ScheduleDateFormat),
 			Lessons: d.Lessons,
 		}
 	}
 	return result
-}
-
-// isCorrectUser asserts that authorized user is the same that passed to API.
-func isCorrectUser(ctx *gin.Context, userID uuid.UUID) (bool, error) {
-	return true, nil
 }
