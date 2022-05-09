@@ -1,29 +1,23 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {WeekSchedule} from "./WeekSchedule";
 import {ScheduleControlTab} from "./ScheduleControlTab/ScheduleControlTab";
 import {Container} from "react-bootstrap";
 import "./SchedulePage.css"
 import {useAppDispatch, useAppSelector} from "../Shared/Hooks";
-import {
-    selectUserData,
-    selectWeekPeriod,
-    selectWeekSchedule,
-    setNextWeek,
-    setPreviousWeek,
-    updateSchedule
-} from "../Shared/Store";
+import {selectUserData, selectWeekPeriod, setNextWeek, setPreviousWeek} from "../Shared/Store";
 import {getPersonalSchedule} from "../Shared/Api";
+import {ScheduleDay} from "../Shared/Models";
 
 export function SchedulePage() {
     const dispatch = useAppDispatch()
 
     const user = useAppSelector(selectUserData)
     const period = useAppSelector(selectWeekPeriod)
-    const schedule = useAppSelector(selectWeekSchedule)
+    const [schedule, setSchedule] = useState<ScheduleDay[]>([])
 
     useEffect(()=>{
         getPersonalSchedule(user?.tokenId || "", period.weekStart, period.weekEnd).then((r)=>{
-            dispatch(updateSchedule(r))
+            setSchedule(r)
         }).catch((err)=>{
             console.error(err)
         })
