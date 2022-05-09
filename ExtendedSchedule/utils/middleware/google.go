@@ -17,11 +17,11 @@ type GoogleToken struct {
 	Sub string `json:"sub"`
 	Azp string `json:"azp"`
 	Aud string `json:"aud"`
-	Iat string `json:"iat"`
-	Exp string `json:"exp"`
+	Iat int    `json:"iat"`
+	Exp int    `json:"exp"`
 
 	Email         string `json:"email"`
-	EmailVerified string `json:"email_verified"`
+	EmailVerified bool   `json:"email_verified"`
 	Name          string `json:"name"`
 	Picture       string `json:"picture"`
 	GivenName     string `json:"given_name"`
@@ -39,14 +39,10 @@ func GetGoogleEmail(ctx *gin.Context) (string, error) {
 		return "", errors.New("tokenID not found in context")
 	}
 
-	emptyKeyFunc := func(token *jwt.Token) (interface{}, error) {
-		return nil, nil
-	}
-
 	var result GoogleToken
-	token, err := jwt.NewParser(jwt.WithoutClaimsValidation()).ParseWithClaims(jwtToken, &result, emptyKeyFunc)
+	token, err := jwt.ParseWithClaims(jwtToken, result, nil)
 	if err != nil {
-		return "", nil
+		return "", err
 	}
 	return token.Claims.(GoogleToken).Email, nil
 }
