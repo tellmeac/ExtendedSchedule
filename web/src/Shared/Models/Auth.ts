@@ -1,15 +1,22 @@
 import {GoogleLoginResponse} from "react-google-login";
 
-export interface UserAuthContent {
+/**
+ * Basic user's data
+ */
+export interface UserData {
     tokenId: string
     avatar: string
     name: string
 }
 
-export function getUserAuthContentFromResponse(r: GoogleLoginResponse): UserAuthContent {
-    const basic = r.getBasicProfile()
+/**
+ * Returns user data from google login response
+ * @param response
+ */
+export function getUserAuthContentFromResponse(response: GoogleLoginResponse): UserData {
+    const basic = response.getBasicProfile()
     return {
-        tokenId: r.tokenId,
+        tokenId: response.tokenId,
         avatar: basic.getImageUrl(),
         name: basic.getName()
     }

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect} from "react";
 import {WeekSchedule} from "./WeekSchedule";
 import {ScheduleControlTab} from "./ScheduleControlTab/ScheduleControlTab";
 import {Container} from "react-bootstrap";
