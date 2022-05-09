@@ -1,7 +1,7 @@
 import React from "react";
 import {ScheduleDay} from "../../Shared/Models";
 import {Table} from "react-bootstrap";
-import {format} from "date-fns";
+import {add, format} from "date-fns";
 import "./WeekSchedule.css"
 import {Intervals, IntervalSectionsCount} from "../../Shared/Definitions";
 import {LessonCell} from "../LessonCell";
@@ -23,7 +23,7 @@ export const WeekSchedule: React.FC<WeekScheduleProps> = ({startDay, endDay, sch
         <tr>
             <th key="-1"/>
             {
-                dayInfo(schedule).map((colInfo)=>{
+                dayInfo(startDay, endDay).map((colInfo)=>{
                     return <th key={colInfo.weekDay}>
                         <div className={"day-header"}>
                             <span className={"day-header-weekday"}>{colInfo.weekDay}</span>
@@ -62,11 +62,20 @@ interface ColumnInfo {
 
 /**
  * Generates day header info for table header
- * @param days is a schedule days, where date will be taken from
+ * @param startDay
+ * @param endDay
  */
-function dayInfo(days: ScheduleDay[]): ColumnInfo[] {
-    return days.map((day) => {
-        const date = new Date(day.date)
+function dayInfo(startDay: number, endDay: number): ColumnInfo[] {
+    const dates: number[] = []
+    let end = new Date(endDay)
+    let d = new Date(startDay)
+    while (d <= end) {
+        dates.push(d.getTime())
+        d = add(d, {days: 1})
+    }
+
+    return dates.map((d) => {
+        const date = new Date(d)
         return {
             weekDay: format(date, "E"),
             shortDate: format(date, "d LLL.")
