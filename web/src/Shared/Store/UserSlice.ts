@@ -1,9 +1,9 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 import {RootState} from "./Root";
-import {UserAuthContent} from "../Models/Auth";
+import {UserData} from "../Models/Auth";
 
 export interface UserState {
-    data?: UserAuthContent
+    data?: UserData
 }
 
 const initialUserState: UserState = {
@@ -14,15 +14,12 @@ export const userSlice = createSlice({
     name: "user",
     initialState: initialUserState,
     reducers: {
-        updateUserData: (state, action: PayloadAction<UserAuthContent>) => {
+        updateUserData: (state, action: PayloadAction<UserData>) => {
             state.data = action.payload
-        },
-        resetUserData: (state) => {
-            state.data = undefined
         },
     }
 })
 
 export const selectUserData = (state: RootState) => state.user.data
 
-export const { updateUserData, resetUserData } = userSlice.actions
+export const { updateUserData } = userSlice.actions

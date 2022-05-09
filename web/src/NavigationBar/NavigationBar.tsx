@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {Nav, Navbar} from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./NavigationBar.css"
@@ -9,10 +9,14 @@ import {getUserAuthContentFromResponse} from "../Shared/Models/Auth";
 import {UserMenu} from "./UserMenu";
 import {Link, useNavigate} from "react-router-dom";
 
+/**
+ * Main navigation bar. Contains user menu and navigation links
+ * @constructor
+ */
 export function NavigationBar() {
     const navigate = useNavigate()
-
     const dispatch = useAppDispatch()
+
     const userData = useAppSelector(selectUserData)
 
     const loginSuccess = (response: (GoogleLoginResponse | GoogleLoginResponseOffline)) => {
@@ -38,7 +42,7 @@ export function NavigationBar() {
                         <GoogleLogin
                             clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID || ""}
                             onSuccess={loginSuccess}
-                            onFailure={err => console.log('failed to sign in', err)}
+                            onFailure={err => console.error(err)}
                             isSignedIn={true}
                             cookiePolicy={'single_host_origin'}
                         >
@@ -49,7 +53,7 @@ export function NavigationBar() {
                 {userData &&
                     <Nav.Item>
                         <UserMenu data={userData} renderLogoutButton={
-                            () => <GoogleLogout onLogoutSuccess={logoutSuccess} clientId={process.env.GOOGLE_CLIENT_ID || ""}/>
+                            () => <GoogleLogout onLogoutSuccess={logoutSuccess} clientId={process.env.GOOGLE_CLIENT_ID || ""}>Выйти</GoogleLogout>
                         }/>
                     </Nav.Item>
                 }
