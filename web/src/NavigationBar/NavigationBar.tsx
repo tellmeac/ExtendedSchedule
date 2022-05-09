@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import "./NavigationBar.css"
 import GoogleLogin, {GoogleLoginResponse, GoogleLoginResponseOffline, GoogleLogout} from "react-google-login";
 import {useAppDispatch, useAppSelector} from "../Shared/Hooks";
-import {selectLoginResponse, updateUserData} from "../Shared/Store";
+import {selectUserData, updateUserData} from "../Shared/Store";
 import {getUserAuthContentFromResponse} from "../Shared/Models/Auth";
 import {UserMenu} from "./UserMenu";
 import {Link, useNavigate} from "react-router-dom";
@@ -13,7 +13,7 @@ export function NavigationBar() {
     const navigate = useNavigate()
 
     const dispatch = useAppDispatch()
-    const userData = useAppSelector(selectLoginResponse)
+    const userData = useAppSelector(selectUserData)
 
     const loginSuccess = (response: (GoogleLoginResponse | GoogleLoginResponseOffline)) => {
         const r = response as GoogleLoginResponse;

@@ -1,4 +1,4 @@
-import React, {ReactNode, useEffect, useMemo, useState} from "react";
+import React from "react";
 import {ScheduleDay} from "../../Shared/Models";
 import {Table} from "react-bootstrap";
 import {format} from "date-fns";
@@ -6,60 +6,24 @@ import "./WeekSchedule.css"
 import {Intervals, IntervalSectionsCount} from "../../Shared/Definitions";
 import {LessonCell} from "../LessonCell";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {useAppDispatch, useAppSelector} from "../../Shared/Hooks";
-import {selectWeekPeriod, selectWeekSchedule, updateSchedule} from "../../Shared/Store";
-import {selectLoginResponse} from "../../Shared/Store";
-import {getPersonalSchedule} from "../../Shared/Api";
 
-interface ColumnInfo {
-    weekDay: string
-    shortDate: string
+type WeekScheduleProps = {
+    startDay: number
+    endDay: number
+    schedule: ScheduleDay[]
 }
 
-function generateColumnsInfo(days: ScheduleDay[]): ColumnInfo[] {
-    return days.map((day) => {
-        const date = new Date(day.date)
-        return {
-            weekDay: format(date, "E"),
-            shortDate: format(date, "d LLL.")
-        }
-    });
-}
-
-export const WeekSchedule: React.FC = () => {
-    const dispatch = useAppDispatch()
-
-    const weekPeriod = useAppSelector(selectWeekPeriod)
-    const weekSchedule = useAppSelector(selectWeekSchedule)
-    const user = useAppSelector(selectLoginResponse)
-
-    const [columnWeekDayInfo, setColumnWeekDayInfo] = useState<ColumnInfo[]>([]);
-
-    const getWeekSchedule = () => {
-        console.log("User info:", user)
-        if (!user) {
-            return
-        }
-
-        getPersonalSchedule(user?.tokenId || "", weekPeriod.weekStart, weekPeriod.weekEnd).then(days => {
-            dispatch(updateSchedule(days))
-        }).catch(e => {
-            console.log("Get user schedule error: ", e)
-        })
-    }
-
-    useEffect(() => {
-        getWeekSchedule()
-        setColumnWeekDayInfo(generateColumnsInfo(weekSchedule))
-    }, [weekPeriod, user])
-
-
+/**
+ * WeekSchedule is a component to render passed week schedule
+ * @constructor
+ */
+export const WeekSchedule: React.FC<WeekScheduleProps> = ({startDay, endDay, schedule}) => {
     return <Table striped bordered hover>
         <thead>
         <tr>
             <th key="-1"/>
             {
-                columnWeekDayInfo.map((colInfo)=>{
+                dayInfo(schedule).map((colInfo)=>{
                     return <th key={colInfo.weekDay}>
                         <div className={"day-header"}>
                             <span className={"day-header-weekday"}>{colInfo.weekDay}</span>
@@ -80,7 +44,7 @@ export const WeekSchedule: React.FC = () => {
                             <span key="end-date" className={"section-end-date"}>{Intervals[position][1]}</span>
                         </div>
                     </td>
-                    {renderSection(position, weekSchedule)}
+                    <ScheduleSection pos={position} days={schedule}/>
                 </tr>
             })
         }
@@ -88,14 +52,42 @@ export const WeekSchedule: React.FC = () => {
     </Table>
 }
 
-function renderSection(position: number, days: ScheduleDay[]): ReactNode {
+/**
+ * Content for column header in a week schedule table
+ */
+interface ColumnInfo {
+    weekDay: string
+    shortDate: string
+}
+
+/**
+ * Generates day header info for table header
+ * @param days is a schedule days, where date will be taken from
+ */
+function dayInfo(days: ScheduleDay[]): ColumnInfo[] {
+    return days.map((day) => {
+        const date = new Date(day.date)
+        return {
+            weekDay: format(date, "E"),
+            shortDate: format(date, "d LLL.")
+        }
+    });
+}
+
+/**
+ * Renders schedule section with passed whole days by position
+ * @param pos is a section number
+ * @param days is a whole days, that will be rendered as table row by required position
+ * @constructor
+ */
+const ScheduleSection: React.FC<{pos: number, days: ScheduleDay[]}> = ({pos, days}) => {
     return <>
         {
             days.map(day => {
                 return <td key={day.date}>
                     {
                         day.lessons.filter(lesson => {
-                            return lesson.position === position
+                            return lesson.position === pos
                         }).map(lesson => {
                             return <LessonCell key={lesson.position + lesson.id}
                                                lesson={lesson}/>

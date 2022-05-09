@@ -23,6 +23,6 @@ export const userSlice = createSlice({
     }
 })
 
-export const selectLoginResponse = (state: RootState) => state.user.data
+export const selectUserData = (state: RootState) => state.user.data
 
 export const { updateUserData, resetUserData } = userSlice.actions
