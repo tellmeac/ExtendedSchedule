@@ -9,7 +9,6 @@ export interface ScheduleState {
         weekStart: number,
         weekEnd: number
     }
-    weekSchedule: ScheduleDay[]
 }
 
 const initialScheduleState: ScheduleState = {
@@ -17,16 +16,12 @@ const initialScheduleState: ScheduleState = {
         weekStart: getCurrentWeekMonday(new Date()).getTime(),
         weekEnd: getCurrentWeekSaturday(new Date()).getTime()
     },
-    weekSchedule: [],
 }
 
 export const scheduleSlice = createSlice({
     name: "schedule",
     initialState: initialScheduleState,
     reducers: {
-        updateSchedule: (state, action: PayloadAction<ScheduleDay[]>) => {
-            state.weekSchedule = action.payload
-        },
         setNextWeek: (state) => {
             state.period = {
                 weekStart: add(state.period.weekStart, {days: 7}).getTime(),
@@ -43,6 +38,5 @@ export const scheduleSlice = createSlice({
 })
 
 export const selectWeekPeriod = (state: RootState) => state.schedule.period
-export const selectWeekSchedule = (state: RootState) => state.schedule.weekSchedule
 
-export const { updateSchedule, setNextWeek, setPreviousWeek, } = scheduleSlice.actions
+export const { setNextWeek, setPreviousWeek, } = scheduleSlice.actions
