@@ -3,9 +3,9 @@ package schedule
 import (
 	"context"
 	"errors"
+	"tellmeac/extended-schedule/adapters/provider"
 	"tellmeac/extended-schedule/domain/aggregate"
 	"tellmeac/extended-schedule/domain/builder"
-	"tellmeac/extended-schedule/domain/provider"
 	"tellmeac/extended-schedule/domain/repository"
 	"time"
 )
@@ -35,7 +35,7 @@ func (s Service) GetPersonal(ctx context.Context, userIdentifier string, start t
 	schedule, err := s.builder.Make(ctx, userIdentifier, start, end)
 	switch {
 	case errors.Is(err, repository.ErrConfigNotFound):
-		_, err = s.config.Init(ctx, userIdentifier)
+		_, err = s.config.Put(ctx, userIdentifier)
 		return nil, err
 	case err != nil:
 		return nil, err

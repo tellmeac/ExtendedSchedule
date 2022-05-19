@@ -25,7 +25,7 @@ func NewClient(cfg config.Config) *ent.Client {
 	drv := entsql.OpenDB(dialect.Postgres, db)
 	client := ent.NewClient(ent.Driver(drv))
 
-	log.Sugared.Info("Init database schema")
+	log.Sugared.Info("Put database schema")
 	if err = client.Schema.Create(context.Background()); err != nil {
 		log.Sugared.Error("Failed to create database schema", "error", err)
 		panic(err)

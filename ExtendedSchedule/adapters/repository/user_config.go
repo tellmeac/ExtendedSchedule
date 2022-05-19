@@ -21,7 +21,7 @@ type entUserConfigRepository struct {
 	client *ent.Client
 }
 
-func (r entUserConfigRepository) Init(ctx context.Context, userIdentifier string) (aggregate.UserConfig, error) {
+func (r entUserConfigRepository) Put(ctx context.Context, userIdentifier string) (aggregate.UserConfig, error) {
 	userInfo, err := r.client.UserInfo.Create().SetEmail(userIdentifier).Save(ctx)
 	if err != nil {
 		return aggregate.UserConfig{}, err
@@ -66,7 +66,6 @@ func mapExcludedLessons(excluded []*ent.ExcludedLesson) []entity.ExcludedLesson 
 		result = append(result, entity.ExcludedLesson{
 			ID:       e.UserID,
 			LessonID: e.LessonID,
-			Teacher:  e.Teacher,
 			Position: e.Position,
 			WeekDay:  e.Weekday,
 		})
@@ -94,7 +93,7 @@ func (r entUserConfigRepository) Update(ctx context.Context, userIdentifier stri
 			SetLessonID(excluded.LessonID).
 			SetPosition(excluded.Position).
 			SetWeekday(excluded.WeekDay).
-			SetTeacher(excluded.Teacher).
+			SetGroups(excluded.Groups).
 			Save(ctx)
 		if err != nil {
 			return rollback(tx, err)
