@@ -2,6 +2,7 @@ package aggregate
 
 import (
 	"errors"
+	"reflect"
 	"tellmeac/extended-schedule/domain/entity"
 	"time"
 )
@@ -29,11 +30,14 @@ func (day *DaySchedule) ExcludeLessons(excluded []entity.ExcludedLesson) error {
 }
 
 func (day DaySchedule) isExcluded(lesson *entity.Lesson, excludeMap map[string][]entity.ExcludedLesson) bool {
+	matchGroups := func(a []entity.GroupInfo, b []entity.GroupInfo) bool {
+		return reflect.DeepEqual(a, b)
+	}
+
 	var lessonMatchExcluded = func(excluded *entity.ExcludedLesson) bool {
 		return lesson.ID == excluded.LessonID &&
 			lesson.Position == excluded.Position &&
-			int(day.Date.Weekday()) == excluded.WeekDay &&
-			(excluded.Teacher == nil || (excluded.Teacher != nil && *excluded.Teacher == lesson.Teacher))
+			int(day.Date.Weekday()) == excluded.WeekDay && matchGroups(excluded.Groups, lesson.Groups)
 	}
 
 	if excludedLessons, ok := excludeMap[lesson.ID]; ok {

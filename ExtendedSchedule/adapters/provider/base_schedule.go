@@ -8,11 +8,16 @@ import (
 	"tellmeac/extended-schedule/domain/aggregate"
 	"tellmeac/extended-schedule/domain/entity"
 	"tellmeac/extended-schedule/domain/enum"
-	"tellmeac/extended-schedule/domain/provider"
 	"time"
 )
 
-func NewBaseScheduleProvider(client *tsuschedule.Client) provider.IBaseScheduleProvider {
+// IBaseScheduleProvider представляет провайдер для получения общего расписания.
+type IBaseScheduleProvider interface {
+	GetByGroupID(ctx context.Context, groupID string, start time.Time, end time.Time) ([]aggregate.DaySchedule, error)
+	GetByLessonID(ctx context.Context, groupID string, lessonID string, start time.Time, end time.Time) ([]aggregate.DaySchedule, error)
+}
+
+func NewBaseScheduleProvider(client *tsuschedule.Client) IBaseScheduleProvider {
 	return &BaseScheduleProvider{client: client}
 }
 

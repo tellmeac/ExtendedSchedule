@@ -33,3 +33,8 @@ type TeacherInfo struct {
 	ID   string `json:"id"`
 	Name string `json:"name"`
 }
+
+type FacultyInfo struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
+}

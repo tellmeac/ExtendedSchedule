@@ -2,9 +2,9 @@ package builder
 
 import (
 	"context"
+	"tellmeac/extended-schedule/adapters/provider"
 	"tellmeac/extended-schedule/domain/aggregate"
 	"tellmeac/extended-schedule/domain/builder"
-	"tellmeac/extended-schedule/domain/provider"
 	"tellmeac/extended-schedule/domain/repository"
 	"time"
 )

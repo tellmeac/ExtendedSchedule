@@ -21,7 +21,7 @@ func (ExcludedLesson) Fields() []ent.Field {
 		field.String("LessonID"),
 		field.Int("Position"),
 		field.Int("Weekday"),
-		field.JSON("Teacher", &entity.TeacherInfo{}),
+		field.JSON("Groups", []entity.GroupInfo{}),
 	}
 }
 

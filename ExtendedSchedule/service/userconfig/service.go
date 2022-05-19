@@ -24,7 +24,7 @@ func (s Service) GetUserConfig(ctx context.Context, userIdentifier string) (aggr
 	config, err := s.repository.Get(ctx, userIdentifier)
 	switch {
 	case errors.Is(err, repository.ErrConfigNotFound):
-		return s.repository.Init(ctx, userIdentifier)
+		return s.repository.Put(ctx, userIdentifier)
 	case err != nil:
 		return aggregate.UserConfig{}, err
 	default:

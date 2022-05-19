@@ -20,7 +20,7 @@ export interface Lesson {
     position: number
     lessonType: string
     audience: Audience
-    groups: Group[]
+    groups: GroupInfo[]
     professor: Professor
 }
 
@@ -33,9 +33,18 @@ export interface Audience {
 }
 
 /**
- * Group info
+ * Group Info
  */
-export interface Group {
+export interface GroupInfo {
+    id: string
+    name: string
+}
+
+
+/**
+ * Faculty Info
+ */
+export interface FacultyInfo {
     id: string
     name: string
 }

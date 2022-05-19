@@ -73,57 +73,6 @@ func TestDaySchedule_ExcludeLessons(t *testing.T) {
 			},
 		},
 		{
-			Name: "Excluded with teacher",
-			Day: DaySchedule{
-				Date: scheduleDay,
-				Lessons: []entity.Lesson{
-					{
-						ID:       "zxc",
-						Position: 1,
-						Title:    "Lesson-1",
-						Teacher: entity.TeacherInfo{
-							ID:   "other-teacher",
-							Name: "Teacher",
-						},
-					},
-					{
-						ID:       "zxc",
-						Position: 1,
-						Title:    "Lesson-1",
-						Teacher: entity.TeacherInfo{
-							ID:   "teacher",
-							Name: "Teacher",
-						},
-					},
-				},
-			},
-			Excluded: []entity.ExcludedLesson{
-				{
-					LessonID: "zxc",
-					Position: 1,
-					WeekDay:  int(scheduleDay.Weekday()),
-					Teacher: &entity.TeacherInfo{
-						ID:   "teacher",
-						Name: "Teacher",
-					},
-				},
-			},
-			ExpectedDay: DaySchedule{
-				Date: scheduleDay,
-				Lessons: []entity.Lesson{
-					{
-						ID:       "zxc",
-						Position: 1,
-						Title:    "Lesson-1",
-						Teacher: entity.TeacherInfo{
-							ID:   "other-teacher",
-							Name: "Teacher",
-						},
-					},
-				},
-			},
-		},
-		{
 			Name: "Excluded many",
 			Day: DaySchedule{
 				Date: scheduleDay,
@@ -162,7 +111,6 @@ func TestDaySchedule_ExcludeLessons(t *testing.T) {
 					LessonID: "zxc",
 					Position: 1,
 					WeekDay:  int(scheduleDay.Weekday()),
-					Teacher:  nil,
 				},
 			},
 			ExpectedDay: DaySchedule{
