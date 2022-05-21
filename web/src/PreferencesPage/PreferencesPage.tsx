@@ -48,11 +48,6 @@ export function PreferencesPage() {
     const [userGroups, setUserGroups] = useState<GroupInfo[]>(mockInitialGroups)
     const [selectedGroup, setSelectedGroup] = useState<GroupInfo | undefined>(undefined)
 
-    const addGroup = () => {
-        if
-        setUserGroups([...userGroups, selectedGroup])
-    }
-
     return <Container>
         <Form>
             <Form.Group className="mb-3" controlId="formBasicEmail">
