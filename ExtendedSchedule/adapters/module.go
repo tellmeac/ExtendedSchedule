@@ -11,6 +11,7 @@ import (
 var Module = fx.Options(
 	fx.Provide(tsuschedule.MakeClient),
 	fx.Provide(provider.NewBaseScheduleProvider),
+	fx.Provide(provider.MakeNewCachingGroupsProvider),
 	fx.Provide(repository.NewEntUserConfigRepository),
 	fx.Provide(builder.NewUserScheduleBuilder),
 )

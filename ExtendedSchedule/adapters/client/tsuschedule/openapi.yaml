@@ -161,7 +161,6 @@ components:
       properties:
         id:
           type: string
-          nullable: true
           example: "faculty-identifier"
         name:
           type: string

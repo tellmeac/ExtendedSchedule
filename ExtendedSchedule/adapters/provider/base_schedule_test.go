@@ -45,7 +45,7 @@ func TestBaseScheduleProviderIntegration(t *testing.T) {
 		},
 	})
 
-	provider := BaseScheduleProvider{
+	provider := baseScheduleProvider{
 		client: client,
 	}
 
@@ -102,7 +102,7 @@ func TestBaseScheduleProviderIntegration_GetLessonSchedule(t *testing.T) {
 		},
 	})
 
-	provider := BaseScheduleProvider{
+	provider := baseScheduleProvider{
 		client: client,
 	}
 

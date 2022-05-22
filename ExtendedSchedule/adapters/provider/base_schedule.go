@@ -18,14 +18,14 @@ type IBaseScheduleProvider interface {
 }
 
 func NewBaseScheduleProvider(client *tsuschedule.Client) IBaseScheduleProvider {
-	return &BaseScheduleProvider{client: client}
+	return &baseScheduleProvider{client: client}
 }
 
-type BaseScheduleProvider struct {
+type baseScheduleProvider struct {
 	client *tsuschedule.Client
 }
 
-func (provider *BaseScheduleProvider) GetByLessonID(ctx context.Context, groupID string, lessonID string, start time.Time, end time.Time) ([]aggregate.DaySchedule, error) {
+func (provider *baseScheduleProvider) GetByLessonID(ctx context.Context, groupID string, lessonID string, start time.Time, end time.Time) ([]aggregate.DaySchedule, error) {
 	params := tsuschedule.GetScheduleGroupParams{
 		Id:       groupID,
 		DateFrom: start.Format(domain.ScheduleDateFormat),
@@ -68,7 +68,7 @@ func filterByLessonID(day *aggregate.DaySchedule, lessonID string) {
 	day.Lessons = filteredLessons
 }
 
-func (provider *BaseScheduleProvider) GetByGroupID(
+func (provider *baseScheduleProvider) GetByGroupID(
 	ctx context.Context,
 	groupID string,
 	start time.Time,
