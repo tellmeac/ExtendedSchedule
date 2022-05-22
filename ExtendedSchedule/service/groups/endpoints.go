@@ -5,6 +5,10 @@ import (
 	"net/http"
 )
 
+func NewEndpoints(service IService) *Endpoints {
+	return &Endpoints{service: service}
+}
+
 type Endpoints struct {
 	service IService
 }

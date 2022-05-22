@@ -9,6 +9,7 @@ import (
 	"tellmeac/extended-schedule/config"
 	"tellmeac/extended-schedule/infrastructure"
 	"tellmeac/extended-schedule/infrastructure/log"
+	"tellmeac/extended-schedule/service/groups"
 	"tellmeac/extended-schedule/service/schedule"
 	"tellmeac/extended-schedule/service/userconfig"
 )
@@ -20,6 +21,7 @@ var Module = fx.Options(
 	adapters.Module,
 	schedule.Module,
 	userconfig.Module,
+	groups.Module,
 	fx.Invoke(bindRoutes),
 	fx.Provide(infrastructure.NewServer),
 	fx.Invoke(bootstrap),
