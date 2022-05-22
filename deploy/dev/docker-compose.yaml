@@ -18,21 +18,12 @@ services:
       dockerfile: Dockerfile
     container_name: "schedule"
     ports:
-    - "8888:8080"
+    - "8080:8080"
     environment:
       DATABASE_CONNECTIONADDRESS: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}"
     depends_on:
       - database
     restart: always
-
-  keycloak:
-    image: jboss/keycloak:latest
-    container_name: "keycloak"
-    environment:
-      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
-      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
-    ports:
-      - "8080:8080"
 
   web:
     container_name: "web"
@@ -44,6 +35,6 @@ services:
     volumes:
       - ../../web/src:/app/src
     environment:
-      "KEYCLOAK_AUTH_SERVER_URL": "http://keycloak:8080/auth"
+      "REACT_APP_API_BASE_URL": "http://schedule:8080/api"
 
     restart: always

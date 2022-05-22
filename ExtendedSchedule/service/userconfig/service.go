@@ -8,7 +8,7 @@ import (
 )
 
 func NewService(repository repository.IUserConfigRepository) IService {
-	return &Service{repository: repository}
+	return &service{repository: repository}
 }
 
 type IService interface {
@@ -16,11 +16,11 @@ type IService interface {
 	UpdateUserConfig(ctx context.Context, userIdentifier string, desired aggregate.UserConfig) error
 }
 
-type Service struct {
+type service struct {
 	repository repository.IUserConfigRepository
 }
 
-func (s Service) GetUserConfig(ctx context.Context, userIdentifier string) (aggregate.UserConfig, error) {
+func (s service) GetUserConfig(ctx context.Context, userIdentifier string) (aggregate.UserConfig, error) {
 	config, err := s.repository.Get(ctx, userIdentifier)
 	switch {
 	case errors.Is(err, repository.ErrConfigNotFound):
@@ -32,6 +32,6 @@ func (s Service) GetUserConfig(ctx context.Context, userIdentifier string) (aggr
 	}
 }
 
-func (s Service) UpdateUserConfig(ctx context.Context, userIdentifier string, desired aggregate.UserConfig) error {
+func (s service) UpdateUserConfig(ctx context.Context, userIdentifier string, desired aggregate.UserConfig) error {
 	return s.repository.Update(ctx, userIdentifier, desired)
 }
