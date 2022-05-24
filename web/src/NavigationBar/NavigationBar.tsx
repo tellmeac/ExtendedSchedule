@@ -33,7 +33,7 @@ export function NavigationBar() {
                 <Nav.Item><Link className={"nav-link"} to="/schedule">Расписание</Link></Nav.Item>
                 <Nav.Item><Link className={"nav-link"} to="/preferences">Параметры</Link></Nav.Item>
             </Nav>
-            <Nav className="mr-4">
+            <Nav className="mr-auto">
                 {
                     !isAuthorized &&
                     <GoogleLogin
@@ -49,7 +49,7 @@ export function NavigationBar() {
                 }
                 {
                     isAuthorized &&
-                    <Nav.Item>Вы вошли как {userName}</Nav.Item>
+                    <Nav.Item className={"user-context"}>Вы вошли как {userName}</Nav.Item>
                 }
             </Nav>
         </Navbar.Collapse>
