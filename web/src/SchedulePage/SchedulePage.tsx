@@ -16,6 +16,10 @@ export function SchedulePage() {
     const [schedule, setSchedule] = useState<ScheduleDay[]>([])
 
     useEffect(()=>{
+        if (user === undefined) {
+            return
+        }
+
         getPersonalSchedule(user?.tokenId || "", period.weekStart, period.weekEnd).then((r)=>{
             setSchedule(r)
         }).catch((err)=>{

@@ -5,7 +5,7 @@ import {GroupInfo} from "../../Shared/Models";
  */
 export interface UserConfig {
     joinedGroups: GroupInfo[]
-    ExcludedRules: ExcludedRule[]
+    excludedLessons: ExcludedRule[]
 }
 
 /**

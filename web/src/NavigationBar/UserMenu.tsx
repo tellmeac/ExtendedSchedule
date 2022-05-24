@@ -10,8 +10,8 @@ type Props = {
 
 /**
  * User menu
- * @param data is an user info
- * @param renderLogoutButton is an render factory for logout button
+ * @param data is user info
+ * @param renderLogoutButton is render factory for logout button
  * @constructor
  */
 export const UserMenu: React.FC<Props> = ({data, renderLogoutButton}) => {
