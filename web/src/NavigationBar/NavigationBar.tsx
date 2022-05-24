@@ -1,31 +1,28 @@
-import React from "react";
+import React, {useState} from "react";
 import {Nav, Navbar} from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./NavigationBar.css"
-import GoogleLogin, {GoogleLoginResponse, GoogleLoginResponseOffline, GoogleLogout} from "react-google-login";
-import {useAppDispatch, useAppSelector} from "../Shared/Hooks";
-import {selectUserData, updateUserData} from "../Shared/Store";
-import {getUserAuthContentFromResponse} from "../Shared/Models/Auth";
-import {UserMenu} from "./UserMenu";
-import {Link, useNavigate} from "react-router-dom";
+import {Link} from "react-router-dom";
+import {GoogleLogin} from "@react-oauth/google";
+import jwtDecode from "jwt-decode";
 
 /**
  * Main navigation bar. Contains user menu and navigation links
  * @constructor
  */
 export function NavigationBar() {
-    const navigate = useNavigate()
-    const dispatch = useAppDispatch()
+    const [isAuthorized, setIsAuthorized] = useState<boolean>(false)
+    const [userName, setUserName] = useState<string>("")
 
-    const userData = useAppSelector(selectUserData)
+    // @ts-ignore
+    const onSuccessLogin = (credentialResponse) => {
+        setIsAuthorized(true)
 
-    const loginSuccess = (response: (GoogleLoginResponse | GoogleLoginResponseOffline)) => {
-        const r = response as GoogleLoginResponse;
-        dispatch(updateUserData(getUserAuthContentFromResponse(r)))
-    }
+        // get username
+        const user = jwtDecode<{name: string}>(credentialResponse.credential)
+        setUserName(user.name)
 
-    const logoutSuccess = () => {
-        navigate(0)
+        console.log(credentialResponse);
     }
 
     return <Navbar bg="light" expand="lg">
@@ -36,26 +33,23 @@ export function NavigationBar() {
                 <Nav.Item><Link className={"nav-link"} to="/schedule">Расписание</Link></Nav.Item>
                 <Nav.Item><Link className={"nav-link"} to="/preferences">Параметры</Link></Nav.Item>
             </Nav>
-            <Nav className="mr-auto">
-                {!userData &&
-                    <Nav.Item>
-                        <GoogleLogin
-                            clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID || ""}
-                            onSuccess={loginSuccess}
-                            onFailure={err => console.error(err)}
-                            isSignedIn={true}
-                            cookiePolicy={'single_host_origin'}
-                        >
-                            Вход
-                        </GoogleLogin>
-                    </Nav.Item>
+            <Nav className="mr-4">
+                {
+                    !isAuthorized &&
+                    <GoogleLogin
+                        auto_select
+                        useOneTap
+                        shape="circle"
+                        theme="outline"
+                        onSuccess={onSuccessLogin}
+                        onError={() => {
+                            console.log('Login Failed');
+                        }}
+                    />
                 }
-                {userData &&
-                    <Nav.Item>
-                        <UserMenu data={userData} renderLogoutButton={
-                            () => <GoogleLogout onLogoutSuccess={logoutSuccess} clientId={process.env.GOOGLE_CLIENT_ID || ""}>Выйти</GoogleLogout>
-                        }/>
-                    </Nav.Item>
+                {
+                    isAuthorized &&
+                    <Nav.Item>Вы вошли как {userName}</Nav.Item>
                 }
             </Nav>
         </Navbar.Collapse>
