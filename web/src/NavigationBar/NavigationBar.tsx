@@ -5,6 +5,7 @@ import "./NavigationBar.css"
 import {Link} from "react-router-dom";
 import {GoogleLogin} from "@react-oauth/google";
 import jwtDecode from "jwt-decode";
+import {storeUserJwtToken} from "../Shared/Api/Token";
 
 /**
  * Main navigation bar. Contains user menu and navigation links
@@ -21,6 +22,7 @@ export function NavigationBar() {
         // get username
         const user = jwtDecode<{name: string}>(credentialResponse.credential)
         setUserName(user.name)
+        storeUserJwtToken(credentialResponse.credential)
 
         console.log(credentialResponse);
     }
@@ -43,7 +45,7 @@ export function NavigationBar() {
                         theme="outline"
                         onSuccess={onSuccessLogin}
                         onError={() => {
-                            console.log('Login Failed');
+                            console.error('Login Failed');
                         }}
                     />
                 }
