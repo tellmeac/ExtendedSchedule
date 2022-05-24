@@ -14,6 +14,7 @@ func bindRoutes(engine *gin.Engine, schedule *schedule.Endpoints, configs *userc
 	health.Endpoints.Bind(engine)
 
 	api := engine.Group("api/")
+
 	api.Use(middleware.GoogleOAuth2())
 	schedule.Bind(api)
 	configs.Bind(api)
