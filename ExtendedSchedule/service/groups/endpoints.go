@@ -15,7 +15,7 @@ type Endpoints struct {
 
 func (e Endpoints) Bind(router gin.IRouter) {
 	router.GET("faculties/", e.GetAllFaculties)
-	router.GET("faculties/{facultyID}/groups", e.GetFacultyGroups)
+	router.GET("faculties/:facultyID/groups", e.GetFacultyGroups)
 }
 
 func (e Endpoints) GetAllFaculties(ctx *gin.Context) {
