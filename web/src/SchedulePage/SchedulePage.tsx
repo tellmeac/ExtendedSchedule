@@ -15,12 +15,11 @@ export function SchedulePage() {
     const [schedule, setSchedule] = useState<ScheduleDay[]>([])
 
     useEffect(()=>{
-
-        // getPersonalSchedule(user?.tokenId || "", period.weekStart, period.weekEnd).then((r)=>{
-        //     setSchedule(r)
-        // }).catch((err)=>{
-        //     console.error(err)
-        // })
+        getPersonalSchedule(period.weekStart, period.weekEnd).then((r)=>{
+            setSchedule(r)
+        }).catch((err)=>{
+            console.error(err)
+        })
     }, [period])
 
     const moveWeek = (isForward: boolean) => {
