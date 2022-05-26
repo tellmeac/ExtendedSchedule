@@ -1,22 +1,21 @@
 import React from 'react';
-import {Navigate, Outlet, Route, Routes} from "react-router-dom";
+import {Outlet, Route, Routes} from "react-router-dom";
 import {SchedulePage} from "./SchedulePage";
-import {PreferencesPage} from "./PreferencesPage";
+import {SettingsPage} from "./SettingsPage";
 import {NavigationBar} from "./NavigationBar";
 import {GoogleOAuthProvider} from "@react-oauth/google";
 
 function App() {
-
   return <GoogleOAuthProvider clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID || ""}>
-    <div className={"app-container"}>
+    <div>
       <NavigationBar/>
 
       <Routes>
-        <Route path="/" element={<Navigate to="schedule"/>}/>
+        <Route path="/" element={<SchedulePage/>}/>
         <Route path="/schedule" element={<SchedulePage/>}/>
-        <Route path="/preferences" element={<PreferencesPage/>}/>
+        <Route path="/settings" element={<SettingsPage/>}/>
 
-        <Route path="*" element={<p>Not found!</p>}/>
+        <Route path="*" element={<p>404. Page not found!</p>}/>
       </Routes>
 
       <Outlet/>
