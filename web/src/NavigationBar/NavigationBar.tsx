@@ -33,7 +33,7 @@ export function NavigationBar() {
         <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
                 <Nav.Item><Link className={"nav-link"} to="/schedule">Расписание</Link></Nav.Item>
-                <Nav.Item><Link className={"nav-link"} to="/preferences">Параметры</Link></Nav.Item>
+                <Nav.Item><Link className={"nav-link"} to="/settings">Параметры</Link></Nav.Item>
             </Nav>
             <Nav className="mr-auto">
                 {
