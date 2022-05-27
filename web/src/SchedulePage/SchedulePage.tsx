@@ -7,6 +7,7 @@ import {useAppDispatch, useAppSelector} from "../Shared/Hooks";
 import {selectWeekPeriod, setNextWeek, setPreviousWeek} from "../Shared/Store";
 import {getPersonalSchedule} from "../Shared/Api";
 import {ScheduleDay} from "../Shared/Models";
+import log from "loglevel";
 
 export function SchedulePage() {
     const dispatch = useAppDispatch()
@@ -17,8 +18,8 @@ export function SchedulePage() {
     useEffect(()=>{
         getPersonalSchedule(period.weekStart, period.weekEnd).then((r)=>{
             setSchedule(r)
-        }).catch((err)=>{
-            console.error(err)
+        }).catch((err)=> {
+            log.error(err)
         })
     }, [period])
 

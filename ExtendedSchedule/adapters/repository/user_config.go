@@ -100,10 +100,11 @@ func (r entUserConfigRepository) Update(ctx context.Context, userIdentifier stri
 		}
 	}
 
-	if err := tx.JoinedGroups.Update().
-		Where(joinedgroups.UserIDEQ(userInfo.ID)).
-		SetJoinedGroups(desired.JoinedGroups).
-		Exec(ctx); err != nil {
+	if _, err := tx.JoinedGroups.Delete().Where(joinedgroups.UserIDEQ(userInfo.ID)).Exec(ctx); err != nil {
+		return rollback(tx, err)
+	}
+
+	if err := tx.JoinedGroups.Create().SetJoinedGroups(desired.JoinedGroups).Exec(ctx); err != nil {
 		return rollback(tx, err)
 	}
 

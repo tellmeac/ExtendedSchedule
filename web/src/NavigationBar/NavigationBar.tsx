@@ -15,11 +15,11 @@ export function NavigationBar() {
     const [isAuthorized, setIsAuthorized] = useState<boolean>(false)
     const [userName, setUserName] = useState<string>("")
 
-    // @ts-ignore
+    // @ts-ignore (not exported response type)
     const onSuccessLogin = (credentialResponse) => {
         setIsAuthorized(true)
 
-        // get username
+        // extract username from jwt token
         const user = jwtDecode<{name: string}>(credentialResponse.credential)
         setUserName(user.name)
         storeUserJwtToken(credentialResponse.credential)
@@ -32,8 +32,8 @@ export function NavigationBar() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="me-auto">
-                <Nav.Item><Link className={"nav-link"} to="/schedule">Расписание</Link></Nav.Item>
-                <Nav.Item><Link className={"nav-link"} to="/settings">Параметры</Link></Nav.Item>
+                <Nav.Item><Link className={"nav-link"} to="/schedule"><i className="bi bi-calendar-heart"/> Расписание</Link></Nav.Item>
+                <Nav.Item><Link className={"nav-link"} to="/settings"><i className="bi bi-gear"/> Параметры</Link></Nav.Item>
             </Nav>
             <Nav className="mr-auto">
                 {
@@ -50,6 +50,7 @@ export function NavigationBar() {
                     />
                 }
                 {
+                    // TODO: replace with user info component
                     isAuthorized &&
                     <Nav.Item className={"user-context"}>Вы вошли как {userName}</Nav.Item>
                 }
