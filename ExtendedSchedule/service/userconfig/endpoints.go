@@ -60,10 +60,24 @@ func (e Endpoints) GetConfig(ctx *gin.Context) {
 // @Success  204
 // @Failure  500
 func (e Endpoints) UpdateConfig(ctx *gin.Context) {
-	// TODO: fix change others configs with asserting email in jwt and body
+	email, err := middleware.GetGoogleEmail(ctx)
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
 	var desired aggregate.UserConfig
 	if err := ctx.ShouldBindJSON(&desired); err != nil {
 		shortcuts.HandleBadRequest(ctx, err.Error())
+		return
+	}
+
+	if email != desired.Email {
+		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
+			"error": err.Error(),
+		})
 		return
 	}
 
