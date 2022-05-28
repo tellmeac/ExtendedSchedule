@@ -24,7 +24,7 @@ func (e Endpoints) Bind(router gin.IRouter) {
 }
 
 func (e Endpoints) GetConfig(ctx *gin.Context) {
-	userIdentifier, err := middleware.GetGoogleEmail(ctx)
+	email, err := middleware.GetGoogleEmail(ctx)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
 			"error": err.Error(),
@@ -32,7 +32,7 @@ func (e Endpoints) GetConfig(ctx *gin.Context) {
 		return
 	}
 
-	config, err := e.service.GetUserConfig(ctx, userIdentifier)
+	config, err := e.service.GetUserConfig(ctx, email)
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
@@ -49,15 +49,7 @@ func (e Endpoints) UpdateConfig(ctx *gin.Context) {
 		return
 	}
 
-	userIdentifier, err := middleware.GetGoogleEmail(ctx)
-	if err != nil {
-		ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{
-			"error": "unauthorized",
-		})
-		return
-	}
-
-	if err := e.service.UpdateUserConfig(ctx, userIdentifier, desired); err != nil {
+	if err := e.service.UpdateUserConfig(ctx, desired); err != nil {
 		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}

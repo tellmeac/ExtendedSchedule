@@ -6,7 +6,7 @@ import (
 
 type ExcludedLesson struct {
 	ID       uuid.UUID   `json:"id"`
-	LessonID string      `json:"lessonID"`
+	LessonID string      `json:"lessonId"`
 	Position int         `json:"position"`
 	WeekDay  int         `json:"weekDay"`
 	Groups   []GroupInfo `json:"groups"`

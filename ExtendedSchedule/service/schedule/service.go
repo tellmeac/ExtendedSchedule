@@ -3,6 +3,7 @@ package schedule
 import (
 	"context"
 	"errors"
+	"fmt"
 	"tellmeac/extended-schedule/adapters/provider"
 	"tellmeac/extended-schedule/domain/aggregate"
 	"tellmeac/extended-schedule/domain/builder"
@@ -31,12 +32,15 @@ type Service struct {
 	config   repository.IUserConfigRepository
 }
 
-func (s Service) GetPersonal(ctx context.Context, userIdentifier string, start time.Time, end time.Time) ([]aggregate.DaySchedule, error) {
-	schedule, err := s.builder.Make(ctx, userIdentifier, start, end)
+func (s Service) GetPersonal(ctx context.Context, email string, start time.Time, end time.Time) ([]aggregate.DaySchedule, error) {
+	schedule, err := s.builder.Make(ctx, email, start, end)
 	switch {
 	case errors.Is(err, repository.ErrConfigNotFound):
-		_, err = s.config.Put(ctx, userIdentifier)
-		return nil, err
+		newConfig := aggregate.NewUserConfig(email)
+		if err := s.config.Put(ctx, newConfig); err != nil {
+			return nil, fmt.Errorf("failed to create new config: %w", err)
+		}
+		return nil, nil
 	case err != nil:
 		return nil, err
 	default:

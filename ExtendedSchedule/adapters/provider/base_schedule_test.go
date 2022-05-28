@@ -29,7 +29,7 @@ func TestBaseScheduleProviderIntegration(t *testing.T) {
 		ExpectedDays int
 	}{
 		{
-			Name:         "Get study week, may fail if there is no schedule at the current day",
+			Name:         "GetByEmail study week, may fail if there is no schedule at the current day",
 			GroupID:      "3c9f5a5d-ffca-11eb-8169-005056bc249c",
 			StartDate:    time.Date(2022, 4, 18, 0, 0, 0, 0, time.UTC),
 			EndDate:      time.Date(2022, 4, 23, 0, 0, 0, 0, time.UTC),
@@ -85,7 +85,7 @@ func TestBaseScheduleProviderIntegration_GetLessonSchedule(t *testing.T) {
 		ExpectedDays int
 	}{
 		{
-			Name:         "Get study week for lesson, may fail if there is no schedule at the current day",
+			Name:         "GetByEmail study week for lesson, may fail if there is no schedule at the current day",
 			GroupID:      "3c9f5a5d-ffca-11eb-8169-005056bc249c",
 			LessonID:     "4baeab32-7df1-496f-845f-9b733a2a3079",
 			StartDate:    time.Date(2022, 4, 18, 0, 0, 0, 0, time.UTC),

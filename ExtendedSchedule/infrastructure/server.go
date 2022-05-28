@@ -5,6 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// NewServer создает новый сервер.
 func NewServer() *gin.Engine {
 	engine := gin.Default()
 	engine.Use(cors.New(cors.Config{
