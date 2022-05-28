@@ -29,9 +29,12 @@ func (builder UserScheduleBuilder) Make(ctx context.Context, userEmail string, s
 		return nil, err
 	}
 
-	baseSchedule, err := builder.scheduleProvider.GetByGroupID(ctx, config.BaseGroup.ID, start, end)
-	if err != nil {
-		return nil, err
+	var baseSchedule = make([]aggregate.DaySchedule, 0)
+	if config.BaseGroup != nil {
+		baseSchedule, err = builder.scheduleProvider.GetByGroupID(ctx, config.BaseGroup.ID, start, end)
+		if err != nil {
+			return nil, err
+		}
 	}
 
 	schedule, err = aggregate.JoinSchedules(schedule, baseSchedule)

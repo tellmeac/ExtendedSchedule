@@ -11,7 +11,9 @@ import (
 
 // NewEntUserConfigRepository создает репозиторий для пользовательской конфигурации.
 func NewEntUserConfigRepository(client *ent.Client) repository.IUserConfigRepository {
-	return &entUserConfigRepository{client: client}
+	return &entUserConfigRepository{
+		client: client,
+	}
 }
 
 type entUserConfigRepository struct {
