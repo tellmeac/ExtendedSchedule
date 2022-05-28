@@ -21,25 +21,25 @@ type UserScheduleBuilder struct {
 	configs          repository.IUserConfigRepository
 }
 
-func (builder UserScheduleBuilder) Make(ctx context.Context, userIdentifier string, start time.Time, end time.Time) ([]aggregate.DaySchedule, error) {
+func (builder UserScheduleBuilder) Make(ctx context.Context, userEmail string, start time.Time, end time.Time) ([]aggregate.DaySchedule, error) {
 	var schedule []aggregate.DaySchedule = nil
 
-	config, err := builder.configs.Get(ctx, userIdentifier)
+	config, err := builder.configs.GetByEmail(ctx, userEmail)
 	if err != nil {
 		return nil, err
 	}
 
-	for _, group := range config.JoinedGroups {
-		groupSchedule, err := builder.scheduleProvider.GetByGroupID(ctx, group.ID, start, end)
-		if err != nil {
-			return nil, err
-		}
-
-		schedule, err = aggregate.JoinSchedules(schedule, groupSchedule)
-		if err != nil {
-			return nil, err
-		}
+	baseSchedule, err := builder.scheduleProvider.GetByGroupID(ctx, config.BaseGroup.ID, start, end)
+	if err != nil {
+		return nil, err
 	}
+
+	schedule, err = aggregate.JoinSchedules(schedule, baseSchedule)
+	if err != nil {
+		return nil, err
+	}
+
+	// TODO: join schedule of extended lessons
 
 	for i := 0; i < len(schedule); i++ {
 		if err := schedule[i].ExcludeLessons(config.ExcludedLessons); err != nil {

@@ -2,6 +2,7 @@ package userconfig
 
 import (
 	"context"
+	"fmt"
 	"github.com/pkg/errors"
 	"tellmeac/extended-schedule/domain/aggregate"
 	"tellmeac/extended-schedule/domain/repository"
@@ -12,19 +13,23 @@ func NewService(repository repository.IUserConfigRepository) IService {
 }
 
 type IService interface {
-	GetUserConfig(ctx context.Context, userIdentifier string) (aggregate.UserConfig, error)
-	UpdateUserConfig(ctx context.Context, userIdentifier string, desired aggregate.UserConfig) error
+	GetUserConfig(ctx context.Context, email string) (aggregate.UserConfig, error)
+	UpdateUserConfig(ctx context.Context, desired aggregate.UserConfig) error
 }
 
 type service struct {
 	repository repository.IUserConfigRepository
 }
 
-func (s service) GetUserConfig(ctx context.Context, userIdentifier string) (aggregate.UserConfig, error) {
-	config, err := s.repository.Get(ctx, userIdentifier)
+func (s service) GetUserConfig(ctx context.Context, email string) (aggregate.UserConfig, error) {
+	config, err := s.repository.GetByEmail(ctx, email)
 	switch {
 	case errors.Is(err, repository.ErrConfigNotFound):
-		return s.repository.Put(ctx, userIdentifier)
+		newConfig := aggregate.NewUserConfig(email)
+		if err := s.repository.Put(ctx, newConfig); err != nil {
+			return aggregate.UserConfig{}, fmt.Errorf("failed to create new config: %w", err)
+		}
+		return newConfig, nil
 	case err != nil:
 		return aggregate.UserConfig{}, err
 	default:
@@ -32,6 +37,6 @@ func (s service) GetUserConfig(ctx context.Context, userIdentifier string) (aggr
 	}
 }
 
-func (s service) UpdateUserConfig(ctx context.Context, userIdentifier string, desired aggregate.UserConfig) error {
-	return s.repository.Update(ctx, userIdentifier, desired)
+func (s service) UpdateUserConfig(ctx context.Context, desired aggregate.UserConfig) error {
+	return s.repository.Update(ctx, desired)
 }
