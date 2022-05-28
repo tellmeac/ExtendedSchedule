@@ -1,11 +1,12 @@
 package middleware
 
 import (
+	"net/http"
+	"strings"
+
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/pkg/errors"
-	"net/http"
-	"strings"
 )
 
 const ContextTokenKey = "token"
@@ -47,7 +48,7 @@ func GetGoogleEmail(ctx *gin.Context) (string, error) {
 	return result.Email, nil
 }
 
-func GoogleOAuth2() gin.HandlerFunc {
+func GoogleOAuth2(debug bool) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		bearer := ctx.Request.Header.Get("Authorization")
 
@@ -58,7 +59,7 @@ func GoogleOAuth2() gin.HandlerFunc {
 
 		tokenID := strings.TrimPrefix(bearer, "Bearer ")
 
-		if !validate(tokenID) {
+		if !debug && !validate(tokenID) {
 			handleForbidden(ctx)
 			return
 		}

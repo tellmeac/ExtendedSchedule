@@ -27,8 +27,8 @@ export const ScheduleControlTab: React.FC<Props> = ({startDay, endDay, moveWeek}
         </Container>
 
         <Container className={"buttons-container"}>
-            <Button variant="outline-primary" onClick={()=>{moveWeek(true)}}><i className="bi bi-caret-left-square"/> Предыдущая неделя</Button>
-            <Button variant="outline-primary" onClick={()=>{moveWeek(false)}}>Следующая неделя <i className="bi bi-caret-right-square"/></Button>
+            <Button variant="outline-primary" onClick={()=>{moveWeek(false)}}><i className="bi bi-caret-left-square"/> Предыдущая неделя</Button>
+            <Button variant="outline-primary" onClick={()=>{moveWeek(true)}}>Следующая неделя <i className="bi bi-caret-right-square"/></Button>
         </Container>
     </Container>
 }
