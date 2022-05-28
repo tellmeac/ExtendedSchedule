@@ -2,13 +2,14 @@ package schedule
 
 import (
 	"errors"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"tellmeac/extended-schedule/domain"
 	"tellmeac/extended-schedule/domain/aggregate"
 	"tellmeac/extended-schedule/utils/middleware"
 	"tellmeac/extended-schedule/utils/shortcuts"
 	"time"
+
+	"github.com/gin-gonic/gin"
 )
 
 func NewEndpoints(service IService) *Endpoints {
@@ -25,6 +26,16 @@ func (e Endpoints) Bind(router gin.IRouter) {
 	router.GET("/schedule/groups/:groupID/lessons/:lessonID", e.GetLessonSchedule)
 }
 
+// GetPersonalSchedule - godoc
+// @Router   /api/schedule/personal [get]
+// @Summary  Get personal schedule
+// @Tags     Schedule
+// @Param    startDate  query  string  true  "Start date"
+// @Param    endDate    query  string  true  "End date"
+// @Produce  application/json
+// @Success  200  {array}  DaySchedule
+// @Failure  401
+// @Failure  500
 func (e Endpoints) GetPersonalSchedule(ctx *gin.Context) {
 	start, end, err := e.ExtractScheduleQuery(ctx)
 	if err != nil {
