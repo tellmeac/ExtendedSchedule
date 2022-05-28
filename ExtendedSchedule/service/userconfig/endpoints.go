@@ -1,11 +1,12 @@
 package userconfig
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"tellmeac/extended-schedule/domain/aggregate"
 	"tellmeac/extended-schedule/utils/middleware"
 	"tellmeac/extended-schedule/utils/shortcuts"
+
+	"github.com/gin-gonic/gin"
 )
 
 func NewEndpoints(service IService) *Endpoints {
@@ -23,6 +24,13 @@ func (e Endpoints) Bind(router gin.IRouter) {
 	router.PATCH("/user/config", e.UpdateConfig)
 }
 
+// GetConfig - godoc
+// @Router   /api/user/config [get]
+// @Summary  Get config
+// @Tags     Config
+// @Produce  application/json
+// @Success  200  {object}  aggregate.UserConfig
+// @Failure  500
 func (e Endpoints) GetConfig(ctx *gin.Context) {
 	email, err := middleware.GetGoogleEmail(ctx)
 	if err != nil {
@@ -42,7 +50,17 @@ func (e Endpoints) GetConfig(ctx *gin.Context) {
 	ctx.JSON(http.StatusOK, config)
 }
 
+// UpdateConfig - godoc
+// @Router   /api/user/config [patch]
+// @Summary  Get config
+// @Tags     Config
+// @Accept   application/json
+// @Produce  application/json
+// @Param    desired  body  aggregate.UserConfig  true  "Desired user config state"
+// @Success  204
+// @Failure  500
 func (e Endpoints) UpdateConfig(ctx *gin.Context) {
+	// TODO: fix change others configs with asserting email in jwt and body
 	var desired aggregate.UserConfig
 	if err := ctx.ShouldBindJSON(&desired); err != nil {
 		shortcuts.HandleBadRequest(ctx, err.Error())
