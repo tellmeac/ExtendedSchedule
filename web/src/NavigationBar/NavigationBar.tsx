@@ -6,25 +6,28 @@ import {Link} from "react-router-dom";
 import {GoogleLogin} from "@react-oauth/google";
 import jwtDecode from "jwt-decode";
 import {storeUserJwtToken} from "../Shared/Api/Token";
+import {useAppDispatch, useAppSelector} from "../Shared/Hooks";
+import {selectUserInfo, selectSignedIn, setCredentials} from "../Shared/Store";
 
 /**
  * Main navigation bar. Contains user menu and navigation links
  * @constructor
  */
 export function NavigationBar() {
-    const [isAuthorized, setIsAuthorized] = useState<boolean>(false)
-    const [userName, setUserName] = useState<string>("")
+    const dispatch = useAppDispatch()
+    const isAuthorized = useAppSelector(selectSignedIn)
+    const userInfo = useAppSelector(selectUserInfo)
 
     // @ts-ignore (not exported response type)
     const onSuccessLogin = (credentialResponse) => {
-        setIsAuthorized(true)
-
         // extract username from jwt token
-        const user = jwtDecode<{name: string}>(credentialResponse.credential)
-        setUserName(user.name)
+        const claims = jwtDecode<{name: string, picture: string}>(credentialResponse.credential)
+        dispatch(setCredentials({
+            token: credentialResponse.credential,
+            username: claims.name,
+            avatarUrl: claims.picture,
+        }))
         storeUserJwtToken(credentialResponse.credential)
-
-        console.log(credentialResponse);
     }
 
     return <Navbar bg="light" expand="lg">
@@ -52,7 +55,7 @@ export function NavigationBar() {
                 {
                     // TODO: replace with user info component
                     isAuthorized &&
-                    <Nav.Item className={"user-context"}>Вы вошли как {userName}</Nav.Item>
+                    <Nav.Item className={"user-context"}>Вы вошли как {userInfo.username}</Nav.Item>
                 }
             </Nav>
         </Navbar.Collapse>
