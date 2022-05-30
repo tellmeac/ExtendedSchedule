@@ -1,8 +1,24 @@
 import {FacultyInfo} from "../../Shared/Models";
 import axios from "axios";
 import {applyAuthorization} from "../../Shared/Api/Token";
+import {UserConfig} from "../Models";
 
 const ScheduleAPIBaseUrl = process.env.REACT_APP_API_BASE_URL || "http://localhost:8080/api"
+
+/**
+ * Returns all faculties
+ */
+export async function getUserConfig(): Promise<UserConfig> {
+    const config = applyAuthorization({
+        validateStatus: status => {
+            return status < 400
+        }
+    })
+
+    const response = await axios.get<UserConfig>(`${ScheduleAPIBaseUrl}/user/config`, config)
+
+    return response.data
+}
 
 /**
  * Returns all faculties
@@ -14,7 +30,7 @@ export async function getAllFaculties(): Promise<FacultyInfo[]> {
         }
     })
 
-    const response = await axios.get<FacultyInfo[]>(`${ScheduleAPIBaseUrl}/faculties/`,config)
+    const response = await axios.get<FacultyInfo[]>(`${ScheduleAPIBaseUrl}/faculties/`, config)
 
     return response.data
 }
