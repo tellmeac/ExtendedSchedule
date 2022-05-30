@@ -1,8 +1,9 @@
 package aggregate
 
 import (
-	"github.com/google/uuid"
 	"tellmeac/extended-schedule/domain/entity"
+
+	"github.com/google/uuid"
 )
 
 func NewUserConfig(email string) UserConfig {
@@ -23,6 +24,6 @@ type UserConfig struct {
 
 // ExtendedGroupLessons представляет группу с дополнительными предметами.
 type ExtendedGroupLessons struct {
-	Group     entity.GroupInfo
-	LessonIDs []string
+	Group     entity.GroupInfo `json:"group"`
+	LessonIDs []string         `json:"lessonIds"`
 }
