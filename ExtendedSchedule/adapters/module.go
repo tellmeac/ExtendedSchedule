@@ -14,4 +14,5 @@ var Module = fx.Options(
 	fx.Provide(provider.NewGroupsProvider),
 	fx.Provide(repository.NewEntUserConfigRepository),
 	fx.Provide(builder.NewUserScheduleBuilder),
+	fx.Provide(provider.NewLessonInfoProvider),
 )

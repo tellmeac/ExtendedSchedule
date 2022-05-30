@@ -43,7 +43,7 @@ func (provider *baseScheduleProvider) GetByLessonID(ctx context.Context, groupID
 	}
 
 	if scheduleDto.JSON200 == nil {
-		return nil, fmt.Errorf("failed to get schedule from parsed response: %w", err)
+		return nil, fmt.Errorf("failed to get schedule from parsed response")
 	}
 
 	var result = make([]aggregate.DaySchedule, len(*scheduleDto.JSON200))
@@ -91,7 +91,7 @@ func (provider *baseScheduleProvider) GetByGroupID(
 	}
 
 	if scheduleDto.JSON200 == nil {
-		return nil, fmt.Errorf("failed to get schedule from parsed response: %w", err)
+		return nil, fmt.Errorf("failed to get schedule from parsed response")
 	}
 
 	var result = make([]aggregate.DaySchedule, len(*scheduleDto.JSON200))
@@ -135,7 +135,18 @@ func mapLesson(dto tsuschedule.Lesson) entity.Lesson {
 		Position:   dto.LessonNumber - 1,
 		Audience:   mapAudience(dto.Audience),
 		Groups:     mapGroups(dto.Groups),
+		Teacher:    mapTeacher(dto.Professor),
 	}
+}
+
+func mapTeacher(teacher *tsuschedule.TeacherInfo) entity.TeacherInfo {
+	if teacher != nil && teacher.Id != nil && teacher.FullName != nil {
+		return entity.TeacherInfo{
+			ID:   *teacher.Id,
+			Name: *teacher.FullName,
+		}
+	}
+	return entity.TeacherInfo{}
 }
 
 func mapGroups(groups *[]tsuschedule.GroupInfo) []entity.GroupInfo {

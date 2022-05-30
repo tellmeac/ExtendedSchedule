@@ -1,4 +1,4 @@
-package groups
+package additions
 
 import "go.uber.org/fx"
 
