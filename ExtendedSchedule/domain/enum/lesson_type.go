@@ -2,6 +2,10 @@ package enum
 
 type LessonType string
 
+func (lt LessonType) String() string {
+	return string(lt)
+}
+
 const (
 	Lecture      LessonType = "LECTURE"
 	Practice     LessonType = "PRACTICE"

@@ -125,6 +125,8 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/GroupInfo"
+        professor:
+          $ref: "#/components/schemas/TeacherInfo"
     GroupInfo:
       type: object
       title: "Group Info"
@@ -138,6 +140,16 @@ components:
         name:
           type: string
           example: "931901"
+    TeacherInfo:
+      type: object
+      title: "Teacher Info"
+      properties:
+        id:
+          type: string
+          example: "teacher-identifier"
+        fullName:
+          type: string
+          example: "Teacher Name"
     AudienceInfo:
       type: object
       title: "Audience Info"
