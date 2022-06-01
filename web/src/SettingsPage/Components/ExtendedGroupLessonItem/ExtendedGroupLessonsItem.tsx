@@ -13,12 +13,16 @@ interface Props {
 export const ExtendedGroupLessonItem: React.FC<Props> = ({isNew, data, editCallback, removeCallback}) => {
     return <div className="container">
         <div className="item-content">
-            <span><b>Группа:</b> {data.group.name} <Badge bg="warning">Новый</Badge></span>
+            <span><b>Группа:</b> {data.group.name}
+                {
+                    isNew && <Badge bg="warning" className="new-badge">Новый</Badge>
+                }
+            </span>
             <div>
                 <b>Предметов:</b> {data.lessonIds.length}
             </div>
         </div>
-        <ButtonGroup className="controller">
+        <ButtonGroup className="controller m-1">
             <Button className="edit-btn" onClick={editCallback}>
                 <i className="bi bi-gear"/>
             </Button>

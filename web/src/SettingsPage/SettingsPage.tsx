@@ -20,14 +20,14 @@ export function SettingsPage() {
                         id: "1",
                         name: "931902"
                     },
-                    lessonIds: []
+                    lessonIds: ["1", "2", "3"]
                 },
                 {
                     group: {
                         id: "2",
                         name: "931903"
                     },
-                    lessonIds: []
+                    lessonIds: ["2", "4"]
                 }
             ],
             id: "1",
@@ -82,20 +82,4 @@ export function SettingsPage() {
             </Button>
         </Form>
     </Container>
-}
-
-function parseFaculty(value: string): FacultyInfo {
-    const [id, name] = value.split("__", 2)
-    return {
-        id: id,
-        name: name
-    }
-}
-
-function parseGroup(value: string): GroupInfo {
-    const [id, name] = value.split("__", 2)
-    return {
-        id: id,
-        name: name
-    }
 }
