@@ -4,6 +4,7 @@ import {FacultyInfo, GroupInfo} from "../Shared/Models";
 import {UserConfig} from "./Models";
 import {getUserConfig} from "./Api";
 import log from "loglevel";
+import {ExtendedGroupLessonItem} from "./Components/ExtendedGroupLessonItem";
 
 export function SettingsPage() {
     const [userConfig, setUserConfig] = useState<UserConfig | undefined>()
@@ -16,22 +17,22 @@ export function SettingsPage() {
             extendedGroupLessons: [
                 {
                     group: {
-                        id: "",
+                        id: "1",
                         name: "931902"
                     },
                     lessonIds: []
                 },
                 {
                     group: {
-                        id: "",
+                        id: "2",
                         name: "931903"
                     },
                     lessonIds: []
                 }
             ],
-            id: "",
+            id: "1",
             baseGroup: {
-                id: "",
+                id: "3",
                 name: "931901"
             }
         })
@@ -66,15 +67,18 @@ export function SettingsPage() {
                 <ListGroup>
                     {userConfig &&
                         userConfig?.extendedGroupLessons.map((extendedLessons)=>{
-                            return <ListGroup.Item>
-                                {extendedLessons.group.name}
+                            return <ListGroup.Item key={extendedLessons.group.id}>
+                                <ExtendedGroupLessonItem isNew={true} data={extendedLessons}
+                                                         editCallback={()=>{}}
+                                                         removeCallback={()=>{}}
+                                />
                             </ListGroup.Item>
                         })
                     }
                 </ListGroup>
             </Form.Group>
             <Button variant="success">
-                Сохранить все настройки
+                Сохранить настройки
             </Button>
         </Form>
     </Container>
