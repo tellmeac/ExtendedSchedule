@@ -1,14 +1,15 @@
 import {Button, Container, Form, InputGroup, ListGroup} from "react-bootstrap";
 import React, {useEffect, useState} from "react";
-import {FacultyInfo, GroupInfo} from "../Shared/Models";
-import {UserConfig} from "./Models";
-import {getUserConfig} from "./Api";
-import log from "loglevel";
+import {ExtendedLessons, UserConfig} from "./Models";
 import {ExtendedGroupLessonItem} from "./Components/ExtendedGroupLessonItem";
+import {GroupSelectModal} from "./Components/GroupSelectModal/GroupSelectModal";
 
 export function SettingsPage() {
     const [userConfig, setUserConfig] = useState<UserConfig | undefined>()
+    const [newExtendedGroupIds, setNewExtendedGroupIds] = useState<string[]>([])
     const [isChanged, setIsChanged] = useState<boolean>(false)
+
+    const [selectGroupModal, setSelectGroupModal] = useState<boolean>(false)
 
     useEffect(()=>{
         setUserConfig({
@@ -43,43 +44,51 @@ export function SettingsPage() {
         // })
     }, [])
 
-    /**
-     * План для страницы с настройками:
-     * 1. base schedule (open modal to select group)
-     * 2. extended group list (with button to open modal to select group to add to list)
-     */
+    const isNewExtendedGroup = (extended: ExtendedLessons) => {
+        return newExtendedGroupIds.includes(extended.group.id)
+    }
 
-    return <Container>
-        <Form className="w-50 mx-auto">
-            <Form.Group className="mb-3">
-                <Form.Label>Почта</Form.Label>
-                <Form.Control placeholder={userConfig?.email || "undefined"} disabled />
-            </Form.Group>
-            <Form.Group className="mb-3">
-                <Form.Label>Основная группа</Form.Label>
-                <InputGroup className="mb-3">
-                    <Form.Control placeholder={userConfig?.baseGroup.name || "группа не выбрана"} disabled />
-                    <Button><i className="bi bi-gear"/> Сменить</Button>
-                </InputGroup>
-            </Form.Group>
-            <Form.Group className="mb-3">
-                <Form.Label>Дополнительные предметы</Form.Label>
-                <ListGroup>
-                    {userConfig &&
+    const addExtendedGroups = () => {
+        setSelectGroupModal(true)
+    }
+
+    return <>
+        <Container>
+            <Form className="w-50 mx-auto">
+                <Form.Group className="mb-3">
+                    <Form.Label>Почта</Form.Label>
+                    <Form.Control placeholder={userConfig?.email || "undefined"} disabled />
+                </Form.Group>
+                <Form.Group className="mb-3">
+                    <Form.Label>Основная группа</Form.Label>
+                    <InputGroup className="mb-3">
+                        <Form.Control placeholder={userConfig?.baseGroup.name || "группа не выбрана"} disabled />
+                        <Button><i className="bi bi-gear"/> Сменить</Button>
+                    </InputGroup>
+                </Form.Group>
+                <Form.Group className="mb-3">
+                    <Form.Label>Дополнительные предметы</Form.Label>
+                    <ListGroup className="mb-3">
+                        {userConfig &&
                         userConfig?.extendedGroupLessons.map((extendedLessons)=>{
                             return <ListGroup.Item key={extendedLessons.group.id}>
-                                <ExtendedGroupLessonItem isNew={true} data={extendedLessons}
+                                <ExtendedGroupLessonItem isNew={isNewExtendedGroup(extendedLessons)}
+                                                         data={extendedLessons}
                                                          editCallback={()=>{}}
                                                          removeCallback={()=>{}}
                                 />
                             </ListGroup.Item>
                         })
-                    }
-                </ListGroup>
-            </Form.Group>
-            <Button variant="success">
-                Сохранить настройки
-            </Button>
-        </Form>
-    </Container>
+                        }
+                    </ListGroup>
+                    <Button variant="outline-success" onClick={addExtendedGroups}>Добавить</Button>
+                </Form.Group>
+                <Button variant="success">
+                    Сохранить настройки
+                </Button>
+            </Form>
+        </Container>
+
+        <GroupSelectModal isOpen={selectGroupModal} selectGroupCallback={(x)=>{setSelectGroupModal(false)}}/>
+    </>
 }
