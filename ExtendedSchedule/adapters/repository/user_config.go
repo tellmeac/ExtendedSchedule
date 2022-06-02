@@ -39,9 +39,10 @@ func (r entUserConfigRepository) GetByEmail(ctx context.Context, email string) (
 		return aggregate.UserConfig{}, err
 	default:
 		return aggregate.UserConfig{
-			Email:           dbo.Email,
-			BaseGroup:       dbo.BaseGroup,
-			ExcludedLessons: dbo.ExcludedLessons,
+			Email:                dbo.Email,
+			BaseGroup:            dbo.BaseGroup,
+			ExcludedLessons:      dbo.ExcludedLessons,
+			ExtendedGroupLessons: dbo.ExtendedGroupLessons,
 		}, nil
 	}
 }
