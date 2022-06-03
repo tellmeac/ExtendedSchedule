@@ -1,7 +1,8 @@
 import {FacultyInfo} from "../../Shared/Models";
 import axios from "axios";
-import {applyAuthorization} from "../../Shared/Api/Token";
-import {UserConfig} from "../Models";
+import {applyAuthorization} from "../../Shared/Auth/Token";
+import {LessonInfo, UserConfig} from "../Models";
+import {format} from "date-fns";
 
 const ScheduleAPIBaseUrl = process.env.REACT_APP_API_BASE_URL || "http://localhost:8080/api"
 
@@ -16,6 +17,25 @@ export async function getUserConfig(): Promise<UserConfig> {
     })
 
     const response = await axios.get<UserConfig>(`${ScheduleAPIBaseUrl}/user/config`, config)
+
+    return response.data
+}
+
+/**
+ * Returns nearest group lessons
+ * @param groupId - group to get lessons from
+ */
+export async function getLessonsInfo(groupId: string): Promise<LessonInfo[]> {
+    const config = applyAuthorization({
+        params: {
+            "groupId": groupId
+        },
+        validateStatus: status => {
+            return status < 400
+        }
+    })
+
+    const response = await axios.get<LessonInfo[]>(`${ScheduleAPIBaseUrl}/lessons/`, config)
 
     return response.data
 }

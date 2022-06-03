@@ -1,9 +1,9 @@
 import React from "react";
-import {ScheduleDay} from "../../Shared/Models";
+import {ScheduleDay} from "../../../Shared/Models";
 import {Table} from "react-bootstrap";
 import {add, format} from "date-fns";
 import "./WeekSchedule.css"
-import {Intervals, IntervalSectionsCount} from "../../Shared/Definitions";
+import {Intervals, IntervalSectionsCount} from "../../../Shared/Definitions";
 import {LessonCell} from "../LessonCell";
 import 'bootstrap/dist/css/bootstrap.min.css';
 

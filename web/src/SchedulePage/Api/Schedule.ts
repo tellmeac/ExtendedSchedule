@@ -1,7 +1,7 @@
-import {ScheduleDay} from "../Models";
+import {ScheduleDay} from "../../Shared/Models";
 import {format} from "date-fns";
 import axios from "axios";
-import {applyAuthorization} from "./Token";
+import {applyAuthorization} from "../../Shared/Auth/Token";
 
 const ScheduleAPIBaseUrl = process.env.REACT_APP_API_BASE_URL || "http://localhost:8080/api"
 
