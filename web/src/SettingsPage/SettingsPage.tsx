@@ -63,6 +63,21 @@ export function SettingsPage() {
         console.log(userConfig)
     }
 
+    const handleCloseExtendedGroupLesson = (extended: ExtendedLessons) => {
+        const updated = userConfig
+        updated.extendedGroupLessons = updated.extendedGroupLessons.map((ext) => {
+            if (ext.group.id === extended.group.id) {
+                ext.lessonIds = extended.lessonIds
+            }
+            return ext
+        })
+        setUserConfig(updated)
+
+        setOpenExtendedLessonsEditor(false)
+
+        console.log(userConfig)
+    }
+
     const addExtendedGroups = () => {
         setOpenGroupModal(true)
     }
@@ -109,7 +124,10 @@ export function SettingsPage() {
         </Container>
 
         {/* TODO: use callbacks to save data to new user config */}
-        <GroupSelectModal isOpen={isOpenGroupModal} selectGroupCallback={(x: GroupInfo | undefined)=>{setOpenGroupModal(false)}}/>
-        <ExtendedLessonsEditorModal isOpen={isOpenExtendedLessonsEditor} extendedLessons={selectedExtendedGroupToEdit} selectExtendedLessonsCallback={(y: string[]) => {setOpenExtendedLessonsEditor(false)}}/>
+        <GroupSelectModal isOpen={isOpenGroupModal}
+                          selectGroupCallback={(x: GroupInfo | undefined)=>{setOpenGroupModal(false)}}/>
+        <ExtendedLessonsEditorModal isOpen={isOpenExtendedLessonsEditor}
+                                    extendedLessons={selectedExtendedGroupToEdit}
+                                    selectExtendedLessonsCallback={handleCloseExtendedGroupLesson}/>
     </>
 }
