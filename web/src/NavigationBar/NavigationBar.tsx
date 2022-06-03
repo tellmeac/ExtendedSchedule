@@ -5,7 +5,7 @@ import "./NavigationBar.css"
 import {Link} from "react-router-dom";
 import {GoogleLogin} from "@react-oauth/google";
 import jwtDecode from "jwt-decode";
-import {storeUserJwtToken} from "../Shared/Api/Token";
+import {storeUserJwtToken} from "../Shared/Auth/Token";
 import {useAppDispatch, useAppSelector} from "../Shared/Hooks";
 import {selectUserInfo, selectSignedIn, setCredentials} from "../Shared/Store";
 

@@ -1,11 +1,11 @@
 import React, {useEffect, useState} from "react";
-import {WeekSchedule} from "./WeekSchedule";
-import {ScheduleControlTab} from "./ScheduleControlTab/ScheduleControlTab";
+import {WeekSchedule} from "./Components/WeekSchedule";
+import {ScheduleControlTab} from "./Components/ScheduleControlTab/ScheduleControlTab";
 import {Container} from "react-bootstrap";
 import "./SchedulePage.css"
 import {useAppDispatch, useAppSelector} from "../Shared/Hooks";
 import {selectSignedIn, selectWeekPeriod, setNextWeek, setPreviousWeek} from "../Shared/Store";
-import {getPersonalSchedule} from "../Shared/Api";
+import {getPersonalSchedule} from "./Api";
 import {ScheduleDay} from "../Shared/Models";
 import log from "loglevel";
 

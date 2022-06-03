@@ -1,0 +1,8 @@
+.lesson-label {
+    min-width: 25em;
+}
+
+.lesson-form {
+    overflow-x: auto;
+    max-height: 30em;
+}

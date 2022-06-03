@@ -6,7 +6,7 @@ import {GroupInfo} from "../../Shared/Models";
 export interface UserConfig {
     id: string
     email: string
-    baseGroup: GroupInfo
+    baseGroup: GroupInfo | undefined
     excludedLessons: ExcludedRule[]
     extendedGroupLessons: ExtendedLessons[]
 }

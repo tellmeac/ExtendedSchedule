@@ -15,12 +15,16 @@ export const GroupSelectModal: React.FC<Props> = ({isOpen, selectGroupCallback})
     const [group, setGroup] = useState<GroupInfo | undefined>(undefined)
 
     useEffect(()=>{
+        if (!isOpen) {
+            return
+        }
+
         getAllFaculties().then((faculties)=>{
             setAllFaculties(faculties)
         }).catch(err=>{
             log.error(err)
         })
-    })
+    }, [isOpen])
 
     const handleClose = () => {
         selectGroupCallback(group)
