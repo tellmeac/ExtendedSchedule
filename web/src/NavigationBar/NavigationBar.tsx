@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Nav, Navbar} from "react-bootstrap";
+import {Container, Nav, Navbar} from "react-bootstrap";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./NavigationBar.css"
 import {Link} from "react-router-dom";
@@ -30,15 +30,15 @@ export function NavigationBar() {
         storeUserJwtToken(credentialResponse.credential)
     }
 
-    return <Navbar bg="light" expand="lg">
-        <Navbar.Brand className="title" href="/">TSU Schedule</Navbar.Brand>
-        <Navbar.Toggle aria-controls="basic-navbar-nav" />
-        <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="me-auto">
-                <Nav.Item><Link className={"nav-link"} to="/schedule"><i className="bi bi-calendar-heart"/> Расписание</Link></Nav.Item>
-                <Nav.Item><Link className={"nav-link"} to="/settings"><i className="bi bi-gear"/> Параметры</Link></Nav.Item>
-            </Nav>
-            <Nav className="mr-auto">
+    return <Navbar bg="light">
+        <Container fluid>
+            <Navbar.Brand className="title" href="/">TSU Schedule</Navbar.Brand>
+            <Navbar.Toggle aria-controls="navbarScroll" />
+            <Navbar.Collapse id="navbarScroll">
+                <Nav className="me-auto my-2 my-lg-0" navbarScroll>
+                    <Nav.Item><Link className={"nav-link"} to="/schedule"><i className="bi bi-calendar-heart"/> Расписание</Link></Nav.Item>
+                    <Nav.Item><Link className={"nav-link"} to="/settings"><i className="bi bi-gear"/> Параметры</Link></Nav.Item>
+                </Nav>
                 {
                     !isAuthorized &&
                     <GoogleLogin
@@ -57,7 +57,7 @@ export function NavigationBar() {
                     isAuthorized &&
                     <Nav.Item className={"user-context"}>Вы вошли как {userInfo.username}</Nav.Item>
                 }
-            </Nav>
-        </Navbar.Collapse>
+            </Navbar.Collapse>
+        </Container>
     </Navbar>
 }
