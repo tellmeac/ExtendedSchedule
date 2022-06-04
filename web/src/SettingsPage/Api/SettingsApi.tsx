@@ -7,7 +7,7 @@ import {format} from "date-fns";
 const ScheduleAPIBaseUrl = process.env.REACT_APP_API_BASE_URL || "http://localhost:8080/api"
 
 /**
- * Returns all faculties
+ * Returns user configuration
  */
 export async function getUserConfig(): Promise<UserConfig> {
     const config = applyAuthorization({
@@ -19,6 +19,19 @@ export async function getUserConfig(): Promise<UserConfig> {
     const response = await axios.get<UserConfig>(`${ScheduleAPIBaseUrl}/user/config`, config)
 
     return response.data
+}
+
+/**
+ * Updates user configuration
+ */
+export async function updateUserConfig(desired: UserConfig): Promise<void> {
+    const config = applyAuthorization({
+        validateStatus: status => {
+            return status < 400
+        }
+    })
+
+    await axios.patch(`${ScheduleAPIBaseUrl}/user/config`, desired, config)
 }
 
 /**
