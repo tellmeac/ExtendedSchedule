@@ -14,7 +14,11 @@ func NewServer(cfg config.Config) *gin.Engine {
 	engine.Use(cors.New(cors.Config{
 		AllowAllOrigins:  true,
 		AllowCredentials: true,
-		AllowHeaders:     []string{"Authorization"},
+		AllowHeaders: []string{
+			"Authorization",
+			"Content-Type",
+		},
+		AllowMethods: []string{"PATCH", "GET"},
 	}))
 
 	engine.Use(middleware.GoogleOAuth2(cfg.IsDebug))

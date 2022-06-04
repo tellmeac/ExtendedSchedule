@@ -8,7 +8,7 @@ import log from "loglevel";
 import "./SettingsPage.css"
 import {useAppSelector} from "../Shared/Hooks";
 import {selectSignedIn} from "../Shared/Store";
-import {getUserConfig} from "./Api";
+import {getUserConfig, updateUserConfig} from "./Api";
 import {ExtendedLessonsEditorModal} from "./Components/ExtendedLessonsEditorModal";
 
 export function SettingsPage() {
@@ -22,8 +22,6 @@ export function SettingsPage() {
         id: ""
     })
     const [configExtendedRender, setConfigExtendedRender] = useState<ExtendedLessons[]>([])
-    const [configChanged, setConfigChanged] = useState<boolean>(false)
-
     const [isOpenGroupModal, setOpenGroupModal] = useState<boolean>(false)
 
     const [isOpenExtendedLessonsEditor, setOpenExtendedLessonsEditor] = useState<boolean>(false)
@@ -72,14 +70,18 @@ export function SettingsPage() {
             return ext
         })
         setUserConfig(updated)
-
         setOpenExtendedLessonsEditor(false)
-
-        console.log(userConfig)
     }
 
     const addExtendedGroups = () => {
-        setOpenGroupModal(true)
+        // TODO
+        // setOpenGroupModal(true)
+    }
+
+    const saveConfig = () => {
+        updateUserConfig(userConfig).catch(err => {
+            log.error(err)
+        })
     }
 
     return <>
@@ -117,7 +119,7 @@ export function SettingsPage() {
                     </ListGroup>
                     <Button variant="outline-success" onClick={addExtendedGroups}>Добавить</Button>
                 </Form.Group>
-                <Button variant="success" disabled={!configChanged}>
+                <Button variant="success" onClick={saveConfig}>
                     Сохранить настройки
                 </Button>
             </Form>
