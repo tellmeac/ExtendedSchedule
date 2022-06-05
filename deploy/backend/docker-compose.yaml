@@ -13,9 +13,7 @@ services:
     restart: always
 
   schedule:
-    build: 
-      context: ../../ExtendedSchedule
-      dockerfile: Dockerfile
+    image: "cloud.canister.io:5000/d4yw41ker/better_schedule:0.1.0"
     container_name: "schedule"
     ports:
     - "8080:8080"
