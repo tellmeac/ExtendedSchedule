@@ -1,4 +1,4 @@
-IsDebug: true
+IsDebug: false
 ListenAddress: ":8080"
 ScheduleAPI:
   BaseURL: "https://intime.tsu.ru/api/web/v1"
