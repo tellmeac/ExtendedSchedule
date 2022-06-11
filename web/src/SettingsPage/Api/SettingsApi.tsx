@@ -1,4 +1,4 @@
-import {FacultyInfo} from "../../Shared/Models";
+import {FacultyInfo, GroupInfo} from "../../Shared/Models";
 import axios from "axios";
 import {applyAuthorization} from "../../Shared/Auth/Token";
 import {LessonInfo, UserConfig} from "../Models";
@@ -72,13 +72,13 @@ export async function getAllFaculties(): Promise<FacultyInfo[]> {
  * Returns groups of specific faculty
  * @param facultyId
  */
-export async function getFacultyGroups(facultyId: string): Promise<FacultyInfo[]> {
+export async function getFacultyGroups(facultyId: string): Promise<GroupInfo[]> {
     const config = applyAuthorization({
         validateStatus: status => {
             return status < 400
         }
     })
 
-    const response = await axios.get<FacultyInfo[]>(`${ScheduleAPIBaseUrl}/faculties/${facultyId}/groups`, config)
+    const response = await axios.get<GroupInfo[]>(`${ScheduleAPIBaseUrl}/faculties/${facultyId}/groups`, config)
     return response.data
 }
