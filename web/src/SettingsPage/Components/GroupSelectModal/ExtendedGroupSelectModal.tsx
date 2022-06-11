@@ -9,7 +9,7 @@ interface Props {
     selectGroupCallback: (group: GroupInfo | undefined) => void
 }
 
-export const GroupSelectModal: React.FC<Props> = ({isOpen, selectGroupCallback}) => {
+export const ExtendedGroupSelectModal: React.FC<Props> = ({isOpen, selectGroupCallback}) => {
     const [allFaculties, setAllFaculties] = useState<FacultyInfo[]>([])
     const [faculty, setFaculty] = useState<FacultyInfo | undefined>(undefined)
     const [allGroups, setAllGroups] = useState<GroupInfo[]>([])

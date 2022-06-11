@@ -10,6 +10,7 @@ import {useAppSelector} from "../Shared/Hooks";
 import {selectSignedIn} from "../Shared/Store";
 import {getUserConfig, updateUserConfig} from "./Api";
 import {ExtendedLessonsEditorModal} from "./Components/ExtendedLessonsEditorModal";
+import {ExtendedGroupSelectModal} from "./Components/GroupSelectModal/ExtendedGroupSelectModal";
 
 export function SettingsPage() {
     const isAuthorized = useAppSelector(selectSignedIn)
@@ -22,7 +23,8 @@ export function SettingsPage() {
         id: ""
     })
     const [configExtendedRender, setConfigExtendedRender] = useState<ExtendedLessons[]>([])
-    const [isOpenGroupModal, setOpenGroupModal] = useState<boolean>(false)
+    const [isOpenGroupModalForExtendedGroupSelect, setOpenExtendedGroupSelectModal] = useState<boolean>(false)
+    const [isOpenBaseGroupModal, setOpenBaseGroupModal] = useState<boolean>(false)
 
     const [isOpenExtendedLessonsEditor, setOpenExtendedLessonsEditor] = useState<boolean>(false)
     const [selectedExtendedGroupToEdit, setSelectedExtendedGroupToEdit] = useState<ExtendedLessons>({
@@ -57,8 +59,28 @@ export function SettingsPage() {
         })
         setUserConfig(updated)
         setConfigExtendedRender(updated.extendedGroupLessons)
+    }
 
-        console.log(userConfig)
+    const handleAddExtendedGroupModal = (group: GroupInfo | undefined) => {
+        if (group) {
+            const updated = userConfig
+            updated.extendedGroupLessons.push({
+                group: group,
+                lessonIds: []
+            })
+            setUserConfig(updated)
+            setConfigExtendedRender(updated.extendedGroupLessons)
+        }
+        setOpenExtendedGroupSelectModal(false)
+    }
+
+    const handleCloseBaseGroupSelectModal = (group: GroupInfo | undefined) => {
+        if (group) {
+            const updated = userConfig
+            updated.baseGroup = group
+            setUserConfig(updated)
+        }
+        setOpenBaseGroupModal(false)
     }
 
     const handleCloseExtendedGroupLesson = (extended: ExtendedLessons) => {
@@ -73,9 +95,12 @@ export function SettingsPage() {
         setOpenExtendedLessonsEditor(false)
     }
 
-    const addExtendedGroups = () => {
-        // TODO
-        // setOpenGroupModal(true)
+    const changeBaseGroup = () => {
+        setOpenBaseGroupModal(true)
+    }
+
+    const addExtendedGroup = () => {
+        setOpenExtendedGroupSelectModal(true)
     }
 
     const saveConfig = () => {
@@ -95,7 +120,7 @@ export function SettingsPage() {
                     <Form.Label>Основная группа</Form.Label>
                     <InputGroup className="mb-3">
                         <Form.Control placeholder={userConfig.baseGroup?.name || "группа отсутствует"} disabled />
-                        <Button><i className="bi bi-gear"/> Сменить</Button>
+                        <Button onClick={changeBaseGroup}><i className="bi bi-gear"/> Изменить</Button>
                     </InputGroup>
                 </Form.Group>
                 <Form.Group className="mb-3">
@@ -117,7 +142,7 @@ export function SettingsPage() {
                             })
                         }
                     </ListGroup>
-                    <Button variant="outline-success" onClick={addExtendedGroups}>Добавить</Button>
+                    <Button variant="outline-success" onClick={addExtendedGroup}>Добавить</Button>
                 </Form.Group>
                 <Button variant="success" onClick={saveConfig}>
                     Сохранить настройки
@@ -125,9 +150,10 @@ export function SettingsPage() {
             </Form>
         </Container>
 
-        {/* TODO: use callbacks to save data to new user config */}
-        <GroupSelectModal isOpen={isOpenGroupModal}
-                          selectGroupCallback={(x: GroupInfo | undefined)=>{setOpenGroupModal(false)}}/>
+        <GroupSelectModal isOpen={isOpenGroupModalForExtendedGroupSelect}
+                          selectGroupCallback={handleAddExtendedGroupModal}/>
+        <ExtendedGroupSelectModal isOpen={isOpenBaseGroupModal}
+                                  selectGroupCallback={handleCloseBaseGroupSelectModal}/>
         <ExtendedLessonsEditorModal isOpen={isOpenExtendedLessonsEditor}
                                     extendedLessons={selectedExtendedGroupToEdit}
                                     selectExtendedLessonsCallback={handleCloseExtendedGroupLesson}/>
