@@ -1,4 +1,4 @@
-version: '2'
+version: '3'
 
 services:
   database:
@@ -21,4 +21,13 @@ services:
       DATABASE_CONNECTIONADDRESS: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}"
     depends_on:
       - database
+    restart: always
+
+  web:
+    image: "cloud.canister.io:5000/d4yw41ker/schedule_frontend:0.2.1"
+    container_name: "web"
+    ports:
+      - "443:443"
+    volumes:
+      - ./nginx-secrets:/etc/letsencrypt
     restart: always

@@ -3,9 +3,10 @@ package userconfig
 import (
 	"context"
 	"fmt"
-	"github.com/pkg/errors"
 	"tellmeac/extended-schedule/domain/aggregate"
 	"tellmeac/extended-schedule/domain/repository"
+
+	"github.com/pkg/errors"
 )
 
 func NewService(repository repository.IUserConfigRepository) IService {

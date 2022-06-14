@@ -22,6 +22,7 @@ type entUserConfigRepository struct {
 
 func (r entUserConfigRepository) Put(ctx context.Context, userConfig aggregate.UserConfig) error {
 	_, err := r.client.UserConfig.Create().
+		SetID(userConfig.ID).
 		SetEmail(userConfig.Email).
 		SetBaseGroup(userConfig.BaseGroup).
 		SetExtendedGroupLessons(userConfig.ExtendedGroupLessons).
@@ -39,6 +40,7 @@ func (r entUserConfigRepository) GetByEmail(ctx context.Context, email string) (
 		return aggregate.UserConfig{}, err
 	default:
 		return aggregate.UserConfig{
+			ID:                   dbo.ID,
 			Email:                dbo.Email,
 			BaseGroup:            dbo.BaseGroup,
 			ExcludedLessons:      dbo.ExcludedLessons,
