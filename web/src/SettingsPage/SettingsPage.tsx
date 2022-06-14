@@ -64,6 +64,9 @@ export function SettingsPage() {
     const handleAddExtendedGroupModal = (group: GroupInfo | undefined) => {
         if (group) {
             const updated = userConfig
+            if (!updated.extendedGroupLessons) {
+                updated.extendedGroupLessons = []
+            }
             updated.extendedGroupLessons.push({
                 group: group,
                 lessonIds: []
@@ -124,24 +127,26 @@ export function SettingsPage() {
                     </InputGroup>
                 </Form.Group>
                 <Form.Group className="mb-3">
-                    <Form.Label>Дополнительные предметы</Form.Label>
-                    <ListGroup className="mb-3">
-                        {
-                            configExtendedRender.map((extendedLessons)=>{
-                                return <ListGroup.Item key={extendedLessons.group.id}>
-                                    <ExtendedGroupLessonItem isNew={false}
-                                                             data={extendedLessons}
-                                                             editCallback={()=>{
-                                                                 editExtendedGroupCallback(extendedLessons)
-                                                             }}
-                                                             removeCallback={()=>{
-                                                                 removeExtendedGroupCallback(extendedLessons)
-                                                             }}
-                                    />
-                                </ListGroup.Item>
-                            })
-                        }
-                    </ListGroup>
+                    <Form.Label>Дополнительные предметы: </Form.Label>
+                    {configExtendedRender &&
+                        <ListGroup className="mb-3">
+                            {
+                                configExtendedRender.map((extendedLessons)=>{
+                                    return <ListGroup.Item key={extendedLessons.group.id}>
+                                        <ExtendedGroupLessonItem isNew={false}
+                                                                data={extendedLessons}
+                                                                editCallback={()=>{
+                                                                    editExtendedGroupCallback(extendedLessons)
+                                                                }}
+                                                                removeCallback={()=>{
+                                                                    removeExtendedGroupCallback(extendedLessons)
+                                                                }}
+                                        />
+                                    </ListGroup.Item>
+                                })
+                            }
+                        </ListGroup>
+                    }
                     <Button variant="outline-success" onClick={addExtendedGroup}>Добавить</Button>
                 </Form.Group>
                 <Button variant="success" onClick={saveConfig}>

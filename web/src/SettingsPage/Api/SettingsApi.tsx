@@ -2,7 +2,6 @@ import {FacultyInfo, GroupInfo} from "../../Shared/Models";
 import axios from "axios";
 import {applyAuthorization} from "../../Shared/Auth/Token";
 import {LessonInfo, UserConfig} from "../Models";
-import {format} from "date-fns";
 
 const ScheduleAPIBaseUrl = process.env.REACT_APP_API_BASE_URL || "http://localhost:8080/api"
 
