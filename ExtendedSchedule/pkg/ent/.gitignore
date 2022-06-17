@@ -1,5 +1,6 @@
-../../../../adapters/ent/hook
+*
 !.gitignore
 !generate.go
 !schema
 !schema/*
+!constructor.go
