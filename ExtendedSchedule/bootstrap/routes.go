@@ -1,21 +1,25 @@
 package bootstrap
 
 import (
-	"tellmeac/extended-schedule/service/additions"
-	"tellmeac/extended-schedule/service/schedule"
-	"tellmeac/extended-schedule/service/userconfig"
-	"tellmeac/extended-schedule/utils/routes/health"
-
 	"github.com/gin-gonic/gin"
+	"tellmeac/extended-schedule/pkg/handlers/faculty"
+	"tellmeac/extended-schedule/pkg/handlers/lesson"
+	"tellmeac/extended-schedule/pkg/handlers/schedule"
+	"tellmeac/extended-schedule/pkg/handlers/userconfig"
 )
 
-// bindRoutes binds api endpoints logically.
-func bindRoutes(engine *gin.Engine, schedule *schedule.Endpoints, configs *userconfig.Endpoints, additions *additions.Endpoints) {
-	health.Endpoints.Bind(engine)
-
+// bind binds api endpoints.
+func bind(
+	engine *gin.Engine,
+	faculty *faculty.Endpoints,
+	configs *userconfig.Endpoints,
+	lessons *lesson.Endpoints,
+	schedule *schedule.Endpoints,
+) {
 	api := engine.Group("api/")
 
 	schedule.Bind(api)
 	configs.Bind(api)
-	additions.Bind(api)
+	faculty.Bind(api)
+	lessons.Bind(api)
 }
