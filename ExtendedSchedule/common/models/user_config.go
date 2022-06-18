@@ -17,7 +17,7 @@ type UserConfig struct {
 	ID                   uuid.UUID              `json:"id"`
 	Email                string                 `json:"email"`
 	BaseGroup            *GroupInfo             `json:"baseGroup"`
-	ExcludedLessons      []ExcludeRule          `json:"excludeRules"`
+	ExcludeRules         []ExcludeRule          `json:"excludeRules"`
 	ExtendedGroupLessons []ExtendedGroupLessons `json:"extendedGroupLessons"`
 }
 

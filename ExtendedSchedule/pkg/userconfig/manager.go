@@ -3,6 +3,7 @@ package userconfig
 import (
 	"context"
 	"errors"
+	"github.com/rs/zerolog/log"
 	"go.uber.org/fx"
 	commonmodels "tellmeac/extended-schedule/common/models"
 	errs "tellmeac/extended-schedule/lib/errors"
@@ -35,6 +36,7 @@ func (m manager) GetByEmail(ctx context.Context, email string) (*commonmodels.Us
 
 	switch {
 	case errors.Is(err, errs.ErrNotFound):
+		log.Info().Str("email", email).Msg("User config was not found, will be created new")
 		newConfig := commonmodels.NewUserConfig(email)
 		err = m.Onboard(ctx, &newConfig)
 		return &newConfig, err

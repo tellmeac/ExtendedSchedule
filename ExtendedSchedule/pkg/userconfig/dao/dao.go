@@ -46,7 +46,7 @@ func (d dao) Onboard(ctx context.Context, userConfig *commonmodels.UserConfig) e
 		SetEmail(userConfig.Email).
 		SetBaseGroup(userConfig.BaseGroup).
 		SetExtendedGroupLessons(userConfig.ExtendedGroupLessons).
-		SetExcludeRules(userConfig.ExcludedLessons).
+		SetExcludeRules(userConfig.ExcludeRules).
 		OnConflictColumns("id", "email").
 		UpdateNewValues().ID(ctx)
 
@@ -58,7 +58,7 @@ func (d dao) Update(ctx context.Context, desired *commonmodels.UserConfig) error
 	updatedCount, err := d.client.UserConfig.Update().
 		Where(userconfig.IDEQ(desired.ID)).
 		SetBaseGroup(desired.BaseGroup).
-		SetExcludeRules(desired.ExcludedLessons).
+		SetExcludeRules(desired.ExcludeRules).
 		SetExtendedGroupLessons(desired.ExtendedGroupLessons).
 		Save(ctx)
 

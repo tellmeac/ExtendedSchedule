@@ -3,6 +3,7 @@ package schedule
 import (
 	"context"
 	"fmt"
+	"github.com/rs/zerolog/log"
 	"github.com/samber/lo"
 	"go.uber.org/fx"
 	commonmodels "tellmeac/extended-schedule/common/models"
@@ -98,7 +99,7 @@ func (m manager) GetUserScheduleByEmail(ctx context.Context, email string, start
 	}
 
 	for i := 0; i < len(schedule); i++ {
-		if err := schedule[i].ExcludeLessons(config.ExcludedLessons); err != nil {
+		if err := schedule[i].ExcludeLessons(config.ExcludeRules); err != nil {
 			return nil, err
 		}
 	}
@@ -109,6 +110,7 @@ func (m manager) GetUserScheduleByEmail(ctx context.Context, email string, start
 func (m manager) getExtendedSchedule(ctx context.Context, groupLessons []commonmodels.ExtendedGroupLessons, start time.Time, end time.Time) ([]commonmodels.DaySchedule, error) {
 	var result []commonmodels.DaySchedule
 	for _, extended := range groupLessons {
+		log.Info().Str("group", extended.Group.ID).Msg("Apply extended group lessons to user schedule")
 		groupSchedule, err := m.GetByGroup(ctx, extended.Group.ID, start, end)
 		if err != nil {
 			return nil, err
