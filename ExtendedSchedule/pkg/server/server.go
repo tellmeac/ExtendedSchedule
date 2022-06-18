@@ -3,6 +3,7 @@ package server
 import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog/log"
 	"tellmeac/extended-schedule/lib/middleware"
 	"tellmeac/extended-schedule/pkg/config"
 )
@@ -13,6 +14,7 @@ func New(cfg config.Config) *gin.Engine {
 
 	// enable cors for local debugging
 	if cfg.IsDebug {
+		log.Debug().Msg("Use cors policy middleware")
 		engine.Use(cors.New(cors.Config{
 			AllowAllOrigins:  true,
 			AllowCredentials: true,

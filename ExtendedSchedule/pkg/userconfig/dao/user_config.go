@@ -12,6 +12,6 @@ func toCommonUserConfig(c *ent.UserConfig) *commonmodels.UserConfig {
 		Email:                c.Email,
 		BaseGroup:            c.BaseGroup,
 		ExtendedGroupLessons: c.ExtendedGroupLessons,
-		ExcludedLessons:      c.ExcludeRules,
+		ExcludeRules:         c.ExcludeRules,
 	}
 }

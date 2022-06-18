@@ -3,13 +3,15 @@ package bootstrap
 import (
 	"context"
 	"github.com/gin-gonic/gin"
+	"github.com/rs/zerolog/log"
 	"go.uber.org/fx"
 	"net/http"
-	config2 "tellmeac/extended-schedule/pkg/config"
+	"tellmeac/extended-schedule/pkg/config"
 	"tellmeac/extended-schedule/pkg/ent"
 	"tellmeac/extended-schedule/pkg/faculty"
 	"tellmeac/extended-schedule/pkg/handlers"
 	"tellmeac/extended-schedule/pkg/lesson"
+	logger "tellmeac/extended-schedule/pkg/log"
 	"tellmeac/extended-schedule/pkg/schedule"
 	"tellmeac/extended-schedule/pkg/server"
 	"tellmeac/extended-schedule/pkg/tsuschedule"
@@ -18,7 +20,8 @@ import (
 
 // Module is a top tree module of application.
 var Module = fx.Options(
-	fx.Provide(config2.MustLoad),
+	fx.Provide(config.MustLoad),
+	logger.Module,
 	ent.Module,
 	tsuschedule.Module,
 	userconfig.Module,
@@ -32,9 +35,11 @@ var Module = fx.Options(
 )
 
 // bootstrap function is an endpoint to all provided structs.
-func bootstrap(lc fx.Lifecycle, cfg config2.Config, server *gin.Engine) {
+func bootstrap(lc fx.Lifecycle, cfg config.Config, server *gin.Engine) {
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
+			log.Info().Msg("Starting application")
+
 			var err error
 			go func() {
 				err = http.ListenAndServe(cfg.ListenAddress, server)
@@ -42,6 +47,7 @@ func bootstrap(lc fx.Lifecycle, cfg config2.Config, server *gin.Engine) {
 			return err
 		},
 		OnStop: func(ctx context.Context) error {
+			log.Info().Msg("Stop application")
 			return nil
 		},
 	})
