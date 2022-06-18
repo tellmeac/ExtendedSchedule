@@ -13,7 +13,7 @@ services:
     restart: always
 
   schedule:
-    image: "cloud.canister.io:5000/d4yw41ker/better_schedule:0.1.0"
+    image: "cloud.canister.io:5000/d4yw41ker/better_schedule:latest"
     container_name: "schedule"
     ports:
     - "8080:8080"
@@ -24,7 +24,7 @@ services:
     restart: always
 
   web:
-    image: "cloud.canister.io:5000/d4yw41ker/schedule_frontend:0.2.1"
+    image: "cloud.canister.io:5000/d4yw41ker/schedule_frontend:latest"
     container_name: "web"
     ports:
       - "443:443"
