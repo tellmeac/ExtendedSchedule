@@ -17,22 +17,22 @@ func NewUserConfig(email string) UserConfig {
 type UserConfig struct {
 	ID                   uuid.UUID              `json:"id"`
 	Email                string                 `json:"email"`
-	BaseGroup            *values.GroupInfo      `json:"baseGroup"`
+	BaseGroup            *values.StudyGroup     `json:"baseGroup"`
 	ExcludeRules         []ExcludeRule          `json:"excludeRules"`
 	ExtendedGroupLessons []ExtendedGroupLessons `json:"extendedGroupLessons"`
 }
 
 // ExtendedGroupLessons represents extended group by some lessons.
 type ExtendedGroupLessons struct {
-	Group     values.GroupInfo `json:"group"`
-	LessonIDs []string         `json:"lessonIds"`
+	Group     values.StudyGroup `json:"group"`
+	LessonIDs []string          `json:"lessonIds"`
 }
 
 // ExcludeRule represents single rule to ignore one or many lessons from schedule repeatedly.
 type ExcludeRule struct {
-	ID       uuid.UUID          `json:"id"`
-	LessonID string             `json:"lessonId"`
-	WeekDay  int                `json:"weekDay"`
-	Position int                `json:"position"`
-	Groups   []values.GroupInfo `json:"groups"`
+	ID       uuid.UUID           `json:"id"`
+	LessonID string              `json:"lessonId"`
+	WeekDay  int                 `json:"weekDay"`
+	Position int                 `json:"position"`
+	Groups   []values.StudyGroup `json:"groups"`
 }

@@ -18,7 +18,7 @@ func (UserConfig) Fields() []ent.Field {
 	return []ent.Field{
 		field.UUID("id", uuid.UUID{}).Default(uuid.New),
 		field.String("Email").NotEmpty(),
-		field.JSON("BaseGroup", &values.GroupInfo{}),
+		field.JSON("BaseGroup", &values.StudyGroup{}),
 		field.JSON("ExcludeRules", []userconfig.ExcludeRule{}),
 		field.JSON("ExtendedGroupLessons", []userconfig.ExtendedGroupLessons{}),
 	}
