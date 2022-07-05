@@ -23,7 +23,7 @@ FROM alpine:3.15.0
 
 WORKDIR /app
 
-COPY --from=builder /service/app /usr/bin/app
+COPY --from=builder /services/app /usr/bin/app
 COPY config.yaml config.yaml
 
 CMD ["/usr/bin/app"]
