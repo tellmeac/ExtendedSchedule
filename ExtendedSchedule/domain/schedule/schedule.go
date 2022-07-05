@@ -2,6 +2,7 @@ package schedule
 
 import (
 	"errors"
+	"github.com/samber/lo"
 	"reflect"
 	"tellmeac/extended-schedule/domain/userconfig"
 	"tellmeac/extended-schedule/domain/values"
@@ -9,8 +10,8 @@ import (
 )
 
 type DaySchedule struct {
-	Date    time.Time          `json:"date"`
-	Lessons []LessonInSchedule `json:"lessons"`
+	Date    time.Time `json:"date"`
+	Lessons []Lesson  `json:"lessons"`
 }
 
 func (day *DaySchedule) ExcludeLessons(excluded []userconfig.ExcludeRule) error {
@@ -19,7 +20,7 @@ func (day *DaySchedule) ExcludeLessons(excluded []userconfig.ExcludeRule) error 
 		ruleMap[e.LessonID] = append(ruleMap[e.LessonID], e)
 	}
 
-	var filteredLessons = make([]LessonInSchedule, 0)
+	var filteredLessons = make([]Lesson, 0)
 	for _, lesson := range day.Lessons {
 		if !day.isExcluded(&lesson, ruleMap) {
 			filteredLessons = append(filteredLessons, lesson)
@@ -30,8 +31,8 @@ func (day *DaySchedule) ExcludeLessons(excluded []userconfig.ExcludeRule) error 
 	return nil
 }
 
-func (day DaySchedule) isExcluded(lesson *LessonInSchedule, ruleMap map[string][]userconfig.ExcludeRule) bool {
-	matchGroups := func(a []values.GroupInfo, b []values.GroupInfo) bool {
+func (day DaySchedule) isExcluded(lesson *Lesson, ruleMap map[string][]userconfig.ExcludeRule) bool {
+	matchGroups := func(a []values.StudyGroup, b []values.StudyGroup) bool {
 		return reflect.DeepEqual(a, b)
 	}
 
@@ -54,9 +55,9 @@ func (day DaySchedule) isExcluded(lesson *LessonInSchedule, ruleMap map[string][
 
 // Join добавляет расписание занятий из переданного дня.
 func (day *DaySchedule) Join(other DaySchedule) error {
-	var appendDistinct = func(others []*LessonInSchedule, lesson *LessonInSchedule) []*LessonInSchedule {
+	var appendDistinct = func(others []*Lesson, lesson *Lesson) []*Lesson {
 		for _, other := range others {
-			if lesson.IsDuplicate(other) {
+			if lesson.IsSame(other) {
 				return others
 			}
 		}
@@ -69,7 +70,7 @@ func (day *DaySchedule) Join(other DaySchedule) error {
 	}
 
 	var maxPosition = 0
-	var lessonsByPosition = make(map[int][]*LessonInSchedule, 0)
+	var lessonsByPosition = make(map[int][]*Lesson, 0)
 	for i, lesson := range day.Lessons {
 		lessonsByPosition[lesson.Position] = append(lessonsByPosition[lesson.Position], &day.Lessons[i])
 		if maxPosition < lesson.Position {
@@ -89,7 +90,7 @@ func (day *DaySchedule) Join(other DaySchedule) error {
 		maximumLessons = len(other.Lessons)
 	}
 
-	var joinedLessons = make([]LessonInSchedule, 0, maximumLessons)
+	var joinedLessons = make([]Lesson, 0, maximumLessons)
 	for i := 0; i <= maxPosition; i++ {
 		if lessons, ok := lessonsByPosition[i]; ok {
 			for _, lesson := range lessons {
@@ -102,28 +103,47 @@ func (day *DaySchedule) Join(other DaySchedule) error {
 	return nil
 }
 
-// JoinSchedules joins to schedule if they equal by length and date period.
-func JoinSchedules(a []DaySchedule, b []DaySchedule) ([]DaySchedule, error) {
+// Join joins many schedule to one if they equal by length and date period.
+func Join(schedule ...[]DaySchedule) ([]DaySchedule, error) {
+	if len(schedule) == 0 {
+		return nil, nil
+	}
+
+	isSameLength := lo.EveryBy(schedule, func(s []DaySchedule) bool {
+		return len(s) == len(schedule[0])
+	})
+	if !isSameLength {
+		return nil, errors.New("expected to have equal schedule length")
+	}
+
+	var err error
+	var result = schedule[0]
+	for i := 1; i < len(schedule); i++ {
+		result, err = Join2(result, schedule[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return result, nil
+}
+
+func Join2(a []DaySchedule, b []DaySchedule) ([]DaySchedule, error) {
 	if a == nil {
 		return b, nil
 	}
+
 	if b == nil {
 		return a, nil
 	}
 
-	if len(a) != len(b) {
-		return nil, errors.New("expected to have equal schedule length")
-	}
-
-	var joinedResult = a
 	for i := 0; i < len(a); i++ {
 		if a[i].Date != b[i].Date {
-			return nil, errors.New("expected to have equal date of day index by index")
+			return nil, errors.New("expected to have equal day dates index by index")
 		}
-		if err := joinedResult[i].Join(b[i]); err != nil {
+		if err := a[i].Join(b[i]); err != nil {
 			return nil, err
 		}
 	}
 
-	return joinedResult, nil
+	return a, nil
 }

@@ -5,15 +5,12 @@ import (
 	"fmt"
 	"github.com/rs/zerolog/log"
 	"github.com/samber/lo"
-	"go.uber.org/fx"
 	"tellmeac/extended-schedule/domain/schedule"
 	"tellmeac/extended-schedule/domain/userconfig"
 	"tellmeac/extended-schedule/services/tsuschedule"
 	configservice "tellmeac/extended-schedule/services/userconfig"
 	"time"
 )
-
-var Module = fx.Options(fx.Provide(New))
 
 const scheduleDateFormat = "2006-01-02"
 
@@ -78,13 +75,13 @@ func (s service) GetUserScheduleByEmail(ctx context.Context, email string, start
 
 	var baseSchedule = make([]schedule.DaySchedule, 0)
 	if config.BaseGroup != nil {
-		baseSchedule, err = s.GetByGroup(ctx, config.BaseGroup.ID, start, end)
+		baseSchedule, err = s.GetByGroup(ctx, config.BaseGroup.ExternalID, start, end)
 		if err != nil {
 			return nil, err
 		}
 	}
 
-	userSchedule, err = schedule.JoinSchedules(userSchedule, baseSchedule)
+	userSchedule, err = schedule.Join(userSchedule, baseSchedule)
 	if err != nil {
 		return nil, err
 	}
@@ -94,7 +91,7 @@ func (s service) GetUserScheduleByEmail(ctx context.Context, email string, start
 		return nil, err
 	}
 
-	userSchedule, err = schedule.JoinSchedules(userSchedule, extended)
+	userSchedule, err = schedule.Join(userSchedule, extended)
 	if err != nil {
 		return nil, err
 	}
@@ -111,14 +108,14 @@ func (s service) GetUserScheduleByEmail(ctx context.Context, email string, start
 func (s service) getExtendedSchedule(ctx context.Context, groupLessons []userconfig.ExtendedGroupLessons, start time.Time, end time.Time) ([]schedule.DaySchedule, error) {
 	var result []schedule.DaySchedule
 	for _, extended := range groupLessons {
-		log.Info().Str("group", extended.Group.ID).Msg("Apply extended group lessons to user schedule")
-		groupSchedule, err := s.GetByGroup(ctx, extended.Group.ID, start, end)
+		log.Info().Str("group", extended.Group.ExternalID).Msg("Apply extended group lessons to user schedule")
+		groupSchedule, err := s.GetByGroup(ctx, extended.Group.ExternalID, start, end)
 		if err != nil {
 			return nil, err
 		}
 
 		filtered := filterByLessons(groupSchedule, extended.LessonIDs)
-		result, err = schedule.JoinSchedules(result, filtered)
+		result, err = schedule.Join(result, filtered)
 		if err != nil {
 			return nil, err
 		}
@@ -137,7 +134,7 @@ func filterByLessons(s []schedule.DaySchedule, lessonIDs []string) []schedule.Da
 	for _, day := range s {
 		result = append(result, schedule.DaySchedule{
 			Date: day.Date,
-			Lessons: lo.Filter(day.Lessons, func(lesson schedule.LessonInSchedule, _ int) bool {
+			Lessons: lo.Filter(day.Lessons, func(lesson schedule.Lesson, _ int) bool {
 				if _, ok := shouldBeIncluded[lesson.ID]; ok {
 					return true
 				}

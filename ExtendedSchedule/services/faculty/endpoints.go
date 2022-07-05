@@ -40,7 +40,7 @@ func (e Endpoints) GetAllFaculties(ctx *gin.Context) {
 // @Router   /api/faculties/{facultyID}/groups [get]
 // @Summary  Get faculty's groups
 // @Tags     Faculty
-// @Param    facultyID  path  string  true  "Faculty ID"
+// @Param    facultyID  path  string  true  "Faculty ExternalID"
 // @Produce  application/json
 // @Success  200  {array}  models.GroupInfo
 // @Failure  404

@@ -3,16 +3,9 @@ package schedule
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
-	"tellmeac/extended-schedule/domain/schedule"
 	"tellmeac/extended-schedule/middle/middleware"
 	"tellmeac/extended-schedule/services/helpers"
 )
-
-// DaySchedule is a response object.
-type DaySchedule struct {
-	Date    string                      `json:"date"`
-	Lessons []schedule.LessonInSchedule `json:"lessons"`
-}
 
 // NewEndpoints creates new endpoints to receive schedule.
 func NewEndpoints(manager Service) *Endpoints {
@@ -65,14 +58,14 @@ func (e Endpoints) GetPersonalSchedule(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, toResponse(days))
+	ctx.JSON(http.StatusOK, days)
 }
 
 // GetGroupSchedule - godoc
 // @Router   /api/schedule/groups/{groupID} [get]
 // @Summary  Get group schedule
 // @Tags     Schedule
-// @Param    groupID  path  string  true  "group ID"
+// @Param    groupID  path  string  true  "group ExternalID"
 // @Param    start  query  string  true  "Start date"
 // @Param    end    query  string  true  "End date"
 // @Produce  application/json
@@ -102,16 +95,5 @@ func (e Endpoints) GetGroupSchedule(ctx *gin.Context) {
 		return
 	}
 
-	ctx.JSON(http.StatusOK, toResponse(days))
-}
-
-func toResponse(schedule []schedule.DaySchedule) []DaySchedule {
-	var result = make([]DaySchedule, len(schedule))
-	for i, d := range schedule {
-		result[i] = DaySchedule{
-			Date:    d.Date.Format(helpers.DateFormat),
-			Lessons: d.Lessons,
-		}
-	}
-	return result
+	ctx.JSON(http.StatusOK, days)
 }
