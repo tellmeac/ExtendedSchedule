@@ -10,5 +10,5 @@ import (
 // @version      1.0
 // @description  Service to work with personal schedule.
 func main() {
-	fx.New(bootstrap.Module, fx.NopLogger).Run()
+	fx.New(bootstrap.Module).Run()
 }

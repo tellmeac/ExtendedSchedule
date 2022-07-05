@@ -2,10 +2,10 @@ package bootstrap
 
 import (
 	"github.com/gin-gonic/gin"
-	"tellmeac/extended-schedule/pkg/handlers/faculty"
-	"tellmeac/extended-schedule/pkg/handlers/lesson"
-	"tellmeac/extended-schedule/pkg/handlers/schedule"
-	"tellmeac/extended-schedule/pkg/handlers/userconfig"
+	"tellmeac/extended-schedule/services/faculty"
+	"tellmeac/extended-schedule/services/lesson"
+	"tellmeac/extended-schedule/services/schedule"
+	"tellmeac/extended-schedule/services/userconfig"
 )
 
 // bind binds api endpoints.

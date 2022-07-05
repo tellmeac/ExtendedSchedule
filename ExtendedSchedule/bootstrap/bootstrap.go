@@ -6,30 +6,23 @@ import (
 	"github.com/rs/zerolog/log"
 	"go.uber.org/fx"
 	"net/http"
-	"tellmeac/extended-schedule/pkg/config"
-	"tellmeac/extended-schedule/pkg/ent"
-	"tellmeac/extended-schedule/pkg/faculty"
-	"tellmeac/extended-schedule/pkg/handlers"
-	"tellmeac/extended-schedule/pkg/lesson"
-	logger "tellmeac/extended-schedule/pkg/log"
-	"tellmeac/extended-schedule/pkg/schedule"
-	"tellmeac/extended-schedule/pkg/server"
-	"tellmeac/extended-schedule/pkg/tsuschedule"
-	"tellmeac/extended-schedule/pkg/userconfig"
+	"tellmeac/extended-schedule/config"
+	"tellmeac/extended-schedule/dao"
+	inf "tellmeac/extended-schedule/infrastructure"
+	"tellmeac/extended-schedule/services"
 )
 
 // Module is a top tree module of application.
 var Module = fx.Options(
 	fx.Provide(config.MustLoad),
-	logger.Module,
-	ent.Module,
-	tsuschedule.Module,
-	userconfig.Module,
-	faculty.Module,
-	lesson.Module,
-	schedule.Module,
-	handlers.Module,
-	fx.Provide(server.New),
+	fx.Invoke(inf.InitLogger),
+
+	fx.Provide(inf.NewEntClient),
+	dao.Module,
+
+	services.Module,
+	fx.Provide(inf.NewServer),
+
 	fx.Invoke(bind),
 	fx.Invoke(bootstrap),
 )
