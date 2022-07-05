@@ -1,0 +1,84 @@
+classDiagram
+    class UserConfig {
+        <<Aggregate>>
+
+        +string Email
+        +StudyGroup BaseGroup
+        +List~ExtendedGroup~ ExtendedGroups
+        +List~ExcludePolicy~ ExcludePolicies
+
+        +ResetExtensions()
+        +UpdateBaseGroup(StudyGroup group)
+    }
+
+    UserConfig "1" o-- "1" StudyGroup
+    UserConfig "1" o-- "M" ExtendedGroup
+    UserConfig "1" o-- "M" ExcludePolicy
+
+    class StudyGroup {
+        <<ValueObject>>
+        +string ExternalID
+        +string Name
+    }
+
+    class ExtendedGroup {
+        <<ValueObject>>
+        +StudyGroup Group
+        +LessonIDs List~string~
+    }
+
+    ExtendedGroup "1" o-- "1" StudyGroup
+
+    class ExcludePolicy {
+        <<ValueObject>>
+    }
+    
+    class DaySchedule{
+        <<Aggregate>>
+        +Datetime Date
+        +Lessons List~ScheduleLesson~
+
+        +Join(DaySchedule other)
+        +Exclude(List~ExcludePolicy~ rules)
+        +Extend(List~ScheduleLesson~ lessons)
+    }
+
+    DaySchedule "1" o-- "M" ScheduleLesson
+
+    class ScheduleLesson {
+        <<ValueObject>>
+        +int Position
+        +Lesson Lesson
+    }
+
+    ScheduleLesson "1" o-- "1" Lesson
+
+    class Lesson {
+        <<ValueObject>>
+        +string ExternalID
+        +string Title
+        +string Audience
+        +Teacher Teacher
+        +LessonKind Kind
+
+        +Equal(Lesson other) bool
+    }
+
+    Lesson "1" o-- "1" Teacher
+    Lesson "1" o-- "1" LessonKind
+
+    class LessonKind {
+        <<enumeration>>
+        Lecture
+        Practice
+        Laboratory
+        Seminar
+        Exam
+    }
+
+    class Teacher {
+        <<ValueObject>>
+        +string ExternalID
+        +string Name
+    }
+
