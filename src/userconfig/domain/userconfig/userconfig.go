@@ -2,7 +2,7 @@ package userconfig
 
 import (
 	"github.com/google/uuid"
-	"github.com/tellmeac/ExtendedSchedule/userconfig/domain/values"
+	"github.com/tellmeac/extended-schedule/userconfig/domain/values"
 )
 
 // NewUserConfig creates clear new UserConfig.

@@ -3,10 +3,10 @@ package dao
 import (
 	"context"
 	"fmt"
-	"github.com/tellmeac/ExtendedSchedule/userconfig/domain/userconfig"
-	"github.com/tellmeac/ExtendedSchedule/userconfig/infrastructure/ent"
-	uc "github.com/tellmeac/ExtendedSchedule/userconfig/infrastructure/ent/userconfig"
-	errs "github.com/tellmeac/ExtendedSchedule/userconfig/middle/errors"
+	"github.com/tellmeac/extended-schedule/userconfig/domain/userconfig"
+	"github.com/tellmeac/extended-schedule/userconfig/infrastructure/ent"
+	uc "github.com/tellmeac/extended-schedule/userconfig/infrastructure/ent/userconfig"
+	errs "github.com/tellmeac/extended-schedule/userconfig/middle/errors"
 )
 
 // UserConfigDAO provides methods to access UserConfig object.

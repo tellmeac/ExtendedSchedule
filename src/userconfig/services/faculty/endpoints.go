@@ -2,7 +2,7 @@ package faculty
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/tellmeac/ExtendedSchedule/userconfig/services/helpers"
+	"github.com/tellmeac/extended-schedule/userconfig/services/helpers"
 	"net/http"
 )
 

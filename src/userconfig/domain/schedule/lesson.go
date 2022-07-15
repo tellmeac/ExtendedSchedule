@@ -1,6 +1,6 @@
 package schedule
 
-import "github.com/tellmeac/ExtendedSchedule/userconfig/domain/lesson"
+import "github.com/tellmeac/extended-schedule/userconfig/domain/lesson"
 
 type Lesson struct {
 	lesson.Lesson

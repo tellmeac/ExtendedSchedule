@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/tellmeac/ExtendedSchedule/userconfig/bootstrap"
+	"github.com/tellmeac/extended-schedule/userconfig/bootstrap"
 
 	"go.uber.org/fx"
 )

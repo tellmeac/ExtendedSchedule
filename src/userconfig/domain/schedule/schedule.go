@@ -3,8 +3,8 @@ package schedule
 import (
 	"errors"
 	"github.com/samber/lo"
-	"github.com/tellmeac/ExtendedSchedule/userconfig/domain/userconfig"
-	"github.com/tellmeac/ExtendedSchedule/userconfig/domain/values"
+	"github.com/tellmeac/extended-schedule/userconfig/domain/userconfig"
+	"github.com/tellmeac/extended-schedule/userconfig/domain/values"
 	"reflect"
 	"time"
 )

@@ -4,16 +4,20 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog/log"
-	"github.com/tellmeac/ExtendedSchedule/userconfig/config"
-	"github.com/tellmeac/ExtendedSchedule/userconfig/middle/middleware"
+	"github.com/tellmeac/extended-schedule/pkg/middleware"
+	"github.com/tellmeac/extended-schedule/userconfig/config"
 )
 
 // NewServer creates new http server.
 func NewServer(cfg config.Config) *gin.Engine {
 	engine := gin.Default()
 
+	if !cfg.Debug {
+		gin.SetMode(gin.ReleaseMode)
+	}
+
 	// enable CORS as debug only option
-	if cfg.IsDebug {
+	if cfg.Debug {
 		log.Debug().Msg("Use cors policy middleware")
 		engine.Use(cors.New(cors.Config{
 			AllowAllOrigins:  true,
@@ -27,7 +31,7 @@ func NewServer(cfg config.Config) *gin.Engine {
 	}
 
 	// handle unauthorized access to API
-	engine.Use(middleware.GoogleOAuth2(cfg.IsDebug))
+	engine.Use(middleware.GoogleOAuth2(cfg.Debug))
 
 	return engine
 }

@@ -1,11 +1,11 @@
 package services
 
 import (
-	"github.com/tellmeac/ExtendedSchedule/userconfig/services/faculty"
-	"github.com/tellmeac/ExtendedSchedule/userconfig/services/lesson"
-	"github.com/tellmeac/ExtendedSchedule/userconfig/services/schedule"
-	"github.com/tellmeac/ExtendedSchedule/userconfig/services/tsuschedule"
-	"github.com/tellmeac/ExtendedSchedule/userconfig/services/userconfig"
+	"github.com/tellmeac/extended-schedule/userconfig/services/faculty"
+	"github.com/tellmeac/extended-schedule/userconfig/services/lesson"
+	"github.com/tellmeac/extended-schedule/userconfig/services/schedule"
+	"github.com/tellmeac/extended-schedule/userconfig/services/tsuschedule"
+	"github.com/tellmeac/extended-schedule/userconfig/services/userconfig"
 	"go.uber.org/fx"
 )
 

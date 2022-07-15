@@ -1,8 +1,8 @@
 package dao
 
 import (
-	"github.com/tellmeac/ExtendedSchedule/userconfig/domain/userconfig"
-	"github.com/tellmeac/ExtendedSchedule/userconfig/infrastructure/ent"
+	"github.com/tellmeac/extended-schedule/userconfig/domain/userconfig"
+	"github.com/tellmeac/extended-schedule/userconfig/infrastructure/ent"
 )
 
 // toCommonUserConfig converts database object to common user config model.
