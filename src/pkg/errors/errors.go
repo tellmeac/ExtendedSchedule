@@ -6,6 +6,12 @@ import (
 	"net/http"
 )
 
+var (
+	Is  = errors.Is
+	As  = errors.As
+	New = errors.New
+)
+
 // SendError tries to handle error properly or as internal server error to response.
 func SendError(ctx *gin.Context, err error, errorMap map[error]int) {
 	if err == nil {
