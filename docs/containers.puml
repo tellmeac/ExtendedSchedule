@@ -1,0 +1,30 @@
+@startuml Containers
+
+!includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
+
+Person(user, Student, "Student")
+Person(teacher, Teacher, "Teacher")
+
+System_Boundary(api, "Better Schedule") {
+    Container(spa, "Web Application", "TypeScript / React")
+
+    Container(ExtendedSchedule, "Extended Schedule Service", "Go", "Service provides configuration and schedule methods")
+
+    ContainerDb(db, "Database", "SQL Database", "Stores user configurations")
+
+    Rel(spa, ExtendedSchedule, "Uses", "JSON/HTTPS")
+    Rel_D(ExtendedSchedule, db, "Uses")
+}
+
+System_Ext(oauth, "OAuth2 Google", "External OAuth2 provider")
+System_Ext(scheduleProvider, "Schedule Source", "Base schedule provider")
+
+Rel_D(user, spa, "Uses", "HTTPS")
+Rel_D(teacher, spa, "Uses", "HTTPS")
+
+Rel_R(ExtendedSchedule, oauth, "Authorizes requests with", "HTTPS")
+Rel_R(spa, oauth, "Receives access token", "HTTPS")
+
+Rel_L(ExtendedSchedule, scheduleProvider, "Uses", "JSON/HTTPS")
+
+@enduml
