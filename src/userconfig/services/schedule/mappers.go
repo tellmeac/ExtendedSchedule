@@ -1,10 +1,10 @@
 package schedule
 
 import (
-	"github.com/tellmeac/ExtendedSchedule/userconfig/domain/lesson"
-	"github.com/tellmeac/ExtendedSchedule/userconfig/domain/schedule"
-	"github.com/tellmeac/ExtendedSchedule/userconfig/domain/values"
-	"github.com/tellmeac/ExtendedSchedule/userconfig/services/tsuschedule"
+	"github.com/tellmeac/extended-schedule/userconfig/domain/lesson"
+	"github.com/tellmeac/extended-schedule/userconfig/domain/schedule"
+	"github.com/tellmeac/extended-schedule/userconfig/domain/values"
+	"github.com/tellmeac/extended-schedule/userconfig/services/tsuschedule"
 	"time"
 )
 

@@ -5,8 +5,8 @@ import (
 	"database/sql"
 	"entgo.io/ent/dialect"
 	entsql "entgo.io/ent/dialect/sql"
-	"github.com/tellmeac/ExtendedSchedule/userconfig/config"
-	"github.com/tellmeac/ExtendedSchedule/userconfig/infrastructure/ent"
+	"github.com/tellmeac/extended-schedule/userconfig/config"
+	"github.com/tellmeac/extended-schedule/userconfig/infrastructure/ent"
 
 	// Required to connect to postgres database
 	_ "github.com/jackc/pgx/v4/stdlib"
@@ -14,7 +14,7 @@ import (
 
 // NewEntClient returns new ent client.
 func NewEntClient(cfg config.Config) *ent.Client {
-	db, err := sql.Open("pgx", cfg.Database.ConnectionAddress)
+	db, err := sql.Open("pgx", cfg.Database.Address)
 	if err != nil {
 		panic(err)
 	}

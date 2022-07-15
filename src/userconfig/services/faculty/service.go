@@ -4,8 +4,8 @@ import (
 	"context"
 	"errors"
 	"github.com/samber/lo"
-	"github.com/tellmeac/ExtendedSchedule/userconfig/domain/values"
-	"github.com/tellmeac/ExtendedSchedule/userconfig/services/tsuschedule"
+	"github.com/tellmeac/extended-schedule/userconfig/domain/values"
+	"github.com/tellmeac/extended-schedule/userconfig/services/tsuschedule"
 )
 
 // Service provides methods to get faculties and groups.

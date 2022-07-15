@@ -4,9 +4,9 @@ import (
 	"context"
 	"errors"
 	"github.com/rs/zerolog/log"
-	"github.com/tellmeac/ExtendedSchedule/userconfig/dao"
-	"github.com/tellmeac/ExtendedSchedule/userconfig/domain/userconfig"
-	errs "github.com/tellmeac/ExtendedSchedule/userconfig/middle/errors"
+	"github.com/tellmeac/extended-schedule/userconfig/dao"
+	"github.com/tellmeac/extended-schedule/userconfig/domain/userconfig"
+	errs "github.com/tellmeac/extended-schedule/userconfig/middle/errors"
 	"go.uber.org/fx"
 )
 

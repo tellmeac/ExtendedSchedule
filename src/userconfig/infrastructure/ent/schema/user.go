@@ -5,8 +5,8 @@ import (
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
 	"github.com/google/uuid"
-	"github.com/tellmeac/ExtendedSchedule/userconfig/domain/userconfig"
-	"github.com/tellmeac/ExtendedSchedule/userconfig/domain/values"
+	"github.com/tellmeac/extended-schedule/userconfig/domain/userconfig"
+	"github.com/tellmeac/extended-schedule/userconfig/domain/values"
 )
 
 // UserConfig holds the schema definition for the UserConfig entity.

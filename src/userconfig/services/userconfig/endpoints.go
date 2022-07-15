@@ -2,10 +2,10 @@ package userconfig
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/tellmeac/ExtendedSchedule/userconfig/domain/userconfig"
-	"github.com/tellmeac/ExtendedSchedule/userconfig/middle/errors"
-	"github.com/tellmeac/ExtendedSchedule/userconfig/middle/middleware"
-	"github.com/tellmeac/ExtendedSchedule/userconfig/services/helpers"
+	"github.com/tellmeac/extended-schedule/pkg/middleware"
+	"github.com/tellmeac/extended-schedule/userconfig/domain/userconfig"
+	"github.com/tellmeac/extended-schedule/userconfig/middle/errors"
+	"github.com/tellmeac/extended-schedule/userconfig/services/helpers"
 	"net/http"
 )
 

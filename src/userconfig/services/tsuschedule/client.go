@@ -1,8 +1,8 @@
 package tsuschedule
 
 import (
-	"github.com/tellmeac/ExtendedSchedule/userconfig/config"
-	"github.com/tellmeac/ExtendedSchedule/userconfig/utils/useragent"
+	"github.com/tellmeac/extended-schedule/pkg/useragent"
+	"github.com/tellmeac/extended-schedule/userconfig/config"
 )
 
 // NewBaseScheduleClient attempts to make api client for tsu schedule api.
@@ -12,7 +12,7 @@ func NewBaseScheduleClient(cfg config.Config) *Client {
 		return nil
 	}
 
-	client, err := NewClient(cfg.ScheduleAPI.BaseURL, options)
+	client, err := NewClient(cfg.BaseScheduleUrl, options)
 	if err != nil {
 		panic(err)
 	}

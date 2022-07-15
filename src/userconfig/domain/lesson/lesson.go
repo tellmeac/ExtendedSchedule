@@ -1,6 +1,6 @@
 package lesson
 
-import "github.com/tellmeac/ExtendedSchedule/userconfig/domain/values"
+import "github.com/tellmeac/extended-schedule/userconfig/domain/values"
 
 // Lesson represents lesson.
 type Lesson struct {

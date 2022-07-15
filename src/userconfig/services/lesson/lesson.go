@@ -2,9 +2,9 @@ package lesson
 
 import (
 	"context"
-	"github.com/tellmeac/ExtendedSchedule/userconfig/domain/lesson"
-	"github.com/tellmeac/ExtendedSchedule/userconfig/domain/schedule"
-	scheduleservice "github.com/tellmeac/ExtendedSchedule/userconfig/services/schedule"
+	"github.com/tellmeac/extended-schedule/userconfig/domain/lesson"
+	"github.com/tellmeac/extended-schedule/userconfig/domain/schedule"
+	scheduleservice "github.com/tellmeac/extended-schedule/userconfig/services/schedule"
 	"time"
 )
 

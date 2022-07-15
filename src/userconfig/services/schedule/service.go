@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"github.com/rs/zerolog/log"
 	"github.com/samber/lo"
-	"github.com/tellmeac/ExtendedSchedule/userconfig/domain/schedule"
-	"github.com/tellmeac/ExtendedSchedule/userconfig/domain/userconfig"
-	"github.com/tellmeac/ExtendedSchedule/userconfig/services/tsuschedule"
-	configservice "github.com/tellmeac/ExtendedSchedule/userconfig/services/userconfig"
+	"github.com/tellmeac/extended-schedule/userconfig/domain/schedule"
+	"github.com/tellmeac/extended-schedule/userconfig/domain/userconfig"
+	"github.com/tellmeac/extended-schedule/userconfig/services/tsuschedule"
+	configservice "github.com/tellmeac/extended-schedule/userconfig/services/userconfig"
 	"time"
 )
 
