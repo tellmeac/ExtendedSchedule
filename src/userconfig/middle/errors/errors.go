@@ -1,9 +1,8 @@
 package errors
 
 import (
-	"errors"
 	"github.com/gin-gonic/gin"
-	pkgerrors "github.com/tellmeac/ExtendedSchedule/pkg/errors"
+	"github.com/tellmeac/ExtendedSchedule/pkg/errors"
 	"net/http"
 )
 
@@ -23,5 +22,5 @@ var (
 
 // SendError tries to handle err properly or as internal.
 func SendError(ctx *gin.Context, err error) {
-	return pkgerrors.SendError(ctx, err, errorMap)
+	errors.SendError(ctx, err, errorMap)
 }
