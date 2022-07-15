@@ -12,15 +12,15 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     restart: always
 
-  schedule:
+  extended_schedule:
     build: 
       context: ../../ExtendedSchedule
       dockerfile: ../../src/userconfig/Dockerfile
-    container_name: "schedule"
+    container_name: "extended_schedule"
     ports:
-    - "8080:8080"
+    - "8080:80"
     environment:
-      DATABASE_CONNECTIONADDRESS: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}"
+      DB_ADDRESS: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}"
     depends_on:
       - database
     restart: always
