@@ -16,11 +16,10 @@ export function SettingsPage() {
     const isAuthorized = useAppSelector(selectSignedIn)
 
     const [userConfig, setUserConfig] = useState<UserConfig>({
-        baseGroup: undefined,
+        id: "",
         email: "",
-        excludedLessons: [],
+        baseGroup: null,
         extendedGroupLessons: [],
-        id: ""
     })
     const [configExtendedRender, setConfigExtendedRender] = useState<ExtendedLessons[]>([])
     const [isOpenGroupModalForExtendedGroupSelect, setOpenExtendedGroupSelectModal] = useState<boolean>(false)

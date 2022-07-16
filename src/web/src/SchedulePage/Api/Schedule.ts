@@ -1,9 +1,8 @@
 import {ScheduleDay} from "../../Shared/Models";
 import {format} from "date-fns";
 import axios from "axios";
-import {applyAuthorization} from "../../Shared/Auth/Token";
 
-const ScheduleAPIBaseUrl = process.env.REACT_APP_API_BASE_URL || "http://localhost:8080/api"
+const base = process.env.REACT_APP_API_BASE_URL
 
 /**
  * Receives user's personal schedule
@@ -11,19 +10,12 @@ const ScheduleAPIBaseUrl = process.env.REACT_APP_API_BASE_URL || "http://localho
  * @param endTime end day of schedule
  */
 export async function getPersonalSchedule(startTime: number, endTime: number): Promise<ScheduleDay[]> {
-    const start = format(new Date(startTime), "u-MM-dd")
-    const end = format(new Date(endTime), "u-MM-dd")
-
-    const config = applyAuthorization({
-        params: {
-            "start": start,
-            "end": end
-        },
-        validateStatus: status => {
-            return status < 400
-        }
-    })
-
-    const response = await axios.get<ScheduleDay[]>(`${ScheduleAPIBaseUrl}/schedule/personal`, config)
-    return response.data
+    return (
+        await axios.get<ScheduleDay[]>(`${base}/schedule/personal`, {
+            params: {
+                "start": format(new Date(startTime), "u-MM-dd"),
+                "end": format(new Date(endTime), "u-MM-dd"),
+            },
+        })
+    ).data
 }
