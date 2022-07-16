@@ -6,16 +6,9 @@ import {GroupInfo} from "../../Shared/Models";
 export interface UserConfig {
     id: string
     email: string
-    baseGroup: GroupInfo | undefined
-    excludedLessons: ExcludedRule[]
+    baseGroup: GroupInfo | null
     extendedGroupLessons: ExtendedLessons[]
 }
-
-/**
- * Exclude rule for lessons
- * TODO: feature
- */
-export interface ExcludedRule {}
 
 /**
  * ExtendedLessons is set of lessons to include from group to user's schedule

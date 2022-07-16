@@ -5,8 +5,8 @@ export interface UserState {
     isAuthorized: boolean
     credentials: {
         token: string,
+        username: string,
         avatarUrl: string,
-        username: string
     }
 }
 
@@ -14,8 +14,8 @@ const initialUserState: UserState = {
     isAuthorized: false,
     credentials: {
         token: "",
+        username: "",
         avatarUrl: "",
-        username: ""
     }
 
 }

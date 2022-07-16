@@ -5,7 +5,7 @@ import "./NavigationBar.css"
 import {Link} from "react-router-dom";
 import {GoogleLogin} from "@react-oauth/google";
 import jwtDecode from "jwt-decode";
-import {storeUserJwtToken} from "../Shared/Auth/Token";
+import {updateAuthorization} from "../Shared/Auth/Auth";
 import {useAppDispatch, useAppSelector} from "../Shared/Hooks";
 import {selectUserInfo, selectSignedIn, setCredentials} from "../Shared/Store";
 
@@ -27,7 +27,7 @@ export function NavigationBar() {
             username: claims.name,
             avatarUrl: claims.picture,
         }))
-        storeUserJwtToken(credentialResponse.credential)
+        updateAuthorization(credentialResponse.credential)
     }
 
     return <Navbar bg="light">
