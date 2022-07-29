@@ -1,12 +1,13 @@
 package userconfig
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/tellmeac/extended-schedule/pkg/middleware"
 	"github.com/tellmeac/extended-schedule/userconfig/domain/userconfig"
 	"github.com/tellmeac/extended-schedule/userconfig/middle/errors"
 	"github.com/tellmeac/extended-schedule/userconfig/services/helpers"
-	"net/http"
 )
 
 // NewEndpoints creates new endpoints for user schedule config.
@@ -70,7 +71,7 @@ func (e Endpoints) UpdateConfig(ctx *gin.Context) {
 		return
 	}
 
-	// prevent change others data.
+	// prevent changes to other people's user settings.
 	if email != desired.Email {
 		errors.SendError(ctx, errors.ErrUnauthorized)
 		return

@@ -1,11 +1,18 @@
 package schedule
 
 import (
+	"net/http"
+	"time"
+
 	"github.com/gin-gonic/gin"
 	"github.com/tellmeac/extended-schedule/pkg/middleware"
 	"github.com/tellmeac/extended-schedule/userconfig/services/helpers"
-	"net/http"
 )
+
+type QueryPeriod struct {
+	Start time.Time `form:"start" binding:"required" time_format:"2006-01-02"`
+	End   time.Time `form:"end" binding:"required" time_format:"2006-01-02"`
+}
 
 // NewEndpoints creates new endpoints to receive schedule.
 func NewEndpoints(manager Service) *Endpoints {
@@ -32,8 +39,8 @@ func (e Endpoints) Bind(router gin.IRouter) {
 // @Success  200  {array}  DaySchedule
 // @Failure  401
 func (e Endpoints) GetPersonalSchedule(ctx *gin.Context) {
-	start, end, err := helpers.ExtractIntervalFromQuery(ctx)
-	if err != nil {
+	var period QueryPeriod
+	if err := ctx.ShouldBindQuery(&period); err != nil {
 		helpers.HandleBadRequest(ctx, err.Error())
 		return
 	}
@@ -46,7 +53,7 @@ func (e Endpoints) GetPersonalSchedule(ctx *gin.Context) {
 		return
 	}
 
-	days, err := e.service.GetUserScheduleByEmail(ctx, email, start, end)
+	days, err := e.service.GetUserScheduleByEmail(ctx, email, period.Start, period.End)
 	if err != nil {
 		ctx.AbortWithStatusJSON(
 			http.StatusInternalServerError,
@@ -65,7 +72,7 @@ func (e Endpoints) GetPersonalSchedule(ctx *gin.Context) {
 // @Router   /api/schedule/groups/{groupID} [get]
 // @Summary  Get group schedule
 // @Tags     Schedule
-// @Param    groupID  path  string  true  "group ExternalID"
+// @Param    groupID  path  string  true  "group external id"
 // @Param    start  query  string  true  "Start date"
 // @Param    end    query  string  true  "End date"
 // @Produce  application/json
@@ -78,13 +85,13 @@ func (e Endpoints) GetGroupSchedule(ctx *gin.Context) {
 		return
 	}
 
-	start, end, err := helpers.ExtractIntervalFromQuery(ctx)
-	if err != nil {
+	var period QueryPeriod
+	if err := ctx.ShouldBindQuery(&period); err != nil {
 		helpers.HandleBadRequest(ctx, err.Error())
 		return
 	}
 
-	days, err := e.service.GetByGroup(ctx, groupID, start, end)
+	days, err := e.service.GetByGroup(ctx, groupID, period.Start, period.End)
 	if err != nil {
 		ctx.AbortWithStatusJSON(
 			http.StatusInternalServerError,
