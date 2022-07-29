@@ -1,9 +1,10 @@
 package faculty
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/tellmeac/extended-schedule/userconfig/services/helpers"
-	"net/http"
 )
 
 // NewEndpoints creates new endpoints for faculties.
@@ -37,15 +38,15 @@ func (e Endpoints) GetAllFaculties(ctx *gin.Context) {
 }
 
 // GetFacultyGroups - godoc
-// @Router   /api/faculties/{facultyID}/groups [get]
+// @Router   /api/faculties/{facultyId}/groups [get]
 // @Summary  Get faculty's groups
 // @Tags     Faculty
-// @Param    facultyID  path  string  true  "Faculty ExternalID"
+// @Param    facultyID  path  string  true  "Faculty external id"
 // @Produce  application/json
 // @Success  200  {array}  models.GroupInfo
 // @Failure  404
 func (e Endpoints) GetFacultyGroups(ctx *gin.Context) {
-	facultyID := ctx.Param("facultyID")
+	facultyID := ctx.Param("facultyId")
 	if facultyID == "" {
 		helpers.HandleBadRequest(ctx, "faculty id is empty")
 		return
