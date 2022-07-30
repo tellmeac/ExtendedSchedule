@@ -1,8 +1,8 @@
 package tsuschedule
 
 import (
-	"github.com/tellmeac/extended-schedule/pkg/useragent"
 	"github.com/tellmeac/extended-schedule/userconfig/config"
+	"github.com/tellmeac/extended-schedule/userconfig/pkg/useragent"
 )
 
 // NewBaseScheduleClient attempts to make api client for tsu schedule api.

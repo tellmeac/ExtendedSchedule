@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	"github.com/tellmeac/extended-schedule/userconfig/domain/userconfig"
-	"github.com/tellmeac/extended-schedule/userconfig/infrastructure/ent"
-	uc "github.com/tellmeac/extended-schedule/userconfig/infrastructure/ent/userconfig"
+	"github.com/tellmeac/extended-schedule/userconfig/dao/ent"
+	uc "github.com/tellmeac/extended-schedule/userconfig/dao/ent/userconfig"
 	errs "github.com/tellmeac/extended-schedule/userconfig/middle/errors"
 )
 

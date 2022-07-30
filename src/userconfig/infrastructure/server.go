@@ -4,8 +4,8 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog/log"
-	"github.com/tellmeac/extended-schedule/pkg/middleware"
 	"github.com/tellmeac/extended-schedule/userconfig/config"
+	"github.com/tellmeac/extended-schedule/userconfig/pkg/middleware"
 )
 
 // NewServer creates new http server.

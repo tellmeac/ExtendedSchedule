@@ -3,10 +3,11 @@ package infrastructure
 import (
 	"context"
 	"database/sql"
+
 	"entgo.io/ent/dialect"
 	entsql "entgo.io/ent/dialect/sql"
 	"github.com/tellmeac/extended-schedule/userconfig/config"
-	"github.com/tellmeac/extended-schedule/userconfig/infrastructure/ent"
+	"github.com/tellmeac/extended-schedule/userconfig/dao/ent"
 
 	// Required to connect to postgres database
 	_ "github.com/jackc/pgx/v4/stdlib"

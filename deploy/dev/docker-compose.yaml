@@ -1,4 +1,4 @@
-version: '2'
+version: '3.9'
 
 services:
   database:
@@ -12,27 +12,13 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     restart: always
 
-  extended_schedule:
-    build: 
-      context: ../../ExtendedSchedule
-      dockerfile: ../../src/userconfig/Dockerfile
-    container_name: "extended_schedule"
+  userconfig:
+    image: "userconfig:latest"
+    container_name: "userconfig"
     ports:
     - "8080:80"
     environment:
       DB_ADDRESS: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}"
     depends_on:
       - database
-    restart: always
-
-  web:
-    build: 
-      context: ../../src/web
-      dockerfile: Dockerfile
-      args:
-        REACT_APP_API_BASE_URL: "http://localhost:8080/api"
-        REACT_APP_GOOGLE_CLIENT_ID: "${GOOGLE_CLIENT_ID}"
-    container_name: "frontend"
-    ports:
-      - "3000:80"      
     restart: always

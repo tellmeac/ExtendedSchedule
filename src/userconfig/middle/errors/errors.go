@@ -2,7 +2,7 @@ package errors
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/tellmeac/extended-schedule/pkg/errors"
+	"github.com/tellmeac/extended-schedule/userconfig/pkg/errors"
 	"net/http"
 )
 

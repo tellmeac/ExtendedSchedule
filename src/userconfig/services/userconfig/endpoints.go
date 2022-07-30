@@ -4,9 +4,9 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/tellmeac/extended-schedule/pkg/middleware"
 	"github.com/tellmeac/extended-schedule/userconfig/domain/userconfig"
 	"github.com/tellmeac/extended-schedule/userconfig/middle/errors"
+	"github.com/tellmeac/extended-schedule/userconfig/pkg/middleware"
 	"github.com/tellmeac/extended-schedule/userconfig/services/helpers"
 )
 
