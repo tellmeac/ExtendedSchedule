@@ -12,12 +12,21 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     restart: always
 
+  redis:
+    image: "redis"
+    container_name: "redis"
+    ports:
+      - "6379:6379"
+    restart: always
+
   userconfig:
-    image: "userconfig:latest"
+    build:
+      context: ../../src/userconfig
     container_name: "userconfig"
     ports:
     - "8080:80"
     environment:
+      REDIS_ADDRESS: "redis:6379"
       DB_ADDRESS: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}"
     depends_on:
       - database

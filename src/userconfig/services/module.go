@@ -12,7 +12,7 @@ import (
 var Module = fx.Options(
 	fx.Provide(tsuschedule.NewBaseScheduleClient),
 
-	fx.Provide(faculty.New),
+	fx.Provide(faculty.NewCacheService),
 	fx.Provide(faculty.NewEndpoints),
 
 	fx.Provide(lesson.New),

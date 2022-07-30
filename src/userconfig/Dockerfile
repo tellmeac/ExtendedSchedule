@@ -5,13 +5,12 @@ WORKDIR /service
 
 RUN apk update && apk add --virtual build-dependencies build-base gcc wget git
 
-RUN go install entgo.io/ent/cmd/ent@latest
-
 COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
 
+RUN go get entgo.io/ent/cmd/ent@latest
 RUN go generate ./...
 RUN go test --short ./...
 
