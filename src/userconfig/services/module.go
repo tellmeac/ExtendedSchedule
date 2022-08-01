@@ -12,7 +12,14 @@ import (
 var Module = fx.Options(
 	fx.Provide(tsuschedule.NewBaseScheduleClient),
 
-	fx.Provide(faculty.NewCacheService),
+	fx.Provide(fx.Annotate(
+		faculty.New,
+		fx.ResultTags(`name:"facultyService"`),
+	)),
+	fx.Provide(fx.Annotate(
+		faculty.NewCacheService,
+		fx.ParamTags(`name:"facultyService"`),
+	)),
 	fx.Provide(faculty.NewEndpoints),
 
 	fx.Provide(lesson.New),

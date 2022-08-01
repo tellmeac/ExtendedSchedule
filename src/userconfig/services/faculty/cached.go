@@ -5,20 +5,10 @@ import (
 	"errors"
 	"time"
 
-	"github.com/go-redis/redis/v9"
 	"github.com/rs/zerolog/log"
 	"github.com/tellmeac/extended-schedule/userconfig/domain/values"
 	"github.com/tellmeac/extended-schedule/userconfig/pkg/cache"
-	"github.com/tellmeac/extended-schedule/userconfig/services/tsuschedule"
 )
-
-func MakeCacheService(client *tsuschedule.Client, r *redis.Client) Service {
-	return NewCacheService(
-		New(client),
-		cache.NewStoreRedis[[]values.Faculty](r),
-		cache.NewStoreRedis[[]values.StudyGroup](r),
-	)
-}
 
 func NewCacheService(inner Service, facultyStore cache.Store[[]values.Faculty], groupsStore cache.Store[[]values.StudyGroup]) Service {
 	return &cachedService{

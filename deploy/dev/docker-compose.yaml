@@ -1,4 +1,4 @@
-version: '3.9'
+version: '2'
 
 services:
   database:
@@ -30,4 +30,5 @@ services:
       DB_ADDRESS: "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}"
     depends_on:
       - database
+      - redis
     restart: always
