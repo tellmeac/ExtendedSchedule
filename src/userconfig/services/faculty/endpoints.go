@@ -26,7 +26,7 @@ func (e Endpoints) Bind(router gin.IRouter) {
 // @Summary  Get all faculties
 // @Tags     Faculty
 // @Produce  application/json
-// @Success  200  {array}  models.FacultyInfo
+// @Success  200  {array}  values.FacultyInfo
 func (e Endpoints) GetAllFaculties(ctx *gin.Context) {
 	faculties, err := e.service.GetAllFaculties(ctx)
 	if err != nil {
@@ -43,7 +43,7 @@ func (e Endpoints) GetAllFaculties(ctx *gin.Context) {
 // @Tags     Faculty
 // @Param    facultyID  path  string  true  "Faculty external id"
 // @Produce  application/json
-// @Success  200  {array}  models.GroupInfo
+// @Success  200  {array}  values.GroupInfo
 // @Failure  404
 func (e Endpoints) GetFacultyGroups(ctx *gin.Context) {
 	facultyID := ctx.Param("facultyId")

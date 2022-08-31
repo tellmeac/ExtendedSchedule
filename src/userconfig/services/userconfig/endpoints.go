@@ -32,7 +32,7 @@ func (e Endpoints) Bind(router gin.IRouter) {
 // @Tags     Config
 // @Produce  application/json
 // @Param    Authorization  header  string  true  "Authorization bearer token"
-// @Success  200  {object}  models.UserConfig
+// @Success  200  {object}  userconfig.UserConfig
 func (e Endpoints) GetConfig(ctx *gin.Context) {
 	email, err := middleware.GetGoogleEmail(ctx)
 	if err != nil {
