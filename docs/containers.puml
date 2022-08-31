@@ -2,29 +2,33 @@
 
 !includeurl https://raw.githubusercontent.com/RicardoNiepel/C4-PlantUML/master/C4_Component.puml
 
-Person(user, Student, "Student")
-Person(teacher, Teacher, "Teacher")
+Person(user, User, "Student or Teacher")
 
-System_Boundary(api, "Better Schedule") {
-    Container(spa, "Web Application", "TypeScript / React")
+System_Boundary(api, "Extended Schedule") {
+    Container(spa, "Web Application", "TypeScript/React")
 
-    Container(ExtendedSchedule, "Extended Schedule Service", "Go", "Service provides configuration and schedule methods")
+    Container(UserConfig, "Settings Service", "Go", "Works with configuration")
+    Container(ScheduleService, "Schedule Service", "Go", "Provides schedule and related information")
 
-    ContainerDb(db, "Database", "SQL Database", "Stores user configurations")
+    ContainerDb(db, "Database", "SQL Database", "Stores user configuration")
 
-    Rel(spa, ExtendedSchedule, "Uses", "JSON/HTTPS")
-    Rel_D(ExtendedSchedule, db, "Uses")
+    Rel(ScheduleService, UserConfig, "Uses", "gRPS")
+
+    Rel(spa, UserConfig, "Uses", "JSON/HTTPS")
+    Rel(spa, ScheduleService, "Uses", "JSON/HTTPS")
+
+    Rel(UserConfig, db, "Uses")
 }
 
 System_Ext(oauth, "OAuth2 Google", "External OAuth2 provider")
 System_Ext(scheduleProvider, "Schedule Source", "Base schedule provider")
 
-Rel_D(user, spa, "Uses", "HTTPS")
-Rel_D(teacher, spa, "Uses", "HTTPS")
+Rel(user, spa, "Uses", "HTTPS")
 
-Rel_R(ExtendedSchedule, oauth, "Authorizes requests with", "HTTPS")
+Rel_R(UserConfig, oauth, "Authorizes requests with", "HTTPS")
+Rel_R(ScheduleService, oauth, "Authorizes requests with", "HTTPS")
 Rel_R(spa, oauth, "Receives access token", "HTTPS")
 
-Rel_L(ExtendedSchedule, scheduleProvider, "Uses", "JSON/HTTPS")
+Rel(UserConfig, scheduleProvider, "Uses", "JSON/HTTPS")
 
 @enduml
