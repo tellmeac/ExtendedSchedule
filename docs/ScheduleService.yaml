@@ -1,44 +1,15 @@
 openapi: 3.0.1
 info:
-  title: ScheduleService
-  description: Service to provide schedule.
+  title: InfoService
+  description: Service to lessons and faculties withing schedule context.
   version: 1.0.0
-security:
-- bearerAuth: []
+
 servers:
   - url: http://{hostname}/api/v1
     variables:
       hostname:
         default: localhost
 paths:
-  /user/{userId}/schedule:
-    get:
-      summary: "Get personal schedule"
-      tags:
-        - Schedule
-      responses:
-        200:
-          description: OK
-        401:
-          description: Unauthorized
-        403:
-          description: Forbidden
-        404:
-          description: Not found
-  /schedule/byGroup/{groupId}:
-    get:
-      summary: "Get group's schedule"
-      tags:
-        - Schedule
-      responses:
-        200:
-          description: OK
-        401:
-          description: Unauthorized
-        403:
-          description: Forbidden
-        404:
-          description: Not found
   /lessons/byGroup/{groupId}:
     get:
       summary: "Get group's lesson list"
@@ -63,17 +34,9 @@ paths:
           description: OK
 
 components:
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
   
   schemas:
     # TODO: define schemas below
-    # Schedule
-    # Day
-    # StudyGroup
     # Teacher
     # Lesson
     Faculty:
