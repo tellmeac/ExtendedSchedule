@@ -6,7 +6,7 @@ info:
 security:
   - bearerAuth: []
 servers:
-  - url: http://{hostname}/api
+  - url: http://{hostname}/api/v1
     variables:
       hostname:
         default: localhost
