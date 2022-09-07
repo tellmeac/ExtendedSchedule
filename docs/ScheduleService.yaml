@@ -3,15 +3,19 @@ info:
   title: ScheduleService
   description: Service to provide schedule.
   version: 1.0.0
+security:
+- bearerAuth: []
 servers:
-  - url: http://{hostname}/api
+  - url: http://{hostname}/api/v1
     variables:
       hostname:
         default: localhost
 paths:
   /user/{userId}/schedule:
     get:
-      summary: "Get user's specific schedule"
+      summary: "Get personal schedule"
+      tags:
+        - Schedule
       responses:
         200:
           description: OK
@@ -24,6 +28,8 @@ paths:
   /schedule/byGroup/{groupId}:
     get:
       summary: "Get group's schedule"
+      tags:
+        - Schedule
       responses:
         200:
           description: OK
@@ -36,6 +42,8 @@ paths:
   /lessons/byGroup/{groupId}:
     get:
       summary: "Get group's lesson list"
+      tags:
+        - Lessons
       responses:
         200:
           description: OK
@@ -48,6 +56,29 @@ paths:
   /faculties:
     get:
       summary: "Get faculty list"
+      tags:
+        - Faculties
       responses:
         200:
           description: OK
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  
+  schemas:
+    # TODO: define schemas below
+    # Schedule
+    # Day
+    # StudyGroup
+    # Teacher
+    # Lesson
+    Faculty:
+      properties:
+        id:
+          type: string
+        name:
+          type: string
