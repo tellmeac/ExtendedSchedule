@@ -9,16 +9,13 @@ System_Boundary(api, "Extended Schedule") {
 
     Container(UserConfigService, "Settings Service", "Go", "Works with configuration")
     Container(ScheduleService, "Schedule Service", "Go", "Provides schedule")
-    Container(Info, "Info Service", "Go", "Provides lessons and faculties")
 
     ContainerDb(db, "Postgres", "SQL Database", "Stores user configuration")
 
     Rel(ScheduleService, UserConfigService, "Uses", "gRPS")
-    Rel(UserConfigService, Info, "Uses", "gRPS")
 
     Rel(spa, UserConfigService, "Uses", "JSON/HTTPS")
     Rel(spa, ScheduleService, "Uses", "JSON/HTTPS")
-    Rel(spa, Info, "Uses", "JSON/HTTPS")
 
     Rel(UserConfigService, db, "Uses")
 }
@@ -33,6 +30,6 @@ Rel_R(ScheduleService, oauth, "Authorizes requests with", "HTTPS")
 Rel_R(spa, oauth, "Receives access token", "HTTPS")
 
 Rel(ScheduleService, scheduleProvider, "Uses", "JSON/HTTPS")
-Rel(Info, scheduleProvider, "Uses", "JSON/HTTPS")
+Rel(UserConfigService, scheduleProvider, "Uses", "JSON/HTTPS")
 
 @enduml
