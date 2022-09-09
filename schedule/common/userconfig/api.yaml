@@ -1,0 +1,161 @@
+openapi: 3.0.1
+info:
+  title: TSU Schedule
+  description: TSU schedule public API
+  version: 0.3.0
+servers:
+  - url: https://intime.tsu.ru/api/web/v1
+    description: default path
+paths:
+  /schedule/group:
+    get:
+      summary: Schedule by group
+      tags:
+        - Schedule
+      parameters:
+        - name: id
+          in: query
+          required: true
+          description: groupd identifier
+          schema:
+            type: string
+        - name: dateFrom
+          in: query
+          required: true
+          description: "date to start from"
+          schema:
+            type: string
+            example: "2022-04-17"
+        - name: dateTo
+          in: query
+          required: true
+          description: "date to end"
+          schema:
+            type: string
+            example: "2022-04-24"
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                title: "Schedule days"
+                type: array
+                items:
+                  $ref: "#/components/schemas/DaySchedule"
+  /faculties:
+    get:
+      summary: Get all faculties
+      tags:
+        - Schedule
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                title: "Faculties"
+                type: array
+                items:
+                  $ref: "#/components/schemas/Faculty"
+
+  /faculties/{id}/groups:
+    get:
+      summary: Get all groups for specific faculty
+      tags:
+        - Schedule
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                title: "Groups"
+                type: array
+                items:
+                  $ref: "#/components/schemas/StudyGroup"
+components:
+  schemas:
+    DaySchedule:
+      type: object
+      title: "Day schedule"
+      required:
+        - date
+        - lessons
+      properties:
+        date:
+          type: "string"
+          example: "2022-01-20"
+        lessons:
+          type: array
+          items:
+            $ref: "#/components/schemas/Lesson"
+    Lesson:
+      type: object
+      required:
+        - type
+        - lessonNumber
+      properties:
+        type:
+          type: "string"
+        lessonNumber:
+          type: integer
+          example: 1
+        lessonType:
+          type: "string"
+        id:
+          type: "string"
+        title:
+          type: string
+        audience:
+          $ref: "#/components/schemas/Audience"
+        groups:
+          type: array
+          items:
+            $ref: "#/components/schemas/StudyGroup"
+        professor:
+          $ref: "#/components/schemas/Teacher"
+    StudyGroup:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+    Teacher:
+      type: object
+      properties:
+        id:
+          type: string
+        fullName:
+          type: string
+    Audience:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          nullable: true
+        name:
+          type: string
+    Faculty:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+        name:
+          type: string
