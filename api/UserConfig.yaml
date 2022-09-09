@@ -11,13 +11,13 @@ servers:
       hostname:
         default: localhost
 paths:
-  /user/{userId}/config:
+  /user/{id}/config:
     get:
       summary: "Get user config"
       tags:
         - Config
       parameters:
-        - name: "userId"
+        - name: id
           in: path
           required: true
           schema:
@@ -41,7 +41,7 @@ paths:
       tags:
         - Config
       parameters:
-      - name: "userId"
+      - name: id
         in: path
         required: true
         schema:

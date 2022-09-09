@@ -66,14 +66,14 @@ type ServerInterface interface {
 	// (GET /faculties)
 	GetFaculties(c *gin.Context)
 	// Get group's lesson list
-	// (GET /lessons/byGroup/{groupId})
-	GetLessonsByGroupGroupId(c *gin.Context, groupId string)
+	// (GET /lessons/byGroup/{id})
+	GetLessonsByGroupId(c *gin.Context, id string)
 	// Get group's schedule
-	// (GET /schedule/byGroup/{groupId})
-	GetScheduleByGroupGroupId(c *gin.Context, groupId string)
+	// (GET /schedule/byGroup/{id})
+	GetScheduleByGroupId(c *gin.Context, id string)
 	// Get personal schedule
-	// (GET /user/{userId}/schedule)
-	GetUserUserIdSchedule(c *gin.Context, userId openapi_types.UUID)
+	// (GET /user/{id}/schedule)
+	GetUserIdSchedule(c *gin.Context, id openapi_types.UUID)
 }
 
 // ServerInterfaceWrapper converts contexts to parameters.
@@ -94,17 +94,17 @@ func (siw *ServerInterfaceWrapper) GetFaculties(c *gin.Context) {
 	siw.Handler.GetFaculties(c)
 }
 
-// GetLessonsByGroupGroupId operation middleware
-func (siw *ServerInterfaceWrapper) GetLessonsByGroupGroupId(c *gin.Context) {
+// GetLessonsByGroupId operation middleware
+func (siw *ServerInterfaceWrapper) GetLessonsByGroupId(c *gin.Context) {
 
 	var err error
 
-	// ------------- Path parameter "groupId" -------------
-	var groupId string
+	// ------------- Path parameter "id" -------------
+	var id string
 
-	err = runtime.BindStyledParameter("simple", false, "groupId", c.Param("groupId"), &groupId)
+	err = runtime.BindStyledParameter("simple", false, "id", c.Param("id"), &id)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"msg": fmt.Sprintf("Invalid format for parameter groupId: %s", err)})
+		c.JSON(http.StatusBadRequest, gin.H{"msg": fmt.Sprintf("Invalid format for parameter id: %s", err)})
 		return
 	}
 
@@ -112,20 +112,20 @@ func (siw *ServerInterfaceWrapper) GetLessonsByGroupGroupId(c *gin.Context) {
 		middleware(c)
 	}
 
-	siw.Handler.GetLessonsByGroupGroupId(c, groupId)
+	siw.Handler.GetLessonsByGroupId(c, id)
 }
 
-// GetScheduleByGroupGroupId operation middleware
-func (siw *ServerInterfaceWrapper) GetScheduleByGroupGroupId(c *gin.Context) {
+// GetScheduleByGroupId operation middleware
+func (siw *ServerInterfaceWrapper) GetScheduleByGroupId(c *gin.Context) {
 
 	var err error
 
-	// ------------- Path parameter "groupId" -------------
-	var groupId string
+	// ------------- Path parameter "id" -------------
+	var id string
 
-	err = runtime.BindStyledParameter("simple", false, "groupId", c.Param("groupId"), &groupId)
+	err = runtime.BindStyledParameter("simple", false, "id", c.Param("id"), &id)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"msg": fmt.Sprintf("Invalid format for parameter groupId: %s", err)})
+		c.JSON(http.StatusBadRequest, gin.H{"msg": fmt.Sprintf("Invalid format for parameter id: %s", err)})
 		return
 	}
 
@@ -133,20 +133,20 @@ func (siw *ServerInterfaceWrapper) GetScheduleByGroupGroupId(c *gin.Context) {
 		middleware(c)
 	}
 
-	siw.Handler.GetScheduleByGroupGroupId(c, groupId)
+	siw.Handler.GetScheduleByGroupId(c, id)
 }
 
-// GetUserUserIdSchedule operation middleware
-func (siw *ServerInterfaceWrapper) GetUserUserIdSchedule(c *gin.Context) {
+// GetUserIdSchedule operation middleware
+func (siw *ServerInterfaceWrapper) GetUserIdSchedule(c *gin.Context) {
 
 	var err error
 
-	// ------------- Path parameter "userId" -------------
-	var userId openapi_types.UUID
+	// ------------- Path parameter "id" -------------
+	var id openapi_types.UUID
 
-	err = runtime.BindStyledParameter("simple", false, "userId", c.Param("userId"), &userId)
+	err = runtime.BindStyledParameter("simple", false, "id", c.Param("id"), &id)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"msg": fmt.Sprintf("Invalid format for parameter userId: %s", err)})
+		c.JSON(http.StatusBadRequest, gin.H{"msg": fmt.Sprintf("Invalid format for parameter id: %s", err)})
 		return
 	}
 
@@ -156,7 +156,7 @@ func (siw *ServerInterfaceWrapper) GetUserUserIdSchedule(c *gin.Context) {
 		middleware(c)
 	}
 
-	siw.Handler.GetUserUserIdSchedule(c, userId)
+	siw.Handler.GetUserIdSchedule(c, id)
 }
 
 // GinServerOptions provides options for the Gin server.
@@ -179,11 +179,11 @@ func RegisterHandlersWithOptions(router *gin.Engine, si ServerInterface, options
 
 	router.GET(options.BaseURL+"/faculties", wrapper.GetFaculties)
 
-	router.GET(options.BaseURL+"/lessons/byGroup/:groupId", wrapper.GetLessonsByGroupGroupId)
+	router.GET(options.BaseURL+"/lessons/byGroup/:id", wrapper.GetLessonsByGroupId)
 
-	router.GET(options.BaseURL+"/schedule/byGroup/:groupId", wrapper.GetScheduleByGroupGroupId)
+	router.GET(options.BaseURL+"/schedule/byGroup/:id", wrapper.GetScheduleByGroupId)
 
-	router.GET(options.BaseURL+"/user/:userId/schedule", wrapper.GetUserUserIdSchedule)
+	router.GET(options.BaseURL+"/user/:id/schedule", wrapper.GetUserIdSchedule)
 
 	return router
 }

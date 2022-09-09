@@ -9,7 +9,7 @@ servers:
       hostname:
         default: localhost
 paths:
-  /user/{userId}/schedule:
+  /user/{id}/schedule:
     get:
       summary: "Get personal schedule"
       security:
@@ -17,7 +17,7 @@ paths:
       tags:
         - Schedule
       parameters:
-        - name: userId
+        - name: id
           in: path
           required: true
           schema:
@@ -36,13 +36,13 @@ paths:
           description: Forbidden
         404:
           description: Not found
-  /schedule/byGroup/{groupId}:
+  /schedule/byGroup/{id}:
     get:
       summary: "Get group's schedule"
       tags:
         - Schedule
       parameters:
-        - name: groupId
+        - name: id
           in: path
           required: true
           schema:
@@ -56,13 +56,13 @@ paths:
                 $ref: "#/components/schemas/Schedule"
         404:
           description: Not found
-  /lessons/byGroup/{groupId}:
+  /lessons/byGroup/{id}:
     get:
       summary: "Get group's lesson list"
       tags:
         - Lessons
       parameters:
-        - name: groupId
+        - name: id
           in: path
           required: true
           schema:
