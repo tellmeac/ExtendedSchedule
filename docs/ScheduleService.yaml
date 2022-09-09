@@ -87,7 +87,7 @@ components:
           format: date
         endDate:
           type: string
-          format: date 
+          format: date
         days:
           description: "ascending ordered schedule days"
     Day:
@@ -104,7 +104,7 @@ components:
           description: "lesson position"
           type: number
           format: integer
-        lessons: 
+        lessons:
           nullable: true
           type: array
           items:
@@ -139,7 +139,7 @@ components:
         id:
           type: string
         name:
-          type: string  
+          type: string
     Faculty:
       required:
           - id
