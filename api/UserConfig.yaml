@@ -11,7 +11,7 @@ servers:
       hostname:
         default: localhost
 paths:
-  /user/{id}/config:
+  /users/{id}/config:
     get:
       summary: "Get user config"
       tags:

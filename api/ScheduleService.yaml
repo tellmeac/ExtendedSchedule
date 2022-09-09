@@ -9,7 +9,7 @@ servers:
       hostname:
         default: localhost
 paths:
-  /user/{id}/schedule:
+  /users/{id}/schedule:
     get:
       summary: "Get personal schedule"
       security:

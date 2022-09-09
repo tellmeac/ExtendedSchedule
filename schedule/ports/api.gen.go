@@ -72,8 +72,8 @@ type ServerInterface interface {
 	// (GET /schedule/byGroup/{id})
 	GetScheduleByGroupId(c *gin.Context, id string)
 	// Get personal schedule
-	// (GET /user/{id}/schedule)
-	GetUserIdSchedule(c *gin.Context, id openapi_types.UUID)
+	// (GET /users/{id}/schedule)
+	GetUsersIdSchedule(c *gin.Context, id openapi_types.UUID)
 }
 
 // ServerInterfaceWrapper converts contexts to parameters.
@@ -136,8 +136,8 @@ func (siw *ServerInterfaceWrapper) GetScheduleByGroupId(c *gin.Context) {
 	siw.Handler.GetScheduleByGroupId(c, id)
 }
 
-// GetUserIdSchedule operation middleware
-func (siw *ServerInterfaceWrapper) GetUserIdSchedule(c *gin.Context) {
+// GetUsersIdSchedule operation middleware
+func (siw *ServerInterfaceWrapper) GetUsersIdSchedule(c *gin.Context) {
 
 	var err error
 
@@ -156,7 +156,7 @@ func (siw *ServerInterfaceWrapper) GetUserIdSchedule(c *gin.Context) {
 		middleware(c)
 	}
 
-	siw.Handler.GetUserIdSchedule(c, id)
+	siw.Handler.GetUsersIdSchedule(c, id)
 }
 
 // GinServerOptions provides options for the Gin server.
@@ -183,7 +183,7 @@ func RegisterHandlersWithOptions(router *gin.Engine, si ServerInterface, options
 
 	router.GET(options.BaseURL+"/schedule/byGroup/:id", wrapper.GetScheduleByGroupId)
 
-	router.GET(options.BaseURL+"/user/:id/schedule", wrapper.GetUserIdSchedule)
+	router.GET(options.BaseURL+"/users/:id/schedule", wrapper.GetUsersIdSchedule)
 
 	return router
 }
