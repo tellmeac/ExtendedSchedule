@@ -29,7 +29,6 @@ paths:
           content:
             application/json:
               schema:
-                title: "User Configuration"
                 $ref: "#/components/schemas/UserConfig"
         401:
           description: Unauthorized
@@ -77,6 +76,9 @@ components:
         email:
           type: string
           format: email
+        base:
+          # TODO: define study group schema
+          type: string
         extendedGroups:
           type: array
           items:

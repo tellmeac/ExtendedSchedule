@@ -16,6 +16,13 @@ paths:
         - bearerAuth: []
       tags:
         - Schedule
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
       responses:
         200:
           description: OK
@@ -34,6 +41,12 @@ paths:
       summary: "Get group's schedule"
       tags:
         - Schedule
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         200:
           description: OK
@@ -48,6 +61,12 @@ paths:
       summary: "Get group's lesson list"
       tags:
         - Lessons
+      parameters:
+        - name: groupId
+          in: path
+          required: true
+          schema:
+            type: string
       responses:
         200:
           description: OK
@@ -81,6 +100,10 @@ components:
       bearerFormat: JWT
   schemas:
     Schedule:
+      required:
+        - startDate
+        - endDate
+        - days
       properties:
         startDate:
           type: string
@@ -90,20 +113,29 @@ components:
           format: date
         days:
           description: "ascending ordered schedule days"
+          type: array
+          items:
+            $ref: "#/components/schemas/Day"
     Day:
+      required:
+        - date
+        - cells
       properties:
         date:
           type: string
           format: date
+        cells:
+          type: array
+          items:
+            $ref: "#/components/schemas/Cell"
     Cell:
       required:
         - pos
         - lessons
       properties:
         pos:
-          description: "lesson position"
+          description: "Position"
           type: number
-          format: integer
         lessons:
           nullable: true
           type: array
@@ -124,11 +156,12 @@ components:
         kind:
           type: string
         teacher:
-          nullable: true
-          $ref: "#/components/schemas/Teacher"
+          anyOf:
+            - type: 'null'
+            - $ref: "#/components/schemas/Teacher"
         groups:
-          nullable: true
           description: "Study group codes"
+          type: array
           items:
             type: string
     Teacher:
