@@ -13,6 +13,7 @@ import (
 	"strings"
 
 	"github.com/deepmap/oapi-codegen/pkg/runtime"
+	openapi_types "github.com/deepmap/oapi-codegen/pkg/types"
 )
 
 // Audience defines model for Audience.
@@ -60,13 +61,13 @@ type Teacher struct {
 // GetScheduleGroupParams defines parameters for GetScheduleGroup.
 type GetScheduleGroupParams struct {
 	// groupd identifier
-	Id string `form:"id" json:"id"`
+	ID string `form:"id" json:"id"`
 
 	// date to start from
-	DateFrom string `form:"dateFrom" json:"dateFrom"`
+	DateFrom openapi_types.Date `form:"dateFrom" json:"dateFrom"`
 
 	// date to end
-	DateTo string `form:"dateTo" json:"dateTo"`
+	DateTo openapi_types.Date `form:"dateTo" json:"dateTo"`
 }
 
 // RequestEditorFn  is the function signature for the RequestEditor callback function
@@ -146,7 +147,7 @@ type ClientInterface interface {
 	GetFaculties(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetFacultiesIdGroups request
-	GetFacultiesIdGroups(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*http.Response, error)
+	GetFacultiesIdGroups(ctx context.Context, iD string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetScheduleGroup request
 	GetScheduleGroup(ctx context.Context, params *GetScheduleGroupParams, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -164,8 +165,8 @@ func (c *Client) GetFaculties(ctx context.Context, reqEditors ...RequestEditorFn
 	return c.Client.Do(req)
 }
 
-func (c *Client) GetFacultiesIdGroups(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewGetFacultiesIdGroupsRequest(c.Server, id)
+func (c *Client) GetFacultiesIdGroups(ctx context.Context, iD string, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetFacultiesIdGroupsRequest(c.Server, iD)
 	if err != nil {
 		return nil, err
 	}
@@ -216,12 +217,12 @@ func NewGetFacultiesRequest(server string) (*http.Request, error) {
 }
 
 // NewGetFacultiesIdGroupsRequest generates requests for GetFacultiesIdGroups
-func NewGetFacultiesIdGroupsRequest(server string, id string) (*http.Request, error) {
+func NewGetFacultiesIdGroupsRequest(server string, iD string) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
 
-	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "id", runtime.ParamLocationPath, id)
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "id", runtime.ParamLocationPath, iD)
 	if err != nil {
 		return nil, err
 	}
@@ -270,7 +271,7 @@ func NewGetScheduleGroupRequest(server string, params *GetScheduleGroupParams) (
 
 	queryValues := queryURL.Query()
 
-	if queryFrag, err := runtime.StyleParamWithLocation("form", true, "id", runtime.ParamLocationQuery, params.Id); err != nil {
+	if queryFrag, err := runtime.StyleParamWithLocation("form", true, "id", runtime.ParamLocationQuery, params.ID); err != nil {
 		return nil, err
 	} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
 		return nil, err
@@ -363,7 +364,7 @@ type ClientWithResponsesInterface interface {
 	GetFacultiesWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetFacultiesResponse, error)
 
 	// GetFacultiesIdGroups request
-	GetFacultiesIdGroupsWithResponse(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*GetFacultiesIdGroupsResponse, error)
+	GetFacultiesIdGroupsWithResponse(ctx context.Context, iD string, reqEditors ...RequestEditorFn) (*GetFacultiesIdGroupsResponse, error)
 
 	// GetScheduleGroup request
 	GetScheduleGroupWithResponse(ctx context.Context, params *GetScheduleGroupParams, reqEditors ...RequestEditorFn) (*GetScheduleGroupResponse, error)
@@ -445,8 +446,8 @@ func (c *ClientWithResponses) GetFacultiesWithResponse(ctx context.Context, reqE
 }
 
 // GetFacultiesIdGroupsWithResponse request returning *GetFacultiesIdGroupsResponse
-func (c *ClientWithResponses) GetFacultiesIdGroupsWithResponse(ctx context.Context, id string, reqEditors ...RequestEditorFn) (*GetFacultiesIdGroupsResponse, error) {
-	rsp, err := c.GetFacultiesIdGroups(ctx, id, reqEditors...)
+func (c *ClientWithResponses) GetFacultiesIdGroupsWithResponse(ctx context.Context, iD string, reqEditors ...RequestEditorFn) (*GetFacultiesIdGroupsResponse, error) {
+	rsp, err := c.GetFacultiesIdGroups(ctx, iD, reqEditors...)
 	if err != nil {
 		return nil, err
 	}

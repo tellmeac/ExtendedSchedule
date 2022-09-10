@@ -17,6 +17,7 @@ paths:
           in: query
           required: true
           description: groupd identifier
+          x-go-name: ID
           schema:
             type: string
         - name: dateFrom
@@ -25,6 +26,7 @@ paths:
           description: "date to start from"
           schema:
             type: string
+            format: date
             example: "2022-04-17"
         - name: dateTo
           in: query
@@ -32,6 +34,7 @@ paths:
           description: "date to end"
           schema:
             type: string
+            format: date
             example: "2022-04-24"
       responses:
         200:
@@ -68,6 +71,7 @@ paths:
         - name: id
           in: path
           required: true
+          x-go-name: ID
           schema:
             type: string
       responses:

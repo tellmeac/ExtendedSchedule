@@ -95,36 +95,38 @@ components:
         base:
           nullable: true
           oneOf:
-            - type: object
-              title: Teacher
-              description: "Teacher based"
-              required:
-                - id
-                - name
-              properties:
-                id:
-                  type: string
-                  x-go-name: ID
-                name:
-                  type: string
-                  example: "Иванов Иван Иванович"
-            - type: object
-              title: Study Group
-              description: "Base group"
-              required:
-                - id
-                - name
-              properties:
-                id:
-                  type: string
-                  x-go-name: ID
-                name:
-                  type: string
-                  example: "931901"
+            - $ref: "#/components/schemas/Teacher"
+            - $ref: "#/components/schemas/StudyGroup"
         extendedGroups:
           type: array
           items:
             $ref: "#/components/schemas/ExtendedGroup"
+    Teacher:
+      title: Teacher
+      description: "Teacher based"
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          x-go-name: ID
+        name:
+          type: string
+          example: "Иванов Иван Иванович"
+    StudyGroup:
+      title: Study Group
+      description: "Base group"
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          x-go-name: ID
+        name:
+          type: string
+          example: "931901"
     ExtendedGroup:
       required:
         - id

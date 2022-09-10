@@ -33,12 +33,21 @@ type Lesson struct {
 	Name string `json:"name"`
 }
 
+// Base group
+type StudyGroup struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
+}
+
+// Teacher based
+type Teacher struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
+}
+
 // UserConfig defines model for UserConfig.
 type UserConfig struct {
-	Base *struct {
-		ID   *string `json:"id,omitempty"`
-		Name *string `json:"name,omitempty"`
-	} `json:"base"`
+	Base           *interface{}    `json:"base"`
 	Email          string          `json:"email"`
 	ExtendedGroups []ExtendedGroup `json:"extendedGroups"`
 	ID             uuid.UUID       `json:"id"`
