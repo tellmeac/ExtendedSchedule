@@ -24,8 +24,8 @@ type Audience struct {
 
 // DaySchedule defines model for DaySchedule.
 type DaySchedule struct {
-	Date    string   `json:"date"`
-	Lessons []Lesson `json:"lessons"`
+	Date    openapi_types.Date `json:"date"`
+	Lessons []Lesson           `json:"lessons"`
 }
 
 // Faculty defines model for Faculty.
@@ -36,14 +36,14 @@ type Faculty struct {
 
 // Lesson defines model for Lesson.
 type Lesson struct {
-	Audience     *Audience     `json:"audience,omitempty"`
-	Groups       *[]StudyGroup `json:"groups,omitempty"`
-	ID           *string       `json:"id,omitempty"`
-	LessonNumber int           `json:"lessonNumber"`
-	LessonType   *string       `json:"lessonType,omitempty"`
-	Professor    *Teacher      `json:"professor,omitempty"`
-	Title        *string       `json:"title,omitempty"`
-	Type         string        `json:"type"`
+	Audience   *Audience     `json:"audience,omitempty"`
+	Groups     *[]StudyGroup `json:"groups,omitempty"`
+	ID         *string       `json:"id,omitempty"`
+	Position   int           `json:"lessonNumber"`
+	LessonKind *string       `json:"lessonType,omitempty"`
+	Professor  *Teacher      `json:"professor,omitempty"`
+	Title      *string       `json:"title,omitempty"`
+	Type       string        `json:"type"`
 }
 
 // StudyGroup defines model for StudyGroup.

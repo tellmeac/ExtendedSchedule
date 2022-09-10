@@ -6,12 +6,12 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/tellmeac/ext-schedule/schedule/common/utils"
 	"github.com/tellmeac/ext-schedule/schedule/adapters"
 	"github.com/tellmeac/ext-schedule/schedule/common/tsu"
+	"github.com/tellmeac/ext-schedule/schedule/common/utils"
 )
 
-// TestScheduleProvider_GetByGroup integrational testing
+// TestScheduleProvider_GetByGroup integration case.
 func TestScheduleProvider_GetByGroup(t *testing.T) {
 	client, err := tsu.NewClientWithResponses("https://intime.tsu.ru/api/web/v1")
 	assert.NoError(t, err)

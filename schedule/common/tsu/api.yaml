@@ -94,7 +94,8 @@ components:
         - lessons
       properties:
         date:
-          type: "string"
+          type: string
+          format: date
           example: "2022-01-20"
         lessons:
           type: array
@@ -107,14 +108,17 @@ components:
         - lessonNumber
       properties:
         type:
-          type: "string"
+          type: string
+          example: "EMPTY"
         lessonNumber:
           type: integer
           example: 1
+          x-go-name: Position
         lessonType:
-          type: "string"
+          type: string
+          x-go-name: LessonKind
         id:
-          type: "string"
+          type: string
           x-go-name: ID
         title:
           type: string

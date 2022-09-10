@@ -6,14 +6,25 @@ require (
 	github.com/deepmap/oapi-codegen v1.11.0
 	github.com/gin-gonic/gin v1.7.7
 	github.com/google/uuid v1.3.0
+	github.com/ilyakaznacheev/cleanenv v1.3.0
+	github.com/rs/zerolog v1.28.0
+	github.com/samber/lo v1.28.0
+	github.com/wux1an/fake-useragent v1.1.0
+	go.uber.org/fx v1.18.1
+	golang.org/x/exp v0.0.0-20220303212507-bbda1eaf7a17
 )
 
 require (
+	github.com/BurntSushi/toml v1.1.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/joho/godotenv v1.4.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
-	github.com/samber/lo v1.28.0 // indirect
-	golang.org/x/exp v0.0.0-20220303212507-bbda1eaf7a17 // indirect
+	go.uber.org/atomic v1.6.0 // indirect
+	go.uber.org/dig v1.15.0 // indirect
+	go.uber.org/multierr v1.5.0 // indirect
+	go.uber.org/zap v1.16.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
+	olympos.io/encoding/edn v0.0.0-20201019073823-d3554ca0b0a3 // indirect
 )
 
 require (
