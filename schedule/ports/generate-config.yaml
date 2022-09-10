@@ -3,5 +3,4 @@ output:
 package:
   ports
 generate:
-  models: true
   gin-server: true

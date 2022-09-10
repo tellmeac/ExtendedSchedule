@@ -8,57 +8,9 @@ import (
 	"net/http"
 
 	"github.com/deepmap/oapi-codegen/pkg/runtime"
-	openapi_types "github.com/deepmap/oapi-codegen/pkg/types"
 	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
-
-const (
-	BearerAuthScopes = "bearerAuth.Scopes"
-)
-
-// Cell defines model for Cell.
-type Cell struct {
-	Lessons *[]Lesson `json:"lessons"`
-
-	// Position
-	Pos float32 `json:"pos"`
-}
-
-// Day defines model for Day.
-type Day struct {
-	Cells []Cell             `json:"cells"`
-	Date  openapi_types.Date `json:"date"`
-}
-
-// Faculty defines model for Faculty.
-type Faculty struct {
-	Id   string `json:"id"`
-	Name string `json:"name"`
-}
-
-// Lesson defines model for Lesson.
-type Lesson struct {
-	// Study group codes
-	Groups  []string    `json:"groups"`
-	Id      string      `json:"id"`
-	Kind    string      `json:"kind"`
-	Name    string      `json:"name"`
-	Teacher interface{} `json:"teacher"`
-}
-
-// Schedule defines model for Schedule.
-type Schedule struct {
-	// ascending ordered schedule days
-	Days      []Day              `json:"days"`
-	EndDate   openapi_types.Date `json:"endDate"`
-	StartDate openapi_types.Date `json:"startDate"`
-}
-
-// Teacher defines model for Teacher.
-type Teacher struct {
-	Id   string `json:"id"`
-	Name string `json:"name"`
-}
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
@@ -73,7 +25,7 @@ type ServerInterface interface {
 	GetScheduleByGroupId(c *gin.Context, id string)
 	// Get personal schedule
 	// (GET /users/{id}/schedule)
-	GetUsersIdSchedule(c *gin.Context, id openapi_types.UUID)
+	GetUsersIdSchedule(c *gin.Context, id uuid.UUID)
 }
 
 // ServerInterfaceWrapper converts contexts to parameters.
@@ -142,7 +94,7 @@ func (siw *ServerInterfaceWrapper) GetUsersIdSchedule(c *gin.Context) {
 	var err error
 
 	// ------------- Path parameter "id" -------------
-	var id openapi_types.UUID
+	var id uuid.UUID
 
 	err = runtime.BindStyledParameter("simple", false, "id", c.Param("id"), &id)
 	if err != nil {

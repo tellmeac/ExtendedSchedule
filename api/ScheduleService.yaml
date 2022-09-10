@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: ScheduleService
   description: Service to provide schedule.
-  version: 1.0.0
+  version: 1.1.0
 servers:
   - url: http://{hostname}/api/v1
     variables:
@@ -23,6 +23,11 @@ paths:
           schema:
             type: string
             format: uuid
+            x-go-name: ID
+            x-go-type: uuid.UUID
+            x-go-type-import:
+              name: uuid
+              path: github.com/google/uuid
       responses:
         200:
           description: OK
@@ -151,28 +156,25 @@ components:
       properties:
         id:
           type: string
+          x-go-name: ID
         name:
           type: string
         kind:
           type: string
         teacher:
-          anyOf:
-            - type: 'null'
-            - $ref: "#/components/schemas/Teacher"
+          nullable: true
+          type: object
+          properties:
+            id:
+              type: string
+              x-go-name: ID
+            name:
+              type: string
         groups:
           description: "Study group codes"
           type: array
           items:
             type: string
-    Teacher:
-      required:
-        - id
-        - name
-      properties:
-        id:
-          type: string
-        name:
-          type: string
     Faculty:
       required:
           - id
@@ -180,5 +182,6 @@ components:
       properties:
         id:
           type: string
+          x-go-name: ID
         name:
           type: string

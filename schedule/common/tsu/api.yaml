@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: TSU Schedule
   description: TSU schedule public API
-  version: 0.3.0
+  version: 0.3.1
 servers:
   - url: https://intime.tsu.ru/api/web/v1
     description: default path
@@ -111,6 +111,7 @@ components:
           type: "string"
         id:
           type: "string"
+          x-go-name: ID
         title:
           type: string
         audience:
@@ -129,6 +130,7 @@ components:
       properties:
         id:
           type: string
+          x-go-name: ID
         name:
           type: string
     Teacher:
@@ -136,6 +138,7 @@ components:
       properties:
         id:
           type: string
+          x-go-name: ID
         fullName:
           type: string
     Audience:
@@ -146,6 +149,7 @@ components:
       properties:
         id:
           type: string
+          x-go-name: ID
           nullable: true
         name:
           type: string
@@ -157,5 +161,6 @@ components:
       properties:
         id:
           type: string
+          x-go-name: ID
         name:
           type: string

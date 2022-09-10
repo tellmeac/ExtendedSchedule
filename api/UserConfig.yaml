@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: UserConfig
   description: Service to provide methods to work with user settings
-  version: 1.0.0
+  version: 1.1.0
 security:
   - bearerAuth: []
 servers:
@@ -23,6 +23,11 @@ paths:
           schema:
             type: string
             format: uuid
+            x-go-name: ID
+            x-go-type: uuid.UUID
+            x-go-type-import:
+              name: uuid
+              path: github.com/google/uuid
       responses:
         200:
           description: OK
@@ -47,6 +52,11 @@ paths:
         schema:
           type: string
           format: uuid
+          x-go-name: ID
+          x-go-type: uuid.UUID
+          x-go-type-import:
+            name: uuid
+            path: github.com/google/uuid
       responses:
         200:
           description: OK
@@ -73,12 +83,44 @@ components:
         id:
           type: string
           format: uuid
+          x-go-name: ID
+          x-go-type: uuid.UUID
+          x-go-type-import:
+            name: uuid
+            path: github.com/google/uuid
         email:
           type: string
+          x-go-type: string
           format: email
         base:
-          # TODO: define study group schema
-          type: string
+          nullable: true
+          oneOf:
+            - type: object
+              title: Teacher
+              description: "Teacher based"
+              required:
+                - id
+                - name
+              properties:
+                id:
+                  type: string
+                  x-go-name: ID
+                name:
+                  type: string
+                  example: "Иванов Иван Иванович"
+            - type: object
+              title: Study Group
+              description: "Base group"
+              required:
+                - id
+                - name
+              properties:
+                id:
+                  type: string
+                  x-go-name: ID
+                name:
+                  type: string
+                  example: "931901"
         extendedGroups:
           type: array
           items:
@@ -90,6 +132,7 @@ components:
       properties:
         id:
           type: string
+          x-go-name: ID
         lessons:
           type: array
           items:
@@ -102,8 +145,10 @@ components:
       properties:
         id:
           type: string
+          x-go-name: ID
         name:
           type: string
+          example: "Базы данных"
         kind:
           type: string
           example: "practice"

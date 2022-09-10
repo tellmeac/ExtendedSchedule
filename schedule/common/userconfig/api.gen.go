@@ -13,7 +13,7 @@ import (
 	"strings"
 
 	"github.com/deepmap/oapi-codegen/pkg/runtime"
-	openapi_types "github.com/deepmap/oapi-codegen/pkg/types"
+	"github.com/google/uuid"
 )
 
 const (
@@ -22,23 +22,26 @@ const (
 
 // ExtendedGroup defines model for ExtendedGroup.
 type ExtendedGroup struct {
-	Id      string   `json:"id"`
+	ID      string   `json:"id"`
 	Lessons []Lesson `json:"lessons"`
 }
 
 // Lesson defines model for Lesson.
 type Lesson struct {
-	Id   string `json:"id"`
+	ID   string `json:"id"`
 	Kind string `json:"kind"`
 	Name string `json:"name"`
 }
 
 // UserConfig defines model for UserConfig.
 type UserConfig struct {
-	Base           *string             `json:"base,omitempty"`
-	Email          openapi_types.Email `json:"email"`
-	ExtendedGroups []ExtendedGroup     `json:"extendedGroups"`
-	Id             openapi_types.UUID  `json:"id"`
+	Base *struct {
+		ID   *string `json:"id,omitempty"`
+		Name *string `json:"name,omitempty"`
+	} `json:"base"`
+	Email          string          `json:"email"`
+	ExtendedGroups []ExtendedGroup `json:"extendedGroups"`
+	ID             uuid.UUID       `json:"id"`
 }
 
 // RequestEditorFn  is the function signature for the RequestEditor callback function
@@ -115,13 +118,13 @@ func WithRequestEditorFn(fn RequestEditorFn) ClientOption {
 // The interface specification for the client above.
 type ClientInterface interface {
 	// GetUsersIdConfig request
-	GetUsersIdConfig(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+	GetUsersIdConfig(ctx context.Context, id uuid.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// PatchUsersIdConfig request
-	PatchUsersIdConfig(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
+	PatchUsersIdConfig(ctx context.Context, id uuid.UUID, reqEditors ...RequestEditorFn) (*http.Response, error)
 }
 
-func (c *Client) GetUsersIdConfig(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) GetUsersIdConfig(ctx context.Context, id uuid.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetUsersIdConfigRequest(c.Server, id)
 	if err != nil {
 		return nil, err
@@ -133,7 +136,7 @@ func (c *Client) GetUsersIdConfig(ctx context.Context, id openapi_types.UUID, re
 	return c.Client.Do(req)
 }
 
-func (c *Client) PatchUsersIdConfig(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
+func (c *Client) PatchUsersIdConfig(ctx context.Context, id uuid.UUID, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewPatchUsersIdConfigRequest(c.Server, id)
 	if err != nil {
 		return nil, err
@@ -146,7 +149,7 @@ func (c *Client) PatchUsersIdConfig(ctx context.Context, id openapi_types.UUID, 
 }
 
 // NewGetUsersIdConfigRequest generates requests for GetUsersIdConfig
-func NewGetUsersIdConfigRequest(server string, id openapi_types.UUID) (*http.Request, error) {
+func NewGetUsersIdConfigRequest(server string, id uuid.UUID) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -180,7 +183,7 @@ func NewGetUsersIdConfigRequest(server string, id openapi_types.UUID) (*http.Req
 }
 
 // NewPatchUsersIdConfigRequest generates requests for PatchUsersIdConfig
-func NewPatchUsersIdConfigRequest(server string, id openapi_types.UUID) (*http.Request, error) {
+func NewPatchUsersIdConfigRequest(server string, id uuid.UUID) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -257,10 +260,10 @@ func WithBaseURL(baseURL string) ClientOption {
 // ClientWithResponsesInterface is the interface specification for the client with responses above.
 type ClientWithResponsesInterface interface {
 	// GetUsersIdConfig request
-	GetUsersIdConfigWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetUsersIdConfigResponse, error)
+	GetUsersIdConfigWithResponse(ctx context.Context, id uuid.UUID, reqEditors ...RequestEditorFn) (*GetUsersIdConfigResponse, error)
 
 	// PatchUsersIdConfig request
-	PatchUsersIdConfigWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*PatchUsersIdConfigResponse, error)
+	PatchUsersIdConfigWithResponse(ctx context.Context, id uuid.UUID, reqEditors ...RequestEditorFn) (*PatchUsersIdConfigResponse, error)
 }
 
 type GetUsersIdConfigResponse struct {
@@ -307,7 +310,7 @@ func (r PatchUsersIdConfigResponse) StatusCode() int {
 }
 
 // GetUsersIdConfigWithResponse request returning *GetUsersIdConfigResponse
-func (c *ClientWithResponses) GetUsersIdConfigWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*GetUsersIdConfigResponse, error) {
+func (c *ClientWithResponses) GetUsersIdConfigWithResponse(ctx context.Context, id uuid.UUID, reqEditors ...RequestEditorFn) (*GetUsersIdConfigResponse, error) {
 	rsp, err := c.GetUsersIdConfig(ctx, id, reqEditors...)
 	if err != nil {
 		return nil, err
@@ -316,7 +319,7 @@ func (c *ClientWithResponses) GetUsersIdConfigWithResponse(ctx context.Context, 
 }
 
 // PatchUsersIdConfigWithResponse request returning *PatchUsersIdConfigResponse
-func (c *ClientWithResponses) PatchUsersIdConfigWithResponse(ctx context.Context, id openapi_types.UUID, reqEditors ...RequestEditorFn) (*PatchUsersIdConfigResponse, error) {
+func (c *ClientWithResponses) PatchUsersIdConfigWithResponse(ctx context.Context, id uuid.UUID, reqEditors ...RequestEditorFn) (*PatchUsersIdConfigResponse, error) {
 	rsp, err := c.PatchUsersIdConfig(ctx, id, reqEditors...)
 	if err != nil {
 		return nil, err

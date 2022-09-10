@@ -17,7 +17,7 @@ import (
 
 // Audience defines model for Audience.
 type Audience struct {
-	Id   *string `json:"id"`
+	ID   *string `json:"id"`
 	Name string  `json:"name"`
 }
 
@@ -29,7 +29,7 @@ type DaySchedule struct {
 
 // Faculty defines model for Faculty.
 type Faculty struct {
-	Id   string `json:"id"`
+	ID   string `json:"id"`
 	Name string `json:"name"`
 }
 
@@ -37,7 +37,7 @@ type Faculty struct {
 type Lesson struct {
 	Audience     *Audience     `json:"audience,omitempty"`
 	Groups       *[]StudyGroup `json:"groups,omitempty"`
-	Id           *string       `json:"id,omitempty"`
+	ID           *string       `json:"id,omitempty"`
 	LessonNumber int           `json:"lessonNumber"`
 	LessonType   *string       `json:"lessonType,omitempty"`
 	Professor    *Teacher      `json:"professor,omitempty"`
@@ -47,14 +47,14 @@ type Lesson struct {
 
 // StudyGroup defines model for StudyGroup.
 type StudyGroup struct {
-	Id   string `json:"id"`
+	ID   string `json:"id"`
 	Name string `json:"name"`
 }
 
 // Teacher defines model for Teacher.
 type Teacher struct {
 	FullName *string `json:"fullName,omitempty"`
-	Id       *string `json:"id,omitempty"`
+	ID       *string `json:"id,omitempty"`
 }
 
 // GetScheduleGroupParams defines parameters for GetScheduleGroup.
