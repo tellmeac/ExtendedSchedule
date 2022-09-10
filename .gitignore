@@ -3,3 +3,6 @@
 
 # environment file
 .env
+
+# binaries
+*.exe
