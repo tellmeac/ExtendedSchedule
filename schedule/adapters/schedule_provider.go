@@ -31,9 +31,14 @@ func (sp ScheduleProvider) GetByGroup(ctx context.Context, id string, from, to t
 		return schedule.Schedule{}, fmt.Errorf("failed with status code = %d", resp.HTTPResponse.StatusCode)
 	}
 
-	return fromScheduleDto(resp.JSON200)
+	return fromScheduleDto(resp.JSON200, from, to)
 }
 
-func fromScheduleDto(dto *[]tsu.DaySchedule) (schedule.Schedule, error) {
+func fromScheduleDto(dto *[]tsu.DaySchedule, from, to time.Time) (schedule.Schedule, error) {
+	result := schedule.Schedule{
+		S
+	}
+
+
 	return schedule.Schedule{}, nil
 }
