@@ -70,6 +70,18 @@ type GetScheduleGroupParams struct {
 	DateTo openapi_types.Date `form:"dateTo" json:"dateTo"`
 }
 
+// GetScheduleProfessorParams defines parameters for GetScheduleProfessor.
+type GetScheduleProfessorParams struct {
+	// teacher identifier
+	ID string `form:"id" json:"id"`
+
+	// date to start from
+	DateFrom openapi_types.Date `form:"dateFrom" json:"dateFrom"`
+
+	// date to end
+	DateTo openapi_types.Date `form:"dateTo" json:"dateTo"`
+}
+
 // RequestEditorFn  is the function signature for the RequestEditor callback function
 type RequestEditorFn func(ctx context.Context, req *http.Request) error
 
@@ -151,6 +163,9 @@ type ClientInterface interface {
 
 	// GetScheduleGroup request
 	GetScheduleGroup(ctx context.Context, params *GetScheduleGroupParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetScheduleProfessor request
+	GetScheduleProfessor(ctx context.Context, params *GetScheduleProfessorParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 }
 
 func (c *Client) GetFaculties(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
@@ -179,6 +194,18 @@ func (c *Client) GetFacultiesIdGroups(ctx context.Context, iD string, reqEditors
 
 func (c *Client) GetScheduleGroup(ctx context.Context, params *GetScheduleGroupParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetScheduleGroupRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetScheduleProfessor(ctx context.Context, params *GetScheduleProfessorParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetScheduleProfessorRequest(c.Server, params)
 	if err != nil {
 		return nil, err
 	}
@@ -317,6 +344,73 @@ func NewGetScheduleGroupRequest(server string, params *GetScheduleGroupParams) (
 	return req, nil
 }
 
+// NewGetScheduleProfessorRequest generates requests for GetScheduleProfessor
+func NewGetScheduleProfessorRequest(server string, params *GetScheduleProfessorParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/schedule/professor")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	queryValues := queryURL.Query()
+
+	if queryFrag, err := runtime.StyleParamWithLocation("form", true, "id", runtime.ParamLocationQuery, params.ID); err != nil {
+		return nil, err
+	} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+		return nil, err
+	} else {
+		for k, v := range parsed {
+			for _, v2 := range v {
+				queryValues.Add(k, v2)
+			}
+		}
+	}
+
+	if queryFrag, err := runtime.StyleParamWithLocation("form", true, "dateFrom", runtime.ParamLocationQuery, params.DateFrom); err != nil {
+		return nil, err
+	} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+		return nil, err
+	} else {
+		for k, v := range parsed {
+			for _, v2 := range v {
+				queryValues.Add(k, v2)
+			}
+		}
+	}
+
+	if queryFrag, err := runtime.StyleParamWithLocation("form", true, "dateTo", runtime.ParamLocationQuery, params.DateTo); err != nil {
+		return nil, err
+	} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+		return nil, err
+	} else {
+		for k, v := range parsed {
+			for _, v2 := range v {
+				queryValues.Add(k, v2)
+			}
+		}
+	}
+
+	queryURL.RawQuery = queryValues.Encode()
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 func (c *Client) applyEditors(ctx context.Context, req *http.Request, additionalEditors []RequestEditorFn) error {
 	for _, r := range c.RequestEditors {
 		if err := r(ctx, req); err != nil {
@@ -368,6 +462,9 @@ type ClientWithResponsesInterface interface {
 
 	// GetScheduleGroup request
 	GetScheduleGroupWithResponse(ctx context.Context, params *GetScheduleGroupParams, reqEditors ...RequestEditorFn) (*GetScheduleGroupResponse, error)
+
+	// GetScheduleProfessor request
+	GetScheduleProfessorWithResponse(ctx context.Context, params *GetScheduleProfessorParams, reqEditors ...RequestEditorFn) (*GetScheduleProfessorResponse, error)
 }
 
 type GetFacultiesResponse struct {
@@ -436,6 +533,28 @@ func (r GetScheduleGroupResponse) StatusCode() int {
 	return 0
 }
 
+type GetScheduleProfessorResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]DaySchedule
+}
+
+// Status returns HTTPResponse.Status
+func (r GetScheduleProfessorResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetScheduleProfessorResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 // GetFacultiesWithResponse request returning *GetFacultiesResponse
 func (c *ClientWithResponses) GetFacultiesWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetFacultiesResponse, error) {
 	rsp, err := c.GetFaculties(ctx, reqEditors...)
@@ -461,6 +580,15 @@ func (c *ClientWithResponses) GetScheduleGroupWithResponse(ctx context.Context, 
 		return nil, err
 	}
 	return ParseGetScheduleGroupResponse(rsp)
+}
+
+// GetScheduleProfessorWithResponse request returning *GetScheduleProfessorResponse
+func (c *ClientWithResponses) GetScheduleProfessorWithResponse(ctx context.Context, params *GetScheduleProfessorParams, reqEditors ...RequestEditorFn) (*GetScheduleProfessorResponse, error) {
+	rsp, err := c.GetScheduleProfessor(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetScheduleProfessorResponse(rsp)
 }
 
 // ParseGetFacultiesResponse parses an HTTP response from a GetFacultiesWithResponse call
@@ -524,6 +652,32 @@ func ParseGetScheduleGroupResponse(rsp *http.Response) (*GetScheduleGroupRespons
 	}
 
 	response := &GetScheduleGroupResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []DaySchedule
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetScheduleProfessorResponse parses an HTTP response from a GetScheduleProfessorWithResponse call
+func ParseGetScheduleProfessorResponse(rsp *http.Response) (*GetScheduleProfessorResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetScheduleProfessorResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}

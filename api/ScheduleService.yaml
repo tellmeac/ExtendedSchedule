@@ -61,6 +61,26 @@ paths:
                 $ref: "#/components/schemas/Schedule"
         404:
           description: Not found
+  /schedule/byTeacher/{id}:
+    get:
+      summary: "Get teacher's schedule"
+      tags:
+        - Schedule
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Schedule"
+        404:
+          description: Not found
   /lessons/byGroup/{id}:
     get:
       summary: "Get group's lesson list"

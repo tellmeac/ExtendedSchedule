@@ -23,6 +23,9 @@ type ServerInterface interface {
 	// Get group's schedule
 	// (GET /schedule/byGroup/{id})
 	GetScheduleByGroupId(c *gin.Context, id string)
+	// Get teacher's schedule
+	// (GET /schedule/byTeacher/{id})
+	GetScheduleByTeacherId(c *gin.Context, id string)
 	// Get personal schedule
 	// (GET /users/{id}/schedule)
 	GetUsersIdSchedule(c *gin.Context, id uuid.UUID)
@@ -88,6 +91,27 @@ func (siw *ServerInterfaceWrapper) GetScheduleByGroupId(c *gin.Context) {
 	siw.Handler.GetScheduleByGroupId(c, id)
 }
 
+// GetScheduleByTeacherId operation middleware
+func (siw *ServerInterfaceWrapper) GetScheduleByTeacherId(c *gin.Context) {
+
+	var err error
+
+	// ------------- Path parameter "id" -------------
+	var id string
+
+	err = runtime.BindStyledParameter("simple", false, "id", c.Param("id"), &id)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"msg": fmt.Sprintf("Invalid format for parameter id: %s", err)})
+		return
+	}
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+	}
+
+	siw.Handler.GetScheduleByTeacherId(c, id)
+}
+
 // GetUsersIdSchedule operation middleware
 func (siw *ServerInterfaceWrapper) GetUsersIdSchedule(c *gin.Context) {
 
@@ -134,6 +158,8 @@ func RegisterHandlersWithOptions(router *gin.Engine, si ServerInterface, options
 	router.GET(options.BaseURL+"/lessons/byGroup/:id", wrapper.GetLessonsByGroupId)
 
 	router.GET(options.BaseURL+"/schedule/byGroup/:id", wrapper.GetScheduleByGroupId)
+
+	router.GET(options.BaseURL+"/schedule/byTeacher/:id", wrapper.GetScheduleByTeacherId)
 
 	router.GET(options.BaseURL+"/users/:id/schedule", wrapper.GetUsersIdSchedule)
 

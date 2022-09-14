@@ -45,7 +45,7 @@ func (b Builder) Personal(ctx context.Context, userID uuid.UUID, from, to time.T
 				return Schedule{}, fmt.Errorf("failed to get base group schedule: %w", err)
 			}
 		default:
-			panic(fmt.Errorf("unknown base in settings: %q", reflect.TypeOf(base).Name()))
+			panic(fmt.Errorf("unknown base type in settings: %q", reflect.TypeOf(base).Name()))
 		}
 	}
 
