@@ -144,26 +144,14 @@ components:
     Day:
       required:
         - date
-        - cells
+        - lessons
       properties:
         date:
           type: string
           format: date
-        cells:
-          type: array
-          items:
-            $ref: "#/components/schemas/Cell"
-    Cell:
-      required:
-        - pos
-        - lessons
-      properties:
-        pos:
-          description: "Position"
-          type: number
         lessons:
-          nullable: true
           type: array
+          description: "Ascending ordered lessons by position"
           items:
             $ref: "#/components/schemas/Lesson"
     Lesson:
@@ -171,6 +159,7 @@ components:
           - id
           - name
           - kind
+          - pos
           - teacher
           - groups
       properties:
@@ -181,6 +170,9 @@ components:
           type: string
         kind:
           type: string
+        pos:
+          description: "Position"
+          type: number
         teacher:
           nullable: true
           type: object

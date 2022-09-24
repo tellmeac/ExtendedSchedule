@@ -8,8 +8,8 @@ import (
 	"time"
 
 	openapi_types "github.com/deepmap/oapi-codegen/pkg/types"
-	"github.com/tellmeac/ext-schedule/schedule/common/tsu"
-	"github.com/tellmeac/ext-schedule/schedule/schedule"
+	"tellmeac/extended-schedule/common/tsu"
+	"tellmeac/extended-schedule/schedule"
 )
 
 func NewScheduleProvider(client tsu.ClientWithResponsesInterface) ScheduleProvider {
@@ -65,51 +65,47 @@ func fromScheduleDto(days []tsu.DaySchedule, from, to time.Time) (schedule.Sched
 
 	for _, d := range days {
 		s.Days = append(s.Days, schedule.Day{
-			Date:  d.Date.Time,
-			Cells: groupByCells(d.Lessons),
+			Date:    d.Date.Time,
+			Lessons: fromLessonsDto(d.Lessons),
 		})
 	}
 
 	return s, nil
 }
 
-func groupByCells(lessons []tsu.Lesson) []schedule.Cell {
+func fromLessonsDto(lessons []tsu.Lesson) []schedule.Lesson {
 	slices.SortFunc(lessons, func(a, b tsu.Lesson) bool {
 		return a.Position < b.Position
 	})
 
-	const maxCells = 7
-	result := make([]schedule.Cell, 0, maxCells)
-	currentCell := schedule.Cell{Pos: 0}
+	result := make([]schedule.Lesson, 0)
 	for _, l := range lessons {
-		if l.Position > currentCell.Pos {
-			result = append(result, currentCell)
-			currentCell = schedule.Cell{
-				Pos:     l.Position,
-				Lessons: nil,
+		if l.Type != "LESSON" {
+			continue
+		}
+
+		// if teacher is not set it has no identifier.
+		var teacher *schedule.Teacher
+		if l.Professor.ID != nil {
+			teacher = &schedule.Teacher{
+				ID:   *l.Professor.ID,
+				Name: *l.Professor.FullName,
 			}
 		}
 
-		// type can be "EMPTY"
-		if l.Type == "LESSON" {
-			lesson := schedule.Lesson{
-				ID:   *l.ID,
-				Kind: *l.LessonKind,
-				Name: *l.Title,
-				Groups: lo.Map(*l.Groups, func(g tsu.StudyGroup, _ int) string {
-					return g.Name
-				}),
-			}
-			// if teacher is not set it has no identifier.
-			if l.Professor.ID != nil {
-				lesson.Teacher = &schedule.Teacher{
-					ID:   *l.Professor.ID,
-					Name: *l.Professor.FullName,
-				}
-			}
-
-			currentCell.Lessons = append(currentCell.Lessons, lesson)
+		lesson := schedule.Lesson{
+			ID:      *l.ID,
+			Kind:    *l.LessonKind,
+			Name:    *l.Title,
+			Pos:     l.Position,
+			Teacher: teacher,
+			Groups: lo.Map(*l.Groups, func(g tsu.StudyGroup, _ int) string {
+				return g.Name
+			}),
 		}
+
+		result = append(result, lesson)
 	}
+
 	return result
 }

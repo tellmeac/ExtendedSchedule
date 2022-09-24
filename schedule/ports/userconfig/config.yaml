@@ -1,0 +1,6 @@
+output:
+  api.gen.go
+package:
+  userconfig
+generate:
+  gin-server: true

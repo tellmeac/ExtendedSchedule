@@ -1,6 +1,0 @@
-output:
-  api.gen.go
-package:
-  ports
-generate:
-  gin-server: true

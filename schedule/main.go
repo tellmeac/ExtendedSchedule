@@ -2,10 +2,10 @@ package main
 
 import (
 	"context"
-	"github.com/tellmeac/ext-schedule/schedule/adapters"
-	"github.com/tellmeac/ext-schedule/schedule/common/tsu"
-	"github.com/tellmeac/ext-schedule/schedule/common/userconfig"
 	"go.uber.org/fx"
+	"tellmeac/extended-schedule/adapters"
+	"tellmeac/extended-schedule/common/tsu"
+	"tellmeac/extended-schedule/common/userconfig"
 )
 
 // module is a root module that aggregates dependencies for application.
@@ -16,7 +16,7 @@ var module = fx.Options(
 	fx.Invoke(bootstrap),
 )
 
-func bootstrap(lc fx.Lifecycle, p adapters.ScheduleProvider) {
+func bootstrap(lc fx.Lifecycle) {
 	lc.Append(fx.Hook{
 		OnStart: func(ctx context.Context) error {
 			return nil

@@ -1,9 +1,9 @@
 package userconfig
 
 import (
-	"github.com/tellmeac/ext-schedule/schedule/common/utils"
-	"github.com/tellmeac/ext-schedule/schedule/config"
 	"go.uber.org/fx"
+	"tellmeac/extended-schedule/common/utils"
+	"tellmeac/extended-schedule/config"
 )
 
 // Module provides api client for user config service.

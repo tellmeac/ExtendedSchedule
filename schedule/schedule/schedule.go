@@ -8,20 +8,13 @@ import (
 type Schedule struct {
 	StartDate time.Time `json:"startDate"`
 	EndDate   time.Time `json:"endDate"`
-	// ascending ordered schedule days
-	Days []Day `json:"days"`
-}
-
-// Cell defines model for Cell.
-type Cell struct {
-	Pos     int      `json:"pos"`
-	Lessons []Lesson `json:"lessons"`
+	Days      []Day     `json:"days"`
 }
 
 // Day defines model for Day.
 type Day struct {
-	Cells []Cell    `json:"cells"`
-	Date  time.Time `json:"date"`
+	Lessons []Lesson  `json:"lessons"`
+	Date    time.Time `json:"date"`
 }
 
 // Faculty defines model for Faculty.
@@ -33,8 +26,9 @@ type Faculty struct {
 // Lesson defines model for Lesson.
 type Lesson struct {
 	ID      string   `json:"id"`
-	Kind    string   `json:"kind"`
 	Name    string   `json:"name"`
+	Kind    string   `json:"kind"`
+	Pos     int      `json:"pos"`
 	Teacher *Teacher `json:"teacher"`
 	Groups  []string `json:"groups"`
 }

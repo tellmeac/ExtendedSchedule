@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 	"github.com/google/uuid"
-	"github.com/tellmeac/ext-schedule/schedule/common/userconfig"
 	"reflect"
+	"tellmeac/extended-schedule/common/userconfig"
 	"time"
 )
 

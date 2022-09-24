@@ -6,9 +6,9 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/tellmeac/ext-schedule/schedule/adapters"
-	"github.com/tellmeac/ext-schedule/schedule/common/tsu"
-	"github.com/tellmeac/ext-schedule/schedule/common/utils"
+	"tellmeac/extended-schedule/adapters"
+	"tellmeac/extended-schedule/common/tsu"
+	"tellmeac/extended-schedule/common/utils"
 )
 
 // TestScheduleProvider_GetByGroup integration case.

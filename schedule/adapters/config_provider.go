@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/google/uuid"
-	"github.com/tellmeac/ext-schedule/schedule/common/userconfig"
+	"tellmeac/extended-schedule/common/userconfig"
 )
 
 func NewConfigProvider(client userconfig.ClientWithResponsesInterface) ConfigProvider {

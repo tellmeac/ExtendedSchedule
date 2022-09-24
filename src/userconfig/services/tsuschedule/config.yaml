@@ -1,7 +1,0 @@
-output:
-  api.gen.go
-package:
-  tsuschedule
-generate:
-  - types
-  - client
