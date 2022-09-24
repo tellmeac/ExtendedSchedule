@@ -8,16 +8,79 @@ import (
 	"net/http"
 
 	"github.com/deepmap/oapi-codegen/pkg/runtime"
+	openapi_types "github.com/deepmap/oapi-codegen/pkg/types"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
 
+const (
+	BearerAuthScopes = "bearerAuth.Scopes"
+)
+
+// ExcludeRule defines model for ExcludeRule.
+type ExcludeRule struct {
+	lessonID string `json:"lessonId"`
+	Pos      int    `json:"pos"`
+}
+
+// ExtendedGroup defines model for ExtendedGroup.
+type ExtendedGroup struct {
+	ID      string   `json:"id"`
+	Lessons []Lesson `json:"lessons"`
+}
+
+// Lesson defines model for Lesson.
+type Lesson struct {
+	ID   string `json:"id"`
+	Kind string `json:"kind"`
+	Name string `json:"name"`
+}
+
+// Base group
+type StudyGroup struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
+}
+
+// Teacher based
+type Teacher struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
+}
+
+// UpdateConfig defines model for UpdateConfig.
+type UpdateConfig struct {
+	Base           *interface{}     `json:"base"`
+	ExcludeRules   *[]ExcludeRule   `json:"excludeRules,omitempty"`
+	ExtendedGroups *[]ExtendedGroup `json:"extendedGroups,omitempty"`
+}
+
+// UserConfig defines model for UserConfig.
+type UserConfig struct {
+	Base           *interface{}    `json:"base"`
+	Email          string          `json:"email"`
+	ExcludeRules   []ExcludeRule   `json:"excludeRules"`
+	ExtendedGroups []ExtendedGroup `json:"extendedGroups"`
+	ID             uuid.UUID       `json:"id"`
+}
+
+// GetUsersConfigParams defines parameters for GetUsersConfig.
+type GetUsersConfigParams struct {
+	Email openapi_types.Email `form:"email" json:"email"`
+}
+
+// PatchUsersIdConfigJSONBody defines parameters for PatchUsersIdConfig.
+type PatchUsersIdConfigJSONBody = UpdateConfig
+
+// PatchUsersIdConfigJSONRequestBody defines body for PatchUsersIdConfig for application/json ContentType.
+type PatchUsersIdConfigJSONRequestBody = PatchUsersIdConfigJSONBody
+
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 	// Get user config
-	// (GET /users/{id}/config)
-	GetUsersIdConfig(c *gin.Context, id uuid.UUID)
-	// Update user config
+	// (GET /users/config)
+	GetUsersConfig(c *gin.Context, params GetUsersConfigParams)
+	// Upsert user config
 	// (PATCH /users/{id}/config)
 	PatchUsersIdConfig(c *gin.Context, id uuid.UUID)
 }
@@ -30,27 +93,35 @@ type ServerInterfaceWrapper struct {
 
 type MiddlewareFunc func(c *gin.Context)
 
-// GetUsersIdConfig operation middleware
-func (siw *ServerInterfaceWrapper) GetUsersIdConfig(c *gin.Context) {
+// GetUsersConfig operation middleware
+func (siw *ServerInterfaceWrapper) GetUsersConfig(c *gin.Context) {
 
 	var err error
 
-	// ------------- Path parameter "id" -------------
-	var id uuid.UUID
+	c.Set(BearerAuthScopes, []string{""})
 
-	err = runtime.BindStyledParameter("simple", false, "id", c.Param("id"), &id)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"msg": fmt.Sprintf("Invalid format for parameter id: %s", err)})
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetUsersConfigParams
+
+	// ------------- Required query parameter "email" -------------
+	if paramValue := c.Query("email"); paramValue != "" {
+
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{"msg": "Query argument email is required, but not found"})
 		return
 	}
 
-	c.Set(BearerAuthScopes, []string{""})
+	err = runtime.BindQueryParameter("form", true, true, "email", c.Request.URL.Query(), &params.Email)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"msg": fmt.Sprintf("Invalid format for parameter email: %s", err)})
+		return
+	}
 
 	for _, middleware := range siw.HandlerMiddlewares {
 		middleware(c)
 	}
 
-	siw.Handler.GetUsersIdConfig(c, id)
+	siw.Handler.GetUsersConfig(c, params)
 }
 
 // PatchUsersIdConfig operation middleware
@@ -94,7 +165,7 @@ func RegisterHandlersWithOptions(router *gin.Engine, si ServerInterface, options
 		HandlerMiddlewares: options.Middlewares,
 	}
 
-	router.GET(options.BaseURL+"/users/:id/config", wrapper.GetUsersIdConfig)
+	router.GET(options.BaseURL+"/users/config", wrapper.GetUsersConfig)
 
 	router.PATCH(options.BaseURL+"/users/:id/config", wrapper.PatchUsersIdConfig)
 

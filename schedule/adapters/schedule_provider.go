@@ -29,8 +29,8 @@ func (sp ScheduleProvider) GetByTeacher(ctx context.Context, id string, from, to
 	switch {
 	case err != nil:
 		return schedule.Schedule{}, fmt.Errorf("failed to get response: %w", err)
-	case resp.HTTPResponse.StatusCode != 200:
-		return schedule.Schedule{}, fmt.Errorf("failed with status code = %d", resp.HTTPResponse.StatusCode)
+	case resp.StatusCode() != 200:
+		return schedule.Schedule{}, fmt.Errorf("failed with status code = %d", resp.StatusCode())
 	}
 
 	return fromScheduleDto(*resp.JSON200, from, to)

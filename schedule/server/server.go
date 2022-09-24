@@ -19,7 +19,7 @@ func NewServer() *gin.Engine {
 
 	// enable CORS as debug only option
 	if cfg.Debug {
-		log.Debug().Msg("Use cors policy middleware")
+		log.Warn().Msg("Using CORS policy middleware")
 		engine.Use(cors.New(cors.Config{
 			AllowAllOrigins:  true,
 			AllowCredentials: true,
@@ -30,9 +30,6 @@ func NewServer() *gin.Engine {
 			AllowMethods: []string{"PATCH", "GET"},
 		}))
 	}
-
-	// handle unauthorized access to API
-	//engine.Use(middleware.GoogleOAuth2(cfg.Debug))
 
 	return engine
 }

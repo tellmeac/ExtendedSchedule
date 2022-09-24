@@ -3,7 +3,6 @@ package schedule
 import (
 	"context"
 	"fmt"
-	"github.com/google/uuid"
 	"reflect"
 	"tellmeac/extended-schedule/userconfig"
 	"time"
@@ -15,7 +14,7 @@ type Provider interface {
 }
 
 type ConfigProvider interface {
-	Get(ctx context.Context, userID uuid.UUID) (userconfig.UserConfig, error)
+	GetByEmail(ctx context.Context, email string) (userconfig.UserConfig, error)
 }
 
 // Builder provides methods to receive personal schedule.
@@ -24,8 +23,8 @@ type Builder struct {
 	config   ConfigProvider
 }
 
-func (b Builder) Personal(ctx context.Context, userID uuid.UUID, from, to time.Time) (Schedule, error) {
-	settings, err := b.config.Get(ctx, userID)
+func (b Builder) Personal(ctx context.Context, email string, from, to time.Time) (Schedule, error) {
+	settings, err := b.config.GetByEmail(ctx, email)
 	if err != nil {
 		return Schedule{}, fmt.Errorf("failed to get user settings: %w", err)
 	}

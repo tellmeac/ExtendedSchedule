@@ -4,3 +4,4 @@ package:
   userconfig
 generate:
   gin-server: true
+  models: true

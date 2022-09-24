@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: UserConfig
   description: Service to provide methods to work with user settings
-  version: 1.2.0
+  version: 1.3.0
 security:
   - bearerAuth: []
 servers:
@@ -11,23 +11,18 @@ servers:
       hostname:
         default: localhost
 paths:
-  /users/{id}/config:
+  /users/config:
     get:
       summary: "Get user config"
       tags:
         - Config
       parameters:
-        - name: id
-          in: path
+        - name: email
+          in: query
           required: true
           schema:
             type: string
-            format: uuid
-            x-go-name: ID
-            x-go-type: uuid.UUID
-            x-go-type-import:
-              name: uuid
-              path: github.com/google/uuid
+            format: email
       responses:
         200:
           description: OK
@@ -41,6 +36,7 @@ paths:
           description: Forbidden
         404:
           description: Not found
+  /users/{id}/config:
     patch:
       summary: "Update user config"
       tags:
@@ -86,6 +82,7 @@ components:
         - id
         - email
         - extendedGroups
+        - excludeRules
       properties:
         id:
           type: string
