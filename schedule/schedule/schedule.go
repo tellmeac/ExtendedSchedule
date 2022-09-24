@@ -15,6 +15,28 @@ type Schedule struct {
 	Days      []Day     `json:"days"`
 }
 
+func (s Schedule) Join(other Schedule) (Schedule, error) {
+	if s.StartDate != other.StartDate || s.EndDate != other.EndDate {
+		return Schedule{}, errors.New("schedule has different periods")
+	}
+
+	result := Schedule{
+		StartDate: s.StartDate,
+		EndDate:   s.EndDate,
+		Days:      s.Days,
+	}
+
+	var err error
+	for i, d := range s.Days {
+		result.Days[i], err = d.Join(other.Days[i])
+		if err != nil {
+			return Schedule{}, fmt.Errorf("failed to join day: %w", err)
+		}
+	}
+
+	return result, nil
+}
+
 // Day defines model for Day.
 type Day struct {
 	Date    time.Time `json:"date"`
@@ -27,12 +49,10 @@ func (d Day) Join(other Day) (Day, error) {
 	}
 
 	// init result
-	maxLessons := len(d.Lessons) + len(other.Lessons)
 	result := Day{
 		Date:    d.Date,
-		Lessons: make([]Lesson, 0, maxLessons),
+		Lessons: d.Lessons,
 	}
-	result.Lessons = append([]Lesson{}, d.Lessons...)
 
 	// join all lessons
 	result.Lessons = append(result.Lessons, other.Lessons...)
