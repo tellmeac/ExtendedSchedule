@@ -9,7 +9,7 @@ servers:
       hostname:
         default: localhost
 paths:
-  /users/{id}/schedule:
+  /users/schedule:
     get:
       summary: "Get personal schedule"
       security:
@@ -17,17 +17,26 @@ paths:
       tags:
         - Schedule
       parameters:
-        - name: id
-          in: path
+        - name: email
+          in: query
           required: true
           schema:
             type: string
-            format: uuid
-            x-go-name: ID
-            x-go-type: uuid.UUID
-            x-go-type-import:
-              name: uuid
-              path: github.com/google/uuid
+            format: email
+        - name: from
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+            example: "2022-04-17"
+        - name: to
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+            example: "2022-04-24"
       responses:
         200:
           description: OK
@@ -52,6 +61,20 @@ paths:
           required: true
           schema:
             type: string
+        - name: from
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+            example: "2022-04-17"
+        - name: to
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+            example: "2022-04-24"
       responses:
         200:
           description: OK
@@ -72,6 +95,20 @@ paths:
           required: true
           schema:
             type: string
+        - name: from
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+            example: "2022-04-17"
+        - name: to
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+            example: "2022-04-24"
       responses:
         200:
           description: OK
@@ -83,7 +120,7 @@ paths:
           description: Not found
   /lessons/byGroup/{id}:
     get:
-      summary: "Get group's lesson list"
+      summary: "Get group's lesson list that occurs in passed period"
       tags:
         - Lessons
       parameters:
@@ -92,6 +129,20 @@ paths:
           required: true
           schema:
             type: string
+        - name: from
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+            example: "2022-04-17"
+        - name: to
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+            example: "2022-04-24"
       responses:
         200:
           description: OK
@@ -100,7 +151,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: "#/components/schemas/Lesson"
+                  $ref: "#/components/schemas/LessonWithoutContext"
         404:
           description: Not found
   /faculties:
@@ -155,13 +206,22 @@ components:
           items:
             $ref: "#/components/schemas/Lesson"
     Lesson:
+      allOf:
+        - $ref: "#/components/schemas/LessonWithoutContext"
+        - type: object
+          required:
+            - pos
+          properties:
+            pos:
+              description: "Position"
+              type: number
+    LessonWithoutContext:
       required:
-          - id
-          - name
-          - kind
-          - pos
-          - teacher
-          - groups
+        - id
+        - name
+        - kind
+        - teacher
+        - groups
       properties:
         id:
           type: string
@@ -170,23 +230,25 @@ components:
           type: string
         kind:
           type: string
-        pos:
-          description: "Position"
-          type: number
         teacher:
-          nullable: true
-          type: object
-          properties:
-            id:
-              type: string
-              x-go-name: ID
-            name:
-              type: string
+          oneOf:
+            - $ref: "#/components/schemas/Teacher"
+            - type: 'null'
         groups:
           description: "Study group codes"
           type: array
           items:
             type: string
+    Teacher:
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          x-go-name: ID
+        name:
+          type: string
     Faculty:
       required:
           - id

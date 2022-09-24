@@ -3,6 +3,7 @@ package schedule
 import (
 	"context"
 	"fmt"
+	"go.uber.org/fx"
 	"reflect"
 	"tellmeac/extended-schedule/userconfig"
 	"time"
@@ -15,6 +16,15 @@ type Provider interface {
 
 type ConfigProvider interface {
 	GetByEmail(ctx context.Context, email string) (userconfig.UserConfig, error)
+}
+
+var Module = fx.Options(fx.Provide(NewBuilder))
+
+func NewBuilder(p Provider, c ConfigProvider) Builder {
+	return Builder{
+		schedule: p,
+		config:   c,
+	}
 }
 
 // Builder provides methods to receive personal schedule.

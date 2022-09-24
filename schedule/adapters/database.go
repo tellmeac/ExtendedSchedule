@@ -8,6 +8,9 @@ import (
 	"github.com/rs/zerolog/log"
 	"tellmeac/extended-schedule/adapters/ent"
 	"tellmeac/extended-schedule/config"
+
+	// Required to connect to postgres database
+	_ "github.com/jackc/pgx/v4/stdlib"
 )
 
 // NewEntClient returns new ent client.

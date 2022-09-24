@@ -7,8 +7,8 @@ import (
 	"tellmeac/extended-schedule/config"
 )
 
-// NewServer creates new http server.
-func NewServer() *gin.Engine {
+// New creates new http server.
+func New() *gin.Engine {
 	engine := gin.Default()
 
 	cfg := config.Get()

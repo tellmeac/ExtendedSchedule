@@ -36,23 +36,17 @@ paths:
           description: Forbidden
         404:
           description: Not found
-  /users/{id}/config:
     patch:
       summary: "Update user config"
       tags:
         - Config
       parameters:
-        - name: id
-          in: path
+        - name: email
+          in: query
           required: true
           schema:
             type: string
-            format: uuid
-            x-go-name: ID
-            x-go-type: uuid.UUID
-            x-go-type-import:
-              name: uuid
-              path: github.com/google/uuid
+            format: email
       requestBody:
         description: Desired settings state
         required: true
