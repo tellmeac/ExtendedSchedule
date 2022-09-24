@@ -63,15 +63,6 @@ func (s ServerHandler) GetUsersSchedule(c *gin.Context, params GetUsersScheduleP
 	c.JSON(http.StatusOK, result)
 }
 
-func (s ServerHandler) GetFaculties(c *gin.Context) {
-	faculties, err := s.faculties.Faculties(c)
-	if err != nil {
-		c.Status(http.StatusInternalServerError)
-		return
-	}
-	c.JSON(http.StatusOK, faculties)
-}
-
 func (s ServerHandler) GetLessonsByGroupId(c *gin.Context, id string, params GetLessonsByGroupIdParams) {
 	groupSchedule, err := s.provider.GetByGroup(c, id, params.From.Time, params.To.Time)
 	if err != nil {

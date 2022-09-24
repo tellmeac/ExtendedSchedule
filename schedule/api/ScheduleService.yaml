@@ -154,25 +154,11 @@ paths:
                   $ref: "#/components/schemas/LessonWithoutContext"
         404:
           description: Not found
-  /faculties:
-    get:
-      summary: "Get faculty list"
-      tags:
-        - Faculties
-      responses:
-        200:
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: "#/components/schemas/Faculty"
   /groups:
     get:
       summary: "Get groups"
       tags:
-        - Groups
+        - Search
       parameters:
         - in: query
           name: filter
@@ -194,6 +180,32 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/StudyGroup"
+  /teachers:
+    get:
+      summary: "Get teachers"
+      tags:
+        - Search
+      parameters:
+        - in: query
+          name: filter
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: limit
+          required: false
+          schema:
+            default: 100
+            type: integer
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Teacher"
 components:
   securitySchemes:
     bearerAuth:

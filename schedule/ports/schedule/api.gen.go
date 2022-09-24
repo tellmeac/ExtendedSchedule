@@ -61,10 +61,23 @@ type Schedule struct {
 	StartDate openapi_types.Date `json:"startDate"`
 }
 
+// StudyGroup defines model for StudyGroup.
+type StudyGroup struct {
+	Faculty Faculty `json:"faculty"`
+	ID      string  `json:"id"`
+	Name    string  `json:"name"`
+}
+
 // Teacher defines model for Teacher.
 type Teacher struct {
 	ID   string `json:"id"`
 	Name string `json:"name"`
+}
+
+// GetGroupsParams defines parameters for GetGroups.
+type GetGroupsParams struct {
+	Filter *string `form:"filter,omitempty" json:"filter,omitempty"`
+	Limit  *int    `form:"limit,omitempty" json:"limit,omitempty"`
 }
 
 // GetLessonsByGroupIdParams defines parameters for GetLessonsByGroupId.
@@ -85,6 +98,12 @@ type GetScheduleByTeacherIdParams struct {
 	To   openapi_types.Date `form:"to" json:"to"`
 }
 
+// GetTeachersParams defines parameters for GetTeachers.
+type GetTeachersParams struct {
+	Filter *string `form:"filter,omitempty" json:"filter,omitempty"`
+	Limit  *int    `form:"limit,omitempty" json:"limit,omitempty"`
+}
+
 // GetUsersScheduleParams defines parameters for GetUsersSchedule.
 type GetUsersScheduleParams struct {
 	Email openapi_types.Email `form:"email" json:"email"`
@@ -94,9 +113,9 @@ type GetUsersScheduleParams struct {
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
-	// Get faculty list
-	// (GET /faculties)
-	GetFaculties(c *gin.Context)
+	// Get groups
+	// (GET /groups)
+	GetGroups(c *gin.Context, params GetGroupsParams)
 	// Get group's lesson list that occurs in passed period
 	// (GET /lessons/byGroup/{id})
 	GetLessonsByGroupId(c *gin.Context, id string, params GetLessonsByGroupIdParams)
@@ -106,6 +125,9 @@ type ServerInterface interface {
 	// Get teacher's schedule
 	// (GET /schedule/byTeacher/{id})
 	GetScheduleByTeacherId(c *gin.Context, id string, params GetScheduleByTeacherIdParams)
+	// Get teachers
+	// (GET /teachers)
+	GetTeachers(c *gin.Context, params GetTeachersParams)
 	// Get personal schedule
 	// (GET /users/schedule)
 	GetUsersSchedule(c *gin.Context, params GetUsersScheduleParams)
@@ -119,14 +141,41 @@ type ServerInterfaceWrapper struct {
 
 type MiddlewareFunc func(c *gin.Context)
 
-// GetFaculties operation middleware
-func (siw *ServerInterfaceWrapper) GetFaculties(c *gin.Context) {
+// GetGroups operation middleware
+func (siw *ServerInterfaceWrapper) GetGroups(c *gin.Context) {
+
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetGroupsParams
+
+	// ------------- Optional query parameter "filter" -------------
+	if paramValue := c.Query("filter"); paramValue != "" {
+
+	}
+
+	err = runtime.BindQueryParameter("form", true, false, "filter", c.Request.URL.Query(), &params.Filter)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"msg": fmt.Sprintf("Invalid format for parameter filter: %s", err)})
+		return
+	}
+
+	// ------------- Optional query parameter "limit" -------------
+	if paramValue := c.Query("limit"); paramValue != "" {
+
+	}
+
+	err = runtime.BindQueryParameter("form", true, false, "limit", c.Request.URL.Query(), &params.Limit)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"msg": fmt.Sprintf("Invalid format for parameter limit: %s", err)})
+		return
+	}
 
 	for _, middleware := range siw.HandlerMiddlewares {
 		middleware(c)
 	}
 
-	siw.Handler.GetFaculties(c)
+	siw.Handler.GetGroups(c, params)
 }
 
 // GetLessonsByGroupId operation middleware
@@ -285,6 +334,43 @@ func (siw *ServerInterfaceWrapper) GetScheduleByTeacherId(c *gin.Context) {
 	siw.Handler.GetScheduleByTeacherId(c, id, params)
 }
 
+// GetTeachers operation middleware
+func (siw *ServerInterfaceWrapper) GetTeachers(c *gin.Context) {
+
+	var err error
+
+	// Parameter object where we will unmarshal all parameters from the context
+	var params GetTeachersParams
+
+	// ------------- Optional query parameter "filter" -------------
+	if paramValue := c.Query("filter"); paramValue != "" {
+
+	}
+
+	err = runtime.BindQueryParameter("form", true, false, "filter", c.Request.URL.Query(), &params.Filter)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"msg": fmt.Sprintf("Invalid format for parameter filter: %s", err)})
+		return
+	}
+
+	// ------------- Optional query parameter "limit" -------------
+	if paramValue := c.Query("limit"); paramValue != "" {
+
+	}
+
+	err = runtime.BindQueryParameter("form", true, false, "limit", c.Request.URL.Query(), &params.Limit)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"msg": fmt.Sprintf("Invalid format for parameter limit: %s", err)})
+		return
+	}
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		middleware(c)
+	}
+
+	siw.Handler.GetTeachers(c, params)
+}
+
 // GetUsersSchedule operation middleware
 func (siw *ServerInterfaceWrapper) GetUsersSchedule(c *gin.Context) {
 
@@ -362,13 +448,15 @@ func RegisterHandlersWithOptions(router *gin.Engine, si ServerInterface, options
 		HandlerMiddlewares: options.Middlewares,
 	}
 
-	router.GET(options.BaseURL+"/faculties", wrapper.GetFaculties)
+	router.GET(options.BaseURL+"/groups", wrapper.GetGroups)
 
 	router.GET(options.BaseURL+"/lessons/byGroup/:id", wrapper.GetLessonsByGroupId)
 
 	router.GET(options.BaseURL+"/schedule/byGroup/:id", wrapper.GetScheduleByGroupId)
 
 	router.GET(options.BaseURL+"/schedule/byTeacher/:id", wrapper.GetScheduleByTeacherId)
+
+	router.GET(options.BaseURL+"/teachers", wrapper.GetTeachers)
 
 	router.GET(options.BaseURL+"/users/schedule", wrapper.GetUsersSchedule)
 
