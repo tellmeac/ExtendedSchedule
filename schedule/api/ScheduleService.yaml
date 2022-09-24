@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: ScheduleService
   description: Service to provide schedule.
-  version: 1.1.0
+  version: 1.2.0
 servers:
   - url: http://{hostname}/api/v1
     variables:
@@ -168,6 +168,32 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Faculty"
+  /groups:
+    get:
+      summary: "Get groups"
+      tags:
+        - Groups
+      parameters:
+        - in: query
+          name: filter
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: limit
+          required: false
+          schema:
+            default: 100
+            type: integer
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/StudyGroup"
 components:
   securitySchemes:
     bearerAuth:
@@ -251,11 +277,27 @@ components:
           type: string
     Faculty:
       required:
-          - id
-          - name
+        - id
+        - name
       properties:
         id:
           type: string
           x-go-name: ID
         name:
           type: string
+
+    StudyGroup:
+      title: Study Group
+      required:
+        - id
+        - name
+        - faculty
+      properties:
+        id:
+          type: string
+          x-go-name: ID
+        name:
+          type: string
+          example: "931901"
+        faculty:
+          $ref: "#/components/schemas/Faculty"
