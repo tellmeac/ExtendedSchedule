@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"github.com/google/uuid"
 	"reflect"
-	"tellmeac/extended-schedule/common/userconfig"
+	"tellmeac/extended-schedule/userconfig"
 	"time"
 )
 
@@ -33,7 +33,7 @@ func (b Builder) Personal(ctx context.Context, userID uuid.UUID, from, to time.T
 	var result Schedule
 	if settings.Base != nil {
 		var err error
-		switch base := (*settings.Base).(type) {
+		switch base := (settings.Base).(type) {
 		case userconfig.Teacher:
 			result, err = b.schedule.GetByTeacher(ctx, base.ID, from, to)
 			if err != nil {

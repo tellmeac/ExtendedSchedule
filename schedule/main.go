@@ -5,13 +5,11 @@ import (
 	"go.uber.org/fx"
 	"tellmeac/extended-schedule/adapters"
 	"tellmeac/extended-schedule/common/tsu"
-	"tellmeac/extended-schedule/common/userconfig"
 )
 
 // module is a root module that aggregates dependencies for application.
 var module = fx.Options(
 	tsu.Module,
-	userconfig.Module,
 	adapters.Module,
 	fx.Invoke(bootstrap),
 )
