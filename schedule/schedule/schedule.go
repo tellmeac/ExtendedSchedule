@@ -20,21 +20,15 @@ func (s Schedule) Join(other Schedule) (Schedule, error) {
 		return Schedule{}, errors.New("schedule has different periods")
 	}
 
-	result := Schedule{
-		StartDate: s.StartDate,
-		EndDate:   s.EndDate,
-		Days:      s.Days,
-	}
-
 	var err error
 	for i, d := range s.Days {
-		result.Days[i], err = d.Join(other.Days[i])
+		s.Days[i], err = d.Join(other.Days[i])
 		if err != nil {
 			return Schedule{}, fmt.Errorf("failed to join day: %w", err)
 		}
 	}
 
-	return result, nil
+	return s, nil
 }
 
 // Day defines model for Day.
@@ -47,27 +41,20 @@ func (d Day) Join(other Day) (Day, error) {
 	if d.Date != other.Date {
 		return Day{}, errors.New("days have different date value")
 	}
-
-	// init result
-	result := Day{
-		Date:    d.Date,
-		Lessons: d.Lessons,
-	}
-
 	// join all lessons
-	result.Lessons = append(result.Lessons, other.Lessons...)
+	d.Lessons = append(d.Lessons, other.Lessons...)
 
 	// remove duplicates
-	result.Lessons = lo.UniqBy(result.Lessons, func(l Lesson) string {
+	d.Lessons = lo.UniqBy(d.Lessons, func(l Lesson) string {
 		return fmt.Sprintf("%s-%d", l.ID, l.Pos)
 	})
 
 	// order by position
-	slices.SortFunc(result.Lessons, func(a, b Lesson) bool {
+	slices.SortFunc(d.Lessons, func(a, b Lesson) bool {
 		return a.Pos < b.Pos
 	})
 
-	return result, nil
+	return d, nil
 }
 
 // Faculty defines model for Faculty.
