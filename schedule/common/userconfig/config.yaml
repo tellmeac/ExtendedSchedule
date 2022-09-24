@@ -1,6 +1,0 @@
-package: userconfig
-output:
-  api.gen.go
-generate:
-  models: true
-  client: true
