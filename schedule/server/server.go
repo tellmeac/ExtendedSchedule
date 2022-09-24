@@ -4,6 +4,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/rs/zerolog/log"
+	"net/http"
 	"tellmeac/extended-schedule/config"
 )
 
@@ -30,6 +31,13 @@ func New() *gin.Engine {
 			AllowMethods: []string{"PATCH", "GET"},
 		}))
 	}
+
+	// provide health check
+	engine.GET("/health", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"msg": "OK",
+		})
+	})
 
 	return engine
 }
