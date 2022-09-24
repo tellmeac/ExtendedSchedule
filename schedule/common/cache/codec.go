@@ -1,6 +1,8 @@
 package cache
 
-// Codec codec interface for cache
+import "github.com/vmihailenco/msgpack/v5"
+
+// Codec interface for cache
 type Codec interface {
 	// Encode returns the encoded byte array of v.
 	Encode(v interface{}) ([]byte, error)

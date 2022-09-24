@@ -1,5 +1,5 @@
 # Stage 1: build
-FROM golang:1.19.3-alpine as builder
+FROM golang:1.19.1-alpine as builder
 
 WORKDIR /service
 
