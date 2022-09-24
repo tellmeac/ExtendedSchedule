@@ -5,6 +5,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"entgo.io/ent/schema/index"
 	"github.com/google/uuid"
+	"tellmeac/extended-schedule/userconfig"
 )
 
 // UserConfig holds the schema definition for the UserConfig entity.
@@ -16,7 +17,10 @@ func (UserConfig) Fields() []ent.Field {
 	return []ent.Field{
 		field.UUID("id", uuid.UUID{}).Default(uuid.New),
 		field.String("Email").NotEmpty(),
-		field.JSON("Base", new(interface{}))}
+		field.JSON("Base", new(interface{})),
+		field.JSON("ExtendedGroups", []userconfig.ExtendedGroup{}),
+		field.JSON("ExcludeRules", []userconfig.ExcludeRule{}),
+	}
 }
 
 func (UserConfig) Indexes() []ent.Index {
