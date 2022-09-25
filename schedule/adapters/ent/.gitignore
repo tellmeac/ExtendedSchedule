@@ -4,3 +4,4 @@
 !constructor.go
 !schema
 !schema/*
+!./migrate/main.go

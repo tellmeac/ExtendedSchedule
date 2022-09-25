@@ -1,7 +1,6 @@
 package adapters
 
 import (
-	"context"
 	"database/sql"
 	"entgo.io/ent/dialect"
 	entsql "entgo.io/ent/dialect/sql"
@@ -19,7 +18,7 @@ func NewEntClient() *ent.Client {
 
 	db, err := sql.Open("pgx", cfg.DatabaseAddress)
 	if err != nil {
-		panic(err)
+		log.Fatal().Err(err).Msg("Failed to open connection to database")
 	}
 
 	// Create an ent.Driver from `db`.
@@ -30,8 +29,5 @@ func NewEntClient() *ent.Client {
 		client = client.Debug()
 	}
 
-	if err = client.Schema.Create(context.Background()); err != nil {
-		log.Fatal().Err(err).Msg("Failed to create schema in database")
-	}
 	return client
 }

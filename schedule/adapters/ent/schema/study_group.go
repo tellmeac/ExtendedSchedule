@@ -6,9 +6,9 @@ import (
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/schema/field"
 	"fmt"
-	"github.com/aymericbeaumet/go-tsvector"
 	gen "tellmeac/extended-schedule/adapters/ent"
 	"tellmeac/extended-schedule/adapters/ent/hook"
+	"tellmeac/extended-schedule/common/tsvector"
 )
 
 // StudyGroup holds the schema definition for the StudyGroup entity.
@@ -21,10 +21,9 @@ func (StudyGroup) Fields() []ent.Field {
 		field.String("id"),
 		field.String("name"),
 		field.String("facultyName"),
-		field.Other("searchVector", tsvector.TSVector{}).
-			SchemaType(map[string]string{
-				dialect.Postgres: "tsvector",
-			}),
+		field.Other("searchVector", tsvector.TSVector{}).SchemaType(map[string]string{
+			dialect.Postgres: "tsvector",
+		}),
 	}
 }
 

@@ -78,3 +78,10 @@ type Teacher struct {
 	ID   string `json:"id"`
 	Name string `json:"name"`
 }
+
+// StudyGroup represents group for base definition.
+type StudyGroup struct {
+	ID      string `json:"id"`
+	Name    string `json:"name"`
+	Faculty string `json:"faculty"`
+}

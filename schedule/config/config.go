@@ -22,6 +22,10 @@ var (
 // Get reads config from env once.
 func Get() Config {
 	once.Do(func() {
+		if instance != nil {
+			return
+		}
+
 		var config Config
 		if err := cleanenv.ReadEnv(&config); err != nil {
 			log.Fatal().Err(err).Msg("failed to read config from environment")
@@ -29,4 +33,8 @@ func Get() Config {
 		instance = &config
 	})
 	return *instance
+}
+
+func Set(cfg Config) {
+	instance = &cfg
 }
