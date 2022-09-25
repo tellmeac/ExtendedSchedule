@@ -33,6 +33,16 @@ type ServerHandler struct {
 	builder   schedule.Builder
 }
 
+func (s ServerHandler) GetGroups(c *gin.Context, params GetGroupsParams) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (s ServerHandler) GetTeachers(c *gin.Context, params GetTeachersParams) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func (s ServerHandler) GetScheduleByGroupId(c *gin.Context, id string, params GetScheduleByGroupIdParams) {
 	result, err := s.provider.GetByGroup(c, id, params.From.Time, params.To.Time)
 	if err != nil {

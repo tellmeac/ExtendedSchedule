@@ -29,7 +29,6 @@ func (UserConfig) Indexes() []ent.Index {
 	}
 }
 
-// Edges of the UserConfig.
 func (UserConfig) Edges() []ent.Edge {
 	return []ent.Edge{}
 }

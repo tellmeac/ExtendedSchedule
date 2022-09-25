@@ -25,10 +25,12 @@ require (
 	github.com/BurntSushi/toml v1.1.0 // indirect
 	github.com/agext/levenshtein v1.2.1 // indirect
 	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect
+	github.com/aymericbeaumet/go-tsvector v0.0.0-20210303220322-b3114343d43a // indirect
 	github.com/cespare/xxhash/v2 v2.1.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/go-openapi/inflect v0.19.0 // indirect
+	github.com/go-test/deep v1.0.7 // indirect
 	github.com/goccy/go-json v0.9.7 // indirect
 	github.com/google/go-cmp v0.5.8 // indirect
 	github.com/hashicorp/hcl/v2 v2.10.0 // indirect
@@ -39,6 +41,8 @@ require (
 	github.com/jackc/pgproto3/v2 v2.3.1 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20200714003250-2b9c44734f2b // indirect
 	github.com/jackc/pgtype v1.12.0 // indirect
+	github.com/jinzhu/inflection v1.0.0 // indirect
+	github.com/jinzhu/now v1.1.1 // indirect
 	github.com/joho/godotenv v1.4.0 // indirect
 	github.com/mitchellh/go-wordwrap v0.0.0-20150314170334-ad45545899c7 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.1 // indirect
@@ -50,6 +54,7 @@ require (
 	go.uber.org/multierr v1.5.0 // indirect
 	go.uber.org/zap v1.16.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
+	gorm.io/gorm v1.20.12 // indirect
 	olympos.io/encoding/edn v0.0.0-20201019073823-d3554ca0b0a3 // indirect
 )
 

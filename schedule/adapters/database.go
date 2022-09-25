@@ -26,6 +26,10 @@ func NewEntClient() *ent.Client {
 	drv := entsql.OpenDB(dialect.Postgres, db)
 	client := ent.NewClient(ent.Driver(drv))
 
+	if cfg.Debug {
+		client = client.Debug()
+	}
+
 	if err = client.Schema.Create(context.Background()); err != nil {
 		log.Fatal().Err(err).Msg("Failed to create schema in database")
 	}
