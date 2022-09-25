@@ -10,27 +10,21 @@ import (
 	"time"
 )
 
-type FacultyProvider interface {
-	Faculties(c context.Context) ([]schedule.Faculty, error)
-}
-
 type Provider interface {
 	GetByTeacher(ctx context.Context, id string, from, to time.Time) (schedule.Schedule, error)
 	GetByGroup(ctx context.Context, id string, from, to time.Time) (schedule.Schedule, error)
 }
 
-func NewServerHandler(f FacultyProvider, p Provider, b schedule.Builder) *ServerHandler {
+func NewServerHandler(p Provider, b schedule.Builder) *ServerHandler {
 	return &ServerHandler{
-		faculties: f,
-		provider:  p,
-		builder:   b,
+		provider: p,
+		builder:  b,
 	}
 }
 
 type ServerHandler struct {
-	faculties FacultyProvider
-	provider  Provider
-	builder   schedule.Builder
+	provider Provider
+	builder  schedule.Builder
 }
 
 func (s ServerHandler) GetGroups(c *gin.Context, params GetGroupsParams) {
