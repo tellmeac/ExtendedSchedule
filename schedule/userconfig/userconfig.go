@@ -2,6 +2,13 @@ package userconfig
 
 import "github.com/google/uuid"
 
+func New(email string) UserConfig {
+	return UserConfig{
+		ID:    uuid.New(),
+		Email: email,
+	}
+}
+
 // UserConfig defines model for user schedule config.
 type UserConfig struct {
 	ID             uuid.UUID       `json:"id"`
