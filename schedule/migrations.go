@@ -4,6 +4,7 @@ package main
 
 import (
 	"context"
+	"flag"
 	"log"
 	"os"
 
@@ -13,7 +14,7 @@ import (
 	"entgo.io/ent/dialect"
 	"entgo.io/ent/dialect/sql/schema"
 
-	_ "github.com/jackc/pgx/v4/stdlib"
+	_ "github.com/lib/pq"
 )
 
 func main() {
@@ -21,8 +22,9 @@ func main() {
 	// Create a local migration directory able to understand Atlas migration file format for replay.
 	dir, err := atlas.NewLocalDir("migrations")
 	if err != nil {
-		log.Fatalf("Failed creating atlas migration directory: %v", err)
+		log.Fatalf("Failed to init atlas migration directory: %v", err)
 	}
+
 	// Migrate diff options.
 	opts := []schema.MigrateOption{
 		schema.WithDir(dir),                         // provide migration directory
@@ -30,11 +32,16 @@ func main() {
 		schema.WithDialect(dialect.Postgres),        // Ent dialect to use
 		schema.WithFormatter(atlas.DefaultFormatter),
 	}
+
 	if len(os.Args) != 2 {
-		log.Fatalln("Migration name is required. Use: 'go run -mod=mod ent/migrate/main.go <name>'")
+		log.Fatalln("Migration name is required. Use: 'go run -mod=mod migrations.go <name>'")
 	}
-	// Generate migrations using Atlas support for Postgres (note the Ent dialect option passed above).
-	err = migrate.NamedDiff(ctx, "postgres://postgres:postgres@localhost:5432/ExtendedSchedule?sslmode=disable", os.Args[1], opts...)
+
+	addr := flag.String("url", "postgres://postgres:postgres@localhost:5432/ExtendedSchedule?sslmode=disable", "")
+	flag.Parse()
+
+	// Generate migrations using Atlas
+	err = migrate.NamedDiff(ctx, addr, os.Args[1], opts...)
 	if err != nil {
 		log.Fatalf("Failed generating migration file: %v", err)
 	}

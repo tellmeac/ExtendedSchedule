@@ -9,14 +9,14 @@ import (
 	"tellmeac/extended-schedule/config"
 
 	// Required to connect to postgres database
-	_ "github.com/jackc/pgx/v4/stdlib"
+	_ "github.com/lib/pq"
 )
 
 // NewEntClient returns new ent client.
 func NewEntClient() *ent.Client {
 	cfg := config.Get()
 
-	db, err := sql.Open("pgx", cfg.DatabaseAddress)
+	db, err := sql.Open("postgres", cfg.DatabaseAddress)
 	if err != nil {
 		log.Fatal().Err(err).Msg("Failed to open connection to database")
 	}
