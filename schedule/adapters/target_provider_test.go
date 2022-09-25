@@ -13,7 +13,7 @@ func TestFacultyProvider_Faculties(t *testing.T) {
 	client, err := tsu.NewClientWithResponses("https://intime.tsu.ru/api/web/v1")
 	assert.NoError(t, err)
 
-	provider := adapters.NewFacultyProvider(client)
+	provider := adapters.NewTargetProvider(client)
 	faculties, err := provider.Faculties(context.Background())
 
 	assert.NoError(t, err)

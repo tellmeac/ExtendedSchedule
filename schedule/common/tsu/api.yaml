@@ -2,7 +2,7 @@ openapi: 3.0.1
 info:
   title: TSU Schedule
   description: TSU schedule public API
-  version: 0.3.1
+  version: 0.4.0
 servers:
   - url: https://intime.tsu.ru/api/web/v1
     description: default path
@@ -85,11 +85,26 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/DaySchedule"
+  /professors:
+    get:
+      summary: Get all teachers available
+      tags:
+        - Info
+      responses:
+        200:
+          description: OK
+          content:
+            application/json:
+              schema:
+                title: "Teachers"
+                type: array
+                items:
+                  $ref: "#/components/schemas/Teacher"
   /faculties:
     get:
       summary: Get all faculties
       tags:
-        - Schedule
+        - Info
       responses:
         200:
           description: OK
@@ -100,12 +115,11 @@ paths:
                 type: array
                 items:
                   $ref: "#/components/schemas/Faculty"
-
   /faculties/{id}/groups:
     get:
       summary: Get all groups for specific faculty
       tags:
-        - Schedule
+        - Info
       parameters:
         - name: id
           in: path
@@ -168,7 +182,7 @@ components:
           items:
             $ref: "#/components/schemas/StudyGroup"
         professor:
-          $ref: "#/components/schemas/Teacher"
+          $ref: "#/components/schemas/LessonTeacher"
     StudyGroup:
       type: object
       required:
@@ -180,8 +194,21 @@ components:
           x-go-name: ID
         name:
           type: string
-    Teacher:
+    LessonTeacher:
+      description: "Used in schedule"
       type: object
+      properties:
+        id:
+          type: string
+          x-go-name: ID
+        fullName:
+          type: string
+    Teacher:
+      description: "Used in all professors list"
+      type: object
+      required:
+        - id
+        - fullName
       properties:
         id:
           type: string

@@ -41,9 +41,17 @@ type Lesson struct {
 	ID         *string       `json:"id,omitempty"`
 	Position   int           `json:"lessonNumber"`
 	LessonKind *string       `json:"lessonType,omitempty"`
-	Professor  *Teacher      `json:"professor,omitempty"`
-	Title      *string       `json:"title,omitempty"`
-	Type       string        `json:"type"`
+
+	// Used in schedule
+	Professor *LessonTeacher `json:"professor,omitempty"`
+	Title     *string        `json:"title,omitempty"`
+	Type      string         `json:"type"`
+}
+
+// Used in schedule
+type LessonTeacher struct {
+	FullName *string `json:"fullName,omitempty"`
+	ID       *string `json:"id,omitempty"`
 }
 
 // StudyGroup defines model for StudyGroup.
@@ -52,10 +60,10 @@ type StudyGroup struct {
 	Name string `json:"name"`
 }
 
-// Teacher defines model for Teacher.
+// Used in all professors list
 type Teacher struct {
-	FullName *string `json:"fullName,omitempty"`
-	ID       *string `json:"id,omitempty"`
+	FullName string `json:"fullName"`
+	ID       string `json:"id"`
 }
 
 // GetScheduleGroupParams defines parameters for GetScheduleGroup.
@@ -161,6 +169,9 @@ type ClientInterface interface {
 	// GetFacultiesIdGroups request
 	GetFacultiesIdGroups(ctx context.Context, iD string, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// GetProfessors request
+	GetProfessors(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetScheduleGroup request
 	GetScheduleGroup(ctx context.Context, params *GetScheduleGroupParams, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -182,6 +193,18 @@ func (c *Client) GetFaculties(ctx context.Context, reqEditors ...RequestEditorFn
 
 func (c *Client) GetFacultiesIdGroups(ctx context.Context, iD string, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetFacultiesIdGroupsRequest(c.Server, iD)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetProfessors(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetProfessorsRequest(c.Server)
 	if err != nil {
 		return nil, err
 	}
@@ -260,6 +283,33 @@ func NewGetFacultiesIdGroupsRequest(server string, iD string) (*http.Request, er
 	}
 
 	operationPath := fmt.Sprintf("/faculties/%s/groups", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewGetProfessorsRequest generates requests for GetProfessors
+func NewGetProfessorsRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/professors")
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -460,6 +510,9 @@ type ClientWithResponsesInterface interface {
 	// GetFacultiesIdGroups request
 	GetFacultiesIdGroupsWithResponse(ctx context.Context, iD string, reqEditors ...RequestEditorFn) (*GetFacultiesIdGroupsResponse, error)
 
+	// GetProfessors request
+	GetProfessorsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetProfessorsResponse, error)
+
 	// GetScheduleGroup request
 	GetScheduleGroupWithResponse(ctx context.Context, params *GetScheduleGroupParams, reqEditors ...RequestEditorFn) (*GetScheduleGroupResponse, error)
 
@@ -505,6 +558,28 @@ func (r GetFacultiesIdGroupsResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r GetFacultiesIdGroupsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetProfessorsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]Teacher
+}
+
+// Status returns HTTPResponse.Status
+func (r GetProfessorsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetProfessorsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -573,6 +648,15 @@ func (c *ClientWithResponses) GetFacultiesIdGroupsWithResponse(ctx context.Conte
 	return ParseGetFacultiesIdGroupsResponse(rsp)
 }
 
+// GetProfessorsWithResponse request returning *GetProfessorsResponse
+func (c *ClientWithResponses) GetProfessorsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetProfessorsResponse, error) {
+	rsp, err := c.GetProfessors(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetProfessorsResponse(rsp)
+}
+
 // GetScheduleGroupWithResponse request returning *GetScheduleGroupResponse
 func (c *ClientWithResponses) GetScheduleGroupWithResponse(ctx context.Context, params *GetScheduleGroupParams, reqEditors ...RequestEditorFn) (*GetScheduleGroupResponse, error) {
 	rsp, err := c.GetScheduleGroup(ctx, params, reqEditors...)
@@ -633,6 +717,32 @@ func ParseGetFacultiesIdGroupsResponse(rsp *http.Response) (*GetFacultiesIdGroup
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
 		var dest []StudyGroup
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+
+	}
+
+	return response, nil
+}
+
+// ParseGetProfessorsResponse parses an HTTP response from a GetProfessorsWithResponse call
+func ParseGetProfessorsResponse(rsp *http.Response) (*GetProfessorsResponse, error) {
+	bodyBytes, err := ioutil.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetProfessorsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []Teacher
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}

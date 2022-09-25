@@ -19,7 +19,7 @@ var Module = fx.Options(
 		fx.As(new(schedule.Provider)),
 	)),
 	fx.Provide(fx.Annotate(
-		NewFacultyProvider,
+		NewTargetProvider,
 		fx.As(new(schedule.FacultyProvider)),
 	)),
 )
