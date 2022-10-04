@@ -3,6 +3,7 @@ module tellmeac/extended-schedule
 go 1.19
 
 require (
+	ariga.io/atlas v0.5.1-0.20220717122844-8593d7eb1a8e
 	entgo.io/ent v0.11.2
 	github.com/deepmap/oapi-codegen v1.11.0
 	github.com/gin-contrib/cors v1.4.0
@@ -11,6 +12,7 @@ require (
 	github.com/gofrs/uuid v4.3.0+incompatible
 	github.com/google/uuid v1.3.0
 	github.com/ilyakaznacheev/cleanenv v1.3.0
+	github.com/jackc/pgx/v5 v5.0.1
 	github.com/lib/pq v1.10.5
 	github.com/rs/zerolog v1.28.0
 	github.com/samber/lo v1.28.0
@@ -21,7 +23,6 @@ require (
 )
 
 require (
-	ariga.io/atlas v0.5.1-0.20220717122844-8593d7eb1a8e // indirect
 	github.com/BurntSushi/toml v1.1.0 // indirect
 	github.com/agext/levenshtein v1.2.1 // indirect
 	github.com/apparentlymart/go-textseg/v13 v13.0.0 // indirect
@@ -33,6 +34,8 @@ require (
 	github.com/goccy/go-json v0.9.7 // indirect
 	github.com/google/go-cmp v0.5.8 // indirect
 	github.com/hashicorp/hcl/v2 v2.10.0 // indirect
+	github.com/jackc/pgpassfile v1.0.0 // indirect
+	github.com/jackc/pgservicefile v0.0.0-20200714003250-2b9c44734f2b // indirect
 	github.com/joho/godotenv v1.4.0 // indirect
 	github.com/mitchellh/go-wordwrap v0.0.0-20150314170334-ad45545899c7 // indirect
 	github.com/pelletier/go-toml/v2 v2.0.1 // indirect

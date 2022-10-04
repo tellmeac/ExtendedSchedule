@@ -6,9 +6,10 @@ import (
 	sch "tellmeac/extended-schedule/schedule"
 )
 
-// Module provides adapters like providers.
+// Module provides adapters like providers and repositories.
 var Module = fx.Options(
 	fx.Provide(NewEntClient),
+
 	fx.Provide(fx.Annotate(
 		NewUserConfigRepository,
 		fx.As(new(sch.ConfigProvider)),
@@ -18,7 +19,12 @@ var Module = fx.Options(
 		fx.As(new(sch.Provider)),
 		fx.As(new(schedule.Provider)),
 	)),
+	fx.Provide(NewTargetProvider),
+
 	fx.Provide(fx.Annotate(
-		NewTargetProvider,
+		NewTeachersRepository,
+		fx.As(new(schedule.TeacherProvider)),
 	)),
+
+	fx.Provide(NewStudyGroupRepository),
 )

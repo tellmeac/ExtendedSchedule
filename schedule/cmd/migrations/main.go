@@ -1,5 +1,3 @@
-//go:build ignore
-
 package main
 
 import (
@@ -19,7 +17,7 @@ import (
 
 func main() {
 	ctx := context.Background()
-	// Create a local migration directory able to understand Atlas migration file format for replay.
+
 	dir, err := atlas.NewLocalDir("migrations")
 	if err != nil {
 		log.Fatalf("Failed to init atlas migration directory: %v", err)
@@ -27,9 +25,9 @@ func main() {
 
 	// Migrate diff options.
 	opts := []schema.MigrateOption{
-		schema.WithDir(dir),                         // provide migration directory
-		schema.WithMigrationMode(schema.ModeReplay), // provide migration mode
-		schema.WithDialect(dialect.Postgres),        // Ent dialect to use
+		schema.WithDir(dir),
+		schema.WithMigrationMode(schema.ModeReplay),
+		schema.WithDialect(dialect.Postgres),
 		schema.WithFormatter(atlas.DefaultFormatter),
 	}
 
@@ -41,7 +39,7 @@ func main() {
 	flag.Parse()
 
 	// Generate migrations using Atlas
-	err = migrate.NamedDiff(ctx, addr, os.Args[1], opts...)
+	err = migrate.NamedDiff(ctx, *addr, os.Args[1], opts...)
 	if err != nil {
 		log.Fatalf("Failed generating migration file: %v", err)
 	}

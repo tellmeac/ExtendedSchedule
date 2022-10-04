@@ -76,8 +76,8 @@ type Teacher struct {
 
 // GetGroupsParams defines parameters for GetGroups.
 type GetGroupsParams struct {
-	Filter *string `form:"filter,omitempty" json:"filter,omitempty"`
-	Limit  *int    `form:"limit,omitempty" json:"limit,omitempty"`
+	Filter string `form:"filter" json:"filter"`
+	Limit  *int   `form:"limit,omitempty" json:"limit,omitempty"`
 }
 
 // GetLessonsByGroupIdParams defines parameters for GetLessonsByGroupId.
@@ -100,8 +100,8 @@ type GetScheduleByTeacherIdParams struct {
 
 // GetTeachersParams defines parameters for GetTeachers.
 type GetTeachersParams struct {
-	Filter *string `form:"filter,omitempty" json:"filter,omitempty"`
-	Limit  *int    `form:"limit,omitempty" json:"limit,omitempty"`
+	Filter string `form:"filter" json:"filter"`
+	Limit  *int   `form:"limit,omitempty" json:"limit,omitempty"`
 }
 
 // GetUsersScheduleParams defines parameters for GetUsersSchedule.
@@ -149,12 +149,15 @@ func (siw *ServerInterfaceWrapper) GetGroups(c *gin.Context) {
 	// Parameter object where we will unmarshal all parameters from the context
 	var params GetGroupsParams
 
-	// ------------- Optional query parameter "filter" -------------
+	// ------------- Required query parameter "filter" -------------
 	if paramValue := c.Query("filter"); paramValue != "" {
 
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{"msg": "Query argument filter is required, but not found"})
+		return
 	}
 
-	err = runtime.BindQueryParameter("form", true, false, "filter", c.Request.URL.Query(), &params.Filter)
+	err = runtime.BindQueryParameter("form", true, true, "filter", c.Request.URL.Query(), &params.Filter)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"msg": fmt.Sprintf("Invalid format for parameter filter: %s", err)})
 		return
@@ -342,12 +345,15 @@ func (siw *ServerInterfaceWrapper) GetTeachers(c *gin.Context) {
 	// Parameter object where we will unmarshal all parameters from the context
 	var params GetTeachersParams
 
-	// ------------- Optional query parameter "filter" -------------
+	// ------------- Required query parameter "filter" -------------
 	if paramValue := c.Query("filter"); paramValue != "" {
 
+	} else {
+		c.JSON(http.StatusBadRequest, gin.H{"msg": "Query argument filter is required, but not found"})
+		return
 	}
 
-	err = runtime.BindQueryParameter("form", true, false, "filter", c.Request.URL.Query(), &params.Filter)
+	err = runtime.BindQueryParameter("form", true, true, "filter", c.Request.URL.Query(), &params.Filter)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"msg": fmt.Sprintf("Invalid format for parameter filter: %s", err)})
 		return

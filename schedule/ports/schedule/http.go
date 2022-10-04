@@ -15,15 +15,23 @@ type Provider interface {
 	GetByGroup(ctx context.Context, id string, from, to time.Time) (schedule.Schedule, error)
 }
 
-func NewServerHandler(p Provider, b schedule.Builder) *ServerHandler {
+type TeacherProvider interface {
+	Search(ctx context.Context, filter string, limit int) ([]schedule.Teacher, error)
+}
+
+var _ ServerInterface = ServerHandler{}
+
+func NewServerHandler(p Provider, b schedule.Builder, tp TeacherProvider) *ServerHandler {
 	return &ServerHandler{
 		provider: p,
 		builder:  b,
+		teachers: tp,
 	}
 }
 
 type ServerHandler struct {
 	provider Provider
+	teachers TeacherProvider
 	builder  schedule.Builder
 }
 
@@ -33,8 +41,18 @@ func (s ServerHandler) GetGroups(c *gin.Context, params GetGroupsParams) {
 }
 
 func (s ServerHandler) GetTeachers(c *gin.Context, params GetTeachersParams) {
-	//TODO implement me
-	panic("implement me")
+	maxLimit := 40
+	if params.Limit == nil {
+		params.Limit = &maxLimit
+	}
+
+	result, err := s.teachers.Search(c, params.Filter, *params.Limit)
+	if err != nil {
+		errors.SendError(c, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, result)
 }
 
 func (s ServerHandler) GetScheduleByGroupId(c *gin.Context, id string, params GetScheduleByGroupIdParams) {

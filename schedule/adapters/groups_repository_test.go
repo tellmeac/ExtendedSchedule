@@ -22,7 +22,7 @@ func TestStudyGroupRepository_SearchGroups(t *testing.T) {
 
 	repository := NewStudyGroupRepository(client)
 
-	_, err := repository.SearchGroups(context.Background(), "931901")
+	_, err := repository.Search(context.Background(), "931901", 5)
 
 	assert.NoError(t, err)
 }

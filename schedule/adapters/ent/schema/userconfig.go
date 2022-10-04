@@ -28,7 +28,3 @@ func (UserConfig) Indexes() []ent.Index {
 		index.Fields("Email").Unique(),
 	}
 }
-
-func (UserConfig) Edges() []ent.Edge {
-	return []ent.Edge{}
-}

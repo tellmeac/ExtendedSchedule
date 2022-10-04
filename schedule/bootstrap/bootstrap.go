@@ -19,6 +19,7 @@ var Module = fx.Options(
 	adapters.Module,
 	ports.Module,
 	schedule.Module,
+
 	fx.Provide(server.New),
 	fx.Invoke(setupRouting),
 	fx.Invoke(Bootstrap),
