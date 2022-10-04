@@ -6,6 +6,7 @@ import (
 	"go.uber.org/fx"
 	"net/http"
 	"tellmeac/extended-schedule/adapters"
+	"tellmeac/extended-schedule/common/logger"
 	"tellmeac/extended-schedule/common/tsu"
 	"tellmeac/extended-schedule/config"
 	"tellmeac/extended-schedule/ports"
@@ -15,6 +16,8 @@ import (
 
 // Module is a root Module that aggregates dependencies for application.
 var Module = fx.Options(
+	fx.Invoke(logger.InitLogger),
+
 	tsu.Module,
 	adapters.Module,
 	ports.Module,
