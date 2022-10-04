@@ -26,5 +26,8 @@ var Module = fx.Options(
 		fx.As(new(schedule.TeacherProvider)),
 	)),
 
-	fx.Provide(NewStudyGroupRepository),
+	fx.Provide(fx.Annotate(
+		NewStudyGroupRepository,
+		fx.As(new(schedule.GroupProvider)),
+	)),
 )

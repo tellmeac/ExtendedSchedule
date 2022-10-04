@@ -19,31 +19,47 @@ type TeacherProvider interface {
 	Search(ctx context.Context, filter string, limit int) ([]schedule.Teacher, error)
 }
 
+type GroupProvider interface {
+	Search(ctx context.Context, filter string, limit int) ([]schedule.StudyGroup, error)
+}
+
 var _ ServerInterface = ServerHandler{}
 
-func NewServerHandler(p Provider, b schedule.Builder, tp TeacherProvider) *ServerHandler {
+func NewServerHandler(p Provider, b schedule.Builder, tp TeacherProvider, gp GroupProvider) *ServerHandler {
 	return &ServerHandler{
 		provider: p,
 		builder:  b,
 		teachers: tp,
+		groups:   gp,
 	}
 }
 
 type ServerHandler struct {
 	provider Provider
 	teachers TeacherProvider
+	groups   GroupProvider
 	builder  schedule.Builder
 }
 
 func (s ServerHandler) GetGroups(c *gin.Context, params GetGroupsParams) {
-	//TODO implement me
-	panic("implement me")
+	defaultLimit := 40
+	if params.Limit == nil {
+		params.Limit = &defaultLimit
+	}
+
+	result, err := s.groups.Search(c, params.Filter, *params.Limit)
+	if err != nil {
+		errors.SendError(c, err)
+		return
+	}
+
+	c.JSON(http.StatusOK, result)
 }
 
 func (s ServerHandler) GetTeachers(c *gin.Context, params GetTeachersParams) {
-	maxLimit := 40
+	defaultLimit := 40
 	if params.Limit == nil {
-		params.Limit = &maxLimit
+		params.Limit = &defaultLimit
 	}
 
 	result, err := s.teachers.Search(c, params.Filter, *params.Limit)
