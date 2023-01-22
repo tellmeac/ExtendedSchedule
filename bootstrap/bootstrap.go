@@ -6,9 +6,9 @@ import (
 	"go.uber.org/fx"
 	"net/http"
 	"tellmeac/extended-schedule/adapters"
-	"tellmeac/extended-schedule/common/logger"
-	"tellmeac/extended-schedule/common/tsu"
 	"tellmeac/extended-schedule/config"
+	"tellmeac/extended-schedule/pkg/logger"
+	"tellmeac/extended-schedule/pkg/tsuclient"
 	"tellmeac/extended-schedule/ports"
 	"tellmeac/extended-schedule/schedule"
 	"tellmeac/extended-schedule/server"
@@ -18,7 +18,7 @@ import (
 var Module = fx.Options(
 	fx.Invoke(logger.InitLogger),
 
-	tsu.Module,
+	tsuclient.Module,
 	adapters.Module,
 	ports.Module,
 	schedule.Module,

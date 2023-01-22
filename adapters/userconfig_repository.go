@@ -3,9 +3,9 @@ package adapters
 import (
 	"context"
 	"fmt"
-	"tellmeac/extended-schedule/adapters/ent"
 	uc "tellmeac/extended-sc/adapters/ent/userconfig"
-	"tellmeac/extended-schedule/common/errors"
+	"tellmeac/extended-schedule/adapters/ent"
+	"tellmeac/extended-schedule/pkg/errors"
 	"tellmeac/extended-schedule/userconfig"
 )
 

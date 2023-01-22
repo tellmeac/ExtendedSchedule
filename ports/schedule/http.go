@@ -5,7 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/samber/lo"
 	"net/http"
-	"tellmeac/extended-schedule/common/errors"
+	"tellmeac/extended-schedule/pkg/errors"
 	"tellmeac/extended-schedule/schedule"
 	"time"
 )

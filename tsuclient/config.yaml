@@ -1,4 +1,4 @@
-package: tsu
+package: tsuclient
 output:
   api.gen.go
 generate:

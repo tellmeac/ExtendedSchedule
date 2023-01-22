@@ -4,13 +4,13 @@ import (
 	"context"
 	"github.com/stretchr/testify/assert"
 	"tellmeac/extended-schedule/adapters"
-	"tellmeac/extended-schedule/common/tsu"
+	"tellmeac/extended-schedule/pkg/tsuclient"
 	"testing"
 )
 
 // TestFacultyProvider_Faculties integration case.
 func TestFacultyProvider_Faculties(t *testing.T) {
-	client, err := tsu.NewClientWithResponses("https://intime.tsu.ru/api/web/v1")
+	client, err := tsuclient.NewClientWithResponses("https://intime.tsu.ru/api/web/v1")
 	assert.NoError(t, err)
 
 	provider := adapters.NewTargetProvider(client)
@@ -22,7 +22,7 @@ func TestFacultyProvider_Faculties(t *testing.T) {
 
 // TestFacultyProvider_Teachers integration case.
 func TestFacultyProvider_Teachers(t *testing.T) {
-	client, err := tsu.NewClientWithResponses("https://intime.tsu.ru/api/web/v1")
+	client, err := tsuclient.NewClientWithResponses("https://intime.tsu.ru/api/web/v1")
 	assert.NoError(t, err)
 
 	provider := adapters.NewTargetProvider(client)

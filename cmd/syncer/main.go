@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/rs/zerolog/log"
 	"tellmeac/extended-schedule/adapters"
-	"tellmeac/extended-schedule/common/tsu"
+	"tellmeac/extended-schedule/pkg/tsuclient"
 	"time"
 )
 
@@ -14,7 +14,7 @@ const uploadInterval = 500 * time.Millisecond
 func main() {
 	ctx := context.Background()
 	client := adapters.NewEntClient()
-	api := tsu.NewTypedClient()
+	api := tsuclient.NewTypedClient()
 	provider := adapters.NewTargetProvider(api)
 
 	teachers, err := provider.Teachers(ctx)

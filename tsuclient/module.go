@@ -1,10 +1,10 @@
-package tsu
+package tsuclient
 
 import (
 	"github.com/rs/zerolog/log"
 	"go.uber.org/fx"
-	"tellmeac/extended-schedule/common/utils"
 	"tellmeac/extended-schedule/config"
+	"tellmeac/extended-schedule/pkg/utils"
 )
 
 func NewTypedClient() ClientWithResponsesInterface {
@@ -13,12 +13,12 @@ func NewTypedClient() ClientWithResponsesInterface {
 		return nil
 	})
 	if err != nil {
-		log.Fatal().Err(err).Msg("Failed to setup tsu client")
+		log.Fatal().Err(err).Msg("Failed to setup tsuclient client")
 	}
 	return c
 }
 
-// Module provides api client for tsu sc.
+// Module provides api client for tsuclient sc.
 var Module = fx.Options(
 	fx.Provide(NewTypedClient),
 )

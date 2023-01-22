@@ -7,13 +7,13 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"tellmeac/extended-schedule/adapters"
-	"tellmeac/extended-schedule/common/tsu"
-	"tellmeac/extended-schedule/common/utils"
+	"tellmeac/extended-schedule/pkg/tsuclient"
+	"tellmeac/extended-schedule/pkg/utils"
 )
 
 // TestScheduleProvider_GetByGroup integration case.
 func TestScheduleProvider_GetByGroup(t *testing.T) {
-	client, err := tsu.NewClientWithResponses("https://intime.tsu.ru/api/web/v1")
+	client, err := tsuclient.NewClientWithResponses("https://intime.tsu.ru/api/web/v1")
 	assert.NoError(t, err)
 
 	id := "3c9f5a5d-ffca-11eb-8169-005056bc249c" // 931901

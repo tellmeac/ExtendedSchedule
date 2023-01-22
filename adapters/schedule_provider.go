@@ -8,20 +8,20 @@ import (
 	"time"
 
 	openapi_types "github.com/deepmap/oapi-codegen/pkg/types"
-	"tellmeac/extended-schedule/common/tsu"
+	"tellmeac/extended-schedule/pkg/tsuclient"
 	"tellmeac/extended-schedule/schedule"
 )
 
-func NewScheduleProvider(client tsu.ClientWithResponsesInterface) ScheduleProvider {
+func NewScheduleProvider(client tsuclient.ClientWithResponsesInterface) ScheduleProvider {
 	return ScheduleProvider{client: client}
 }
 
 type ScheduleProvider struct {
-	client tsu.ClientWithResponsesInterface
+	client tsuclient.ClientWithResponsesInterface
 }
 
 func (sp ScheduleProvider) GetByTeacher(ctx context.Context, id string, from, to time.Time) (schedule.Schedule, error) {
-	resp, err := sp.client.GetScheduleProfessorWithResponse(ctx, &tsu.GetScheduleProfessorParams{
+	resp, err := sp.client.GetScheduleProfessorWithResponse(ctx, &tsuclient.GetScheduleProfessorParams{
 		ID:       id,
 		DateFrom: openapi_types.Date{Time: from},
 		DateTo:   openapi_types.Date{Time: to},
@@ -37,7 +37,7 @@ func (sp ScheduleProvider) GetByTeacher(ctx context.Context, id string, from, to
 }
 
 func (sp ScheduleProvider) GetByGroup(ctx context.Context, id string, from, to time.Time) (schedule.Schedule, error) {
-	resp, err := sp.client.GetScheduleGroupWithResponse(ctx, &tsu.GetScheduleGroupParams{
+	resp, err := sp.client.GetScheduleGroupWithResponse(ctx, &tsuclient.GetScheduleGroupParams{
 		ID:       id,
 		DateFrom: openapi_types.Date{Time: from},
 		DateTo:   openapi_types.Date{Time: to},
@@ -52,7 +52,7 @@ func (sp ScheduleProvider) GetByGroup(ctx context.Context, id string, from, to t
 	return fromScheduleDto(*resp.JSON200, from, to)
 }
 
-func fromScheduleDto(days []tsu.DaySchedule, from, to time.Time) (schedule.Schedule, error) {
+func fromScheduleDto(days []tsuclient.DaySchedule, from, to time.Time) (schedule.Schedule, error) {
 	s := schedule.Schedule{
 		StartDate: from,
 		EndDate:   to,
@@ -73,8 +73,8 @@ func fromScheduleDto(days []tsu.DaySchedule, from, to time.Time) (schedule.Sched
 	return s, nil
 }
 
-func fromLessonsDto(lessons []tsu.Lesson) []schedule.Lesson {
-	slices.SortFunc(lessons, func(a, b tsu.Lesson) bool {
+func fromLessonsDto(lessons []tsuclient.Lesson) []schedule.Lesson {
+	slices.SortFunc(lessons, func(a, b tsuclient.Lesson) bool {
 		return a.Position < b.Position
 	})
 
@@ -99,7 +99,7 @@ func fromLessonsDto(lessons []tsu.Lesson) []schedule.Lesson {
 			Name:    *l.Title,
 			Pos:     l.Position,
 			Teacher: teacher,
-			Groups: lo.Map(*l.Groups, func(g tsu.StudyGroup, _ int) string {
+			Groups: lo.Map(*l.Groups, func(g tsuclient.StudyGroup, _ int) string {
 				return g.Name
 			}),
 		}

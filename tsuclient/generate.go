@@ -1,4 +1,4 @@
-package tsu
+package tsuclient
 
 import (
 	_ "github.com/deepmap/oapi-codegen/pkg/codegen"

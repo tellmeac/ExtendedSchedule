@@ -1,5 +1,5 @@
 # Stage 1: build
-FROM golang:1.19.1-alpine as builder
+FROM golang:1.19.5-alpine as builder
 
 WORKDIR /service
 
@@ -11,13 +11,14 @@ RUN go mod download
 COPY . .
 
 RUN go generate ./...
+
 RUN go test --short ./...
 
 ENV CGO_ENABLED=0
 RUN go build -a -buildvcs=false -installsuffix cgo -o app .
 
 # Stage 2: base image
-FROM alpine:3.15.0
+FROM alpine:latest
 
 WORKDIR /app
 

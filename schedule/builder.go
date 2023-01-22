@@ -6,7 +6,7 @@ import (
 	"github.com/rs/zerolog/log"
 	"go.uber.org/fx"
 	"reflect"
-	"tellmeac/extended-schedule/common/errors"
+	"tellmeac/extended-schedule/pkg/errors"
 	"tellmeac/extended-schedule/userconfig"
 	"time"
 )

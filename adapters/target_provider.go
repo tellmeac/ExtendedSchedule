@@ -4,19 +4,19 @@ import (
 	"context"
 	"fmt"
 	"github.com/samber/lo"
-	"tellmeac/extended-schedule/common/tsu"
-	"tellmeac/extended-schedule/common/utils"
+	"tellmeac/extended-schedule/pkg/tsuclient"
+	"tellmeac/extended-schedule/pkg/utils"
 	"tellmeac/extended-schedule/schedule"
 	"tellmeac/extended-schedule/userconfig"
 )
 
 // NewTargetProvider возвращает стандартный провайдер списков групп и преподавателей.
-func NewTargetProvider(client tsu.ClientWithResponsesInterface) TargetProvider {
+func NewTargetProvider(client tsuclient.ClientWithResponsesInterface) TargetProvider {
 	return TargetProvider{client: client}
 }
 
 type TargetProvider struct {
-	client tsu.ClientWithResponsesInterface
+	client tsuclient.ClientWithResponsesInterface
 }
 
 func (fp TargetProvider) Teachers(ctx context.Context) ([]schedule.Teacher, error) {
@@ -28,7 +28,7 @@ func (fp TargetProvider) Teachers(ctx context.Context) ([]schedule.Teacher, erro
 		return nil, fmt.Errorf("failed with status code = %d", resp.StatusCode())
 	}
 
-	return lo.Map(*resp.JSON200, func(t tsu.Teacher, _ int) schedule.Teacher {
+	return lo.Map(*resp.JSON200, func(t tsuclient.Teacher, _ int) schedule.Teacher {
 		return schedule.Teacher{
 			ID:   t.ID,
 			Name: t.FullName,
@@ -45,7 +45,7 @@ func (fp TargetProvider) Faculties(ctx context.Context) ([]schedule.Faculty, err
 		return nil, fmt.Errorf("failed with status code = %d", resp.StatusCode())
 	}
 
-	return lo.Map(*resp.JSON200, func(f tsu.Faculty, _ int) schedule.Faculty {
+	return lo.Map(*resp.JSON200, func(f tsuclient.Faculty, _ int) schedule.Faculty {
 		return schedule.Faculty{
 			ID:   f.ID,
 			Name: f.Name,
@@ -62,7 +62,7 @@ func (fp TargetProvider) GroupsByFaculty(ctx context.Context, id string) ([]user
 		return nil, fmt.Errorf("failed with status code = %d", resp.StatusCode())
 	}
 
-	return lo.Map(*resp.JSON200, func(g tsu.StudyGroup, _ int) userconfig.StudyGroup {
+	return lo.Map(*resp.JSON200, func(g tsuclient.StudyGroup, _ int) userconfig.StudyGroup {
 		return userconfig.StudyGroup{
 			ID:   g.ID,
 			Name: g.Name,

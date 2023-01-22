@@ -1,4 +1,4 @@
-package logger
+package bootstrap
 
 import (
 	"github.com/rs/zerolog"
