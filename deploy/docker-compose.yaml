@@ -14,9 +14,9 @@ services:
 
   schedule:
     image: schedule
-    container_name: schedule
+    container_name: sc
     build:
-      context: ../schedule
+      context: ../sc
       dockerfile: Dockerfile
     ports:
       - "8080:80"

@@ -1,0 +1,7 @@
+output:
+  api.gen.go
+package:
+  sc
+generate:
+  gin-server: true
+  models: true

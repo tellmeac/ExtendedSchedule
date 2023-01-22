@@ -1,0 +1,5 @@
+//go:build generate
+
+package ent
+
+//go:generate go run -mod=mod entgo.io/ent/cmd/ent generate --feature sql/upsert --feature sql/execquery --feature sql/versioned-migration ./schema

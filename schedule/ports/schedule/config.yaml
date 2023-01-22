@@ -1,7 +1,0 @@
-output:
-  api.gen.go
-package:
-  schedule
-generate:
-  gin-server: true
-  models: true
