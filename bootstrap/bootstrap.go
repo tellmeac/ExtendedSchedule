@@ -24,7 +24,7 @@ var Module = fx.Options(
 	schedule.Module,
 
 	fx.Provide(server.New),
-	fx.Invoke(setupRouting),
+	fx.Invoke(ports.ApplyRouting),
 	fx.Invoke(Bootstrap),
 )
 
