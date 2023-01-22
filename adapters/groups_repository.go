@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"tellmeac/extended-schedule/adapters/ent"
-	sg "tellmeac/extended-sc/adapters/ent/studygroup"
+	sg "tellmeac/extended-schedule/adapters/ent/studygroup"
 	"tellmeac/extended-schedule/schedule"
 )
 

@@ -3,7 +3,7 @@ package adapters
 import (
 	"go.uber.org/fx"
 	"tellmeac/extended-schedule/ports/schedule"
-	sch "tellmeac/extended-sc/sc"
+	sch "tellmeac/extended-schedule/schedule"
 )
 
 // Module provides adapters like providers and repositories.

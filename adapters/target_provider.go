@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 	"github.com/samber/lo"
-	"tellmeac/extended-schedule/pkg/tsuclient"
 	"tellmeac/extended-schedule/pkg/utils"
 	"tellmeac/extended-schedule/schedule"
+	"tellmeac/extended-schedule/tsuclient"
 	"tellmeac/extended-schedule/userconfig"
 )
 

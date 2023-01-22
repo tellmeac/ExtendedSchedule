@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/rs/zerolog/log"
 	"tellmeac/extended-schedule/adapters"
-	"tellmeac/extended-schedule/pkg/tsuclient"
+	"tellmeac/extended-schedule/tsuclient"
 	"time"
 )
 

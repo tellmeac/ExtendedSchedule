@@ -8,8 +8,8 @@ import (
 	"time"
 
 	openapi_types "github.com/deepmap/oapi-codegen/pkg/types"
-	"tellmeac/extended-schedule/pkg/tsuclient"
 	"tellmeac/extended-schedule/schedule"
+	"tellmeac/extended-schedule/tsuclient"
 )
 
 func NewScheduleProvider(client tsuclient.ClientWithResponsesInterface) ScheduleProvider {

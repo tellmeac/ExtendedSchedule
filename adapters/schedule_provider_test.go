@@ -7,8 +7,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"tellmeac/extended-schedule/adapters"
-	"tellmeac/extended-schedule/pkg/tsuclient"
 	"tellmeac/extended-schedule/pkg/utils"
+	"tellmeac/extended-schedule/tsuclient"
 )
 
 // TestScheduleProvider_GetByGroup integration case.

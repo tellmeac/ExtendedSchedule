@@ -7,16 +7,15 @@ import (
 	"net/http"
 	"tellmeac/extended-schedule/adapters"
 	"tellmeac/extended-schedule/config"
-	"tellmeac/extended-schedule/pkg/logger"
-	"tellmeac/extended-schedule/pkg/tsuclient"
 	"tellmeac/extended-schedule/ports"
 	"tellmeac/extended-schedule/schedule"
 	"tellmeac/extended-schedule/server"
+	"tellmeac/extended-schedule/tsuclient"
 )
 
 // Module is a root Module that aggregates dependencies for application.
 var Module = fx.Options(
-	fx.Invoke(logger.InitLogger),
+	fx.Invoke(InitLogger),
 
 	tsuclient.Module,
 	adapters.Module,
